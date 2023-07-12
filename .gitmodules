@@ -1,0 +1,3 @@
+[submodule "code/fdtd-animate/pyFDTD"]
+	path = code/fdtd-animate/pyFDTD
+	url = https://github.com/sparky-10/pyFDTD.git
