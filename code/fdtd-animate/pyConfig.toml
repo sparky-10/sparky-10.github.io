@@ -1,0 +1,4 @@
+packages = ["numpy", "matplotlib", "scipy"]
+plugins = []
+[[fetch]]
+files = ["./pyFDTD/pyFDTD.py", "./images/Flat_wall.png", "./images/Absorbing_wall.png", "./images/Concave_wall.png", "./images/Convex_wall.png", "./images/Schroeder_diffuser.png", "./images/Binary_amplitude_diffuser.png", "./images/Helmholtz_resonator.png", "./images/Box_room.png", "./images/Whispering_gallery.png", "./images/Square_object.png", "./images/Circular_object.png", "./images/Barrier.png", "./images/Single_slit.png", "./images/Double_slit.png", "./images/Perforated_sheet.png", "./images/Sonic_crystal.png", "./images/Squiggle.png", "./images/Hello_world.png", "./images/Maze.png"]

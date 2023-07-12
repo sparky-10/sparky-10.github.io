@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FDTD Animate</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <!--link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css">
+  <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+  <!--link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
+  <script defer src="https://pyscript.net/latest/pyscript.js"></script-->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2023.03.1/pyscript.css">
+  <script defer src="https://pyscript.net/releases/2023.03.1/pyscript.js"></script>
+  <!--script src="https://cdn.plot.ly/plotly-2.20.0.min.js" charset="utf-8"></script-->
+  <script src="https://cdn.plot.ly/plotly-2.24.2.min.js" charset="utf-8"></script>
+  <!--link rel="stylesheet" href="theme.css" /-->
+  
+  <style>
+  
+  /* Style the tables */
+  table, td, th {	text-align: left; }
+  th { font-size: 1.17em; } /* To match h3 */
+  
+  /* Padding and border included in element total width and height */
+  * { box-sizing: border-box; }
+  
+  /* Supposed to make equal height cols (https://www.w3schools.com/howto/howto_css_equal_height.asp) but not working */
+  .col-container {
+    display: table; /* Make the container element behave like a table */
+    width: 100%; 	/* Set full-width to expand the whole page */
+  }
+  
+  /* Style the header */
+  header { 
+	padding: 10px;
+	background-color: powderblue;
+  }
+  .header-column {
+    float: left;
+    width: 50%;
+  }
+
+  /* Clear floats after the header */
+  header:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Style the top-right divs */
+  .simTimeDiv {
+    text-align: right;
+	white-space: break-spaces; /* Preserve white spaces */
+  }
+  .descriptionDiv {
+	text-align: right;
+  }
+  
+  /* Style the headings */
+  h1, h2, h3 { margin-top: 0.2em; margin-bottom: 0.5em; }
+  
+  /* Style the left side settings */
+  nav {
+    float: left;
+    width: 25%;
+    padding: 10px;
+	/*background-color: ghostwhite; Don't use because equal height not working */
+	display: table-cell;
+  }
+  
+  /* Style the sidebar(/nav) columns */
+  .sidebar-column {
+      width: 100%;
+      height: auto;
+  }
+  
+  /* Style the main article (i.e. the plot space) */
+  article {
+    float: left;
+    padding: 10px;
+    width: 75%;
+	background-color: white;
+	display: table-cell;
+  }
+  
+  /* Clear floats after the main section */
+  section::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Style the footer */
+  footer {
+    padding: 10px;
+	background-color: powderblue;
+  }
+  .footer-column {
+    float: left;
+    width: 50%;
+  }
+  
+  /* Clear floats after the footer */
+  footer:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+  @media (max-width: 900px) {
+    nav, article, .header-column, .footer-column {
+      width: 100%;
+      height: auto;
+    }
+	.descriptionDiv, .simTimeDiv {
+	text-align: left;
+	}
+  }
+  
+  /* Responsive layout - makes sidebar switch to two columns - NOT WORKING!! */
+  @media (max-width: 900px) {
+    .sidebar-column {
+      float: left;
+      width: 50%;
+    }
+  }
+  
+  </style>
+  
+</head>
+
+<!--py-config>
+    packages = ["numpy", "matplotlib", "scipy"]
+    plugins = []
+    [[fetch]]
+    files = ["./pyFDTD/pyFDTD.py", "./images/Flat_wall.jpg", ...]
+</py-config-->
+<py-config src="./pyConfig.toml"></py-config>
+
+<body>
+
+<!--
+Sort layout https://www.w3schools.com/html/html_layout.asp
+-->
+
+<!--Top panel with run buttons-->
+<header id="Top panel">
+
+  <div class="header-column">
+
+  <h1 id="Main header">FDTD Animate</h1>
+  
+  <button id="Run button" onclick="runButton()"
+				title="Run/pause simulation" style="width:140px">
+				RUN/PAUSE</button>
+  <button id="Reset button" onclick="resetButton()"
+				title="Reset simulation" style="width:140px">
+				RESET</button>
+  <button id="Stop button" onclick="stopButton()"
+				title="Stop (and clear) simulation" style="width:140px">
+				STOP</button>
+  
+  <br>
+  
+  <button id="Load file button" onclick="document.getElementById('Load file').click();"
+				title="Load image file" style="width:140px">
+				LOAD IMAGE</button>
+  <button id="Update button" onclick="updateButton()" style="display:none"
+				title="Update offline settings" style="width:140px">
+				UPDATE</button>																						<!-- HIDDEN -->
+  <button id="Reset mesh button" onclick="clearFile().then(meshResetButton());"
+				title="Reset to empty mesh" style="width:140px">
+				CLEAR MESH</button>
+  
+  <input id="Load file" type="file" accept="image/*" style="display:none" onchange="loadFileButton();"/>			<!-- HIDDEN -->
+  <button id="Prepare mesh button" onclick="meshUpdateButton();" style="display:none">PREPARE MESH</button>			<!-- HIDDEN & UNUSED -->
+  
+  <label for="Load examples"></label>
+  <select name="Load examples" id="Load examples" onchange="loadExample();"
+				title="Load example simulation" style="width:140px">
+    <option value="-1">Load example...</option>
+  </select>
+  
+  </div>
+  
+  <!--Description in upper right corner-->
+  <div class="header-column">
+  <div class="descriptionDiv">
+	<p>2D acoustic Finite Difference Time Domain (FDTD) simulation.<br> 
+	Contact: 	<a href="mailto:r.j.hughes@salford.ac.uk">					email		</a> ; 
+				<a href="https://twitter.com/sparky_10" target=”_blank”>	@sparky_10	</a> <br>
+	Info: <button id="Info button" style="border-radius: 50%;height:25px;width:25px;" onclick="infoButton();">i</button></p>
+  </div>
+  <!--br-->
+  <div id="Sim time div" class="simTimeDiv">t =     0.0 ms</div>
+  </div>
+  
+</header>
+
+<section class="col-container">
+
+<!--Real time input panel-->
+<nav id="Real time settings">
+
+  <div>
+
+  <h2 id="Real time header">Real time settings:</h2>
+  
+  <h3 id="Colours header">Colours:</h3>
+  
+  <button id="Reset colours button" onclick="rtResetColorScale().then(rtColourUpdate());"
+				title="Reset colours to default" style="width:98px">
+				RESET</button>
+  <button id="Hit me button" onclick="rtRandomColorScale().then(rtColourUpdate());"
+				title="Set to random colours" style="width:98px">
+				HIT ME!</button>
+  
+  <br>
+  
+  </div>
+  
+  <div class=".sidebar-column">
+  
+  <table>
+  
+  <tr>
+	<td style="text-align: center;"></td>
+	<td style="text-align: center;">R</td>
+	<td style="text-align: center;">G</td>
+	<td style="text-align: center;">B</td>
+  </tr>
+  <tr>
+	<td>Pos</td>
+    <td>
+	  <label for="cpr"></label>
+	  <input type="number" name="cpr" id="cpr" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="255" style="width:52px"
+				title="Red RGB colour component (0-255) - positive">
+	</td>
+	<td>
+	  <label for="cpg"></label>
+	  <input type="number" name="cpg" id="cpg" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="0" style="width:52px"
+				title="Green RGB colour component (0-255) - positive">
+	</td>
+	<td>
+	  <label for="cpb"></label>
+	  <input type="number" name="cpb" id="cpb" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="0" style="width:52px"
+				title="Blue RGB colour component (0-255) - positive">
+	</td>
+  </tr>
+	
+  <tr>
+	<td>Zero</td>
+    <td>
+	  <label for="czr"></label>
+	  <input type="number" name="czr" id="czr" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="255" style="width:52px"
+				title="Red RGB colour component (0-255) - zero">
+	</td>
+	<td>
+	  <label for="czg"></label>
+	  <input type="number" name="czg" id="czg" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="255" style="width:52px"
+				title="Green RGB colour component (0-255) - zero">
+	</td>
+	<td>
+	  <label for="czb"></label>
+	  <input type="number" name="czb" id="czb" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="255" style="width:52px"
+				title="Blue RGB colour component (0-255) - zero">
+	</td>
+  </tr>
+  
+  <tr>
+	<td>Neg</td>
+    <td>
+	  <label for="cnr"></label>
+	  <input type="number" name="cnr" id="cnr" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="0" style="width:52px"
+				title="Red RGB colour component (0-255) - negative">
+	</td>
+	<td>
+	  <label for="cng"></label>
+	  <input type="number" name="cng" id="cng" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="0" style="width:52px"
+				title="Green RGB colour component (0-255) - negative">
+	</td>
+	<td>
+	  <label for="cnb"></label>
+	  <input type="number" name="cnb" id="cnb" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0" max="255" step="1" value="255" style="width:52px"
+				title="Blue RGB colour component (0-255) - negative">
+	</td>
+  </tr>
+  
+  </table>
+  
+  </div>
+  
+  <div class=".sidebar-column">
+  
+  <h3 id="Other RT header">Other:</h3>
+	
+  <table>
+  
+  <tr>
+    <td>Scale</td>
+	<td>
+    <label for="cLim"></label>
+	  <input type="number" name="cLim" id="cLim" onchange="constrainInput(this).then(rtColourUpdate());"
+                min="0.01" max="1" step="0.01" value="0.1" style="width:60px"
+				title="Colour axis limit (plus and minus this value)">
+    </td>
+  </tr>
+  
+  <tr>
+    <td>Plot step</td>
+	<td>
+    <label for="Plot step"></label>
+	<input type="number" name="Plot step" id="Plot step" onchange="constrainInput(this).then(rtPlotRateUpdate());"
+                min="1" max="20" step="1" value="5" style="width:60px"
+				title="Update plot every i-th simulation step">
+    </td>
+  </tr>
+  
+  <tr>
+    <td>Surf. colour invert</td>
+	<td>
+    <label for="Mesh colour invert" class="switch"></label>
+      <input type="checkbox" name="Mesh colour invert" id="Mesh colour invert" onchange="rtMeshColInvStatus();"
+				title="Invert surface colour (i.e. objects are white instead of black)">
+    </td>
+  </tr>
+  
+  <tr>
+    <td>Show surfaces</td>
+	<td>
+    <label for="Mesh show" class="switch"></label>
+      <input type="checkbox" name="Mesh show" id="Mesh show" onchange="rtMeshShowStatus();"
+				title="Show/hide mesh surfaces in plot">
+    </td>
+  </tr>
+  
+  <tr>
+    <td>Show source(s)</td>
+	<td>
+    <label for="Source show" class="switch"></label>
+      <input type="checkbox" name="Source show" id="Source show" onchange="rtSrcShowStatus();"
+				title="Show/hide source(s) in plot">
+    </td>
+  </tr>
+  
+  <tr>
+    <td>Show receiver</td>
+	<td>
+    <label for="Receiver show" class="switch"></label>
+      <input type="checkbox" name="Receiver show" id="Receiver show" onchange="rtRecShowStatus();"
+				title="Show/hide receiver(s) in plot">
+    </td>
+  </tr>
+  
+  </table>
+  
+  </div>
+  
+</nav>
+
+<!--Plot/animation panel-->
+<article id="plot panel">
+  <div id="fdtdPlot" style="margin: 0 auto;"></div>
+</article>
+
+</section>
+
+<!--Input panel with general inputs-->
+<footer id="Input panel">
+  
+  <div>
+  
+  <h2 id="Input header">Offline inputs:</h2>
+  
+	<!--table id="Receiver table" style="width:100%" hidden>
+	<tr>
+		<th colspan="4">Receiver(s)</th>
+	</tr>
+	<tr>
+		<td style="font-weight: bold;">No.</td>
+		<td style="font-weight: bold;">Active</td>
+		<td style="font-weight: bold;">x (m)</td>
+		<td style="font-weight: bold;">y (m)</td>
+	</tr-->
+	
+	<!--Note: Downloads handled by Python-->
+	<button id="Gif download" style="display:none">GIF download</button>											<!-- HIDDEN -->
+	<button id="Wav download" style="display:none">WAV download</button>											<!-- HIDDEN -->
+	
+    <table>
+	
+	<tr>
+      <td >Auto update</td>
+	  <td>
+	  <label for="OL plot update" class="switch"></label>
+	  <input 	type="checkbox" name="OL plot update" id="OL plot update" onchange="olPlotUpdateStatus();" 
+				title="Automatically update settings/plot when simulation is not running (otherwise updates on next restart)">
+	  </td>
+	  <td >&emsp;&emsp;&nbsp; Make GIF</td>
+	  <td>
+	  <label for="Download gif" class="switch"></label>
+	  <input 	type="checkbox" name="Download gif" id="Download gif" onchange="olDownloadsStatus();" 
+				title="Make and auto-download animated GIF file (note: can slow down simulation)">
+	  </td>
+	</tr>
+    
+	<tr>
+      <td>Mesh check</td>
+	  <td>
+	  <label for="Mesh check" class="switch"></label>
+	  <input 	type="checkbox" name="Mesh check" id="Mesh check" onchange="olMeshCheckStatus();" 
+				title="Check mesh (and attempt to fix any issues) before running">
+	  </td>
+	  <td >&emsp;&emsp;&nbsp;  Make wav</td>
+	  <td>
+	  <label for="Download wav" class="switch"></label>
+	  <input 	type="checkbox" name="Download wav" id="Download wav" onchange="olDownloadsStatus();" 
+				title="Make and auto-download .wav file of receiver audio">
+	  </td>
+	</tr>
+	
+	</table>
+	
+  </div>
+  
+  <div class="footer-column">
+  
+  <table style="width:100%">
+  
+  <tr>
+    <th colspan="6">Mesh</th>
+  </tr>
+  
+  <tr>
+    <td colspan="2" style="font-weight: bold;">Size</td>
+	<!--td colspan="2" style="font-weight: bold;">Source</td-->
+	<!--td colspan="2" style="font-weight: bold;">Admittance</td-->
+	<td colspan="2" style="font-weight: bold;">Absorption</td>
+	<td colspan="2" style="font-weight: bold;">Sim settings</td>
+  </tr>
+  
+  <tr>
+    
+	<td>X</td>
+	<td>
+	  <label for="X grid"></label>
+	  <input type="number" name="X grid" id="X grid" onchange="constrainInput(this).then(olGridSizeUpdate());"
+				min="100" max="1000" step="10" value="300" style="width:60px"
+				title="No. of x grid cells (/pixels)">
+	</td>
+	
+	<td>Surface &alpha;</td>
+	<!--td>Surfaces</td-->
+	<td>
+	  <label for="Beta"></label>
+	  <input type="number" name="Beta mesh" id="Beta mesh" onchange="constrainInput(this).then(olMeshSettingsUpdate());"
+                min="0.0" max="1.0" step="0.001" value="0.0" style="width:60px"
+				title="Normal incidence absorption coefficient of meshed surfaces (when mode = 'Con.'; 0 = hard, 1 = absorbing)">
+				<!--title="Normalised acoustic admittance of meshed surfaces (when mode = 'Con.'; 0 = hard, 1 = matched)"-->
+	</td>
+	
+	<td>c<sub>0</sub> (m/s)</td>
+	<td>
+	  <label for="Sound speed"></label>
+	  <input type="number" name="Sound speed" id="Sound speed" onchange="constrainInput(this).then(olGridStepUpdate());"
+                min="300" max="400" step="1" value="344" style="width:60px"
+				title="Sound speed (m/s)">
+	</td>
+	
+  </tr>
+  
+  <tr>
+    
+	<td>Y</td>
+	<td>
+	  <label for="Y grid"></label>
+	  <input type="number" name="Y grid" id="Y grid" onchange="constrainInput(this).then(olGridSizeUpdate());"
+                min="100" max="1000" step="10" value="200" style="width:60px"
+				title="No. of y grid cells (/pixels)">
+	</td>
+	
+	<td>Boundary &alpha;</td>
+	<!--td>Boundary</td-->
+	<td>
+	  <label for="Beta"></label>
+	  <input type="number" name="Beta boundary" id="Beta boundary" onchange="constrainInput(this).then(olMeshSettingsUpdate());"
+                min="0.0" max="1.0" step="0.001" value="0.0" style="width:60px"
+				title="Normal incidence absorption coefficient of mesh/image border/boundary (0 = hard, 1 = absorbing)">
+				<!--title="Normalised acoustic admittance of mesh/image border/boundary (0 = hard, 1 = matched)"-->  
+	</td>
+	
+	<td>Time (ms)</td>
+	<td>
+	  <label for="Sim time"></label>
+	  <input type="number" name="Sim time" id="Sim time" onchange="constrainInput(this).then(olGridStepUpdate());"
+                min="1" max="1000" step="1" value="5" style="width:60px"
+				title="Simulation run time (ms)">
+	</td>
+	
+  </tr>
+  
+  <tr>
+    
+	<td>&Delta;x (mm)</td>
+	<td>
+	  <label for="Grid spacing"></label>
+	  <input type="number" name="Grid spacing" id="Grid spacing" onchange="constrainInput(this).then(olGridSizeUpdate());"
+                min="1" max="1000" step="1" value="10" style="width:60px"
+				title="Grid cell spacing (mm)">
+	</td>
+	
+	<!--td></td>
+	<td></td-->
+	
+	<td>Thresh. (%)</td>
+	<td>
+	  <label for="Beta"></label>
+	  <input type="number" name="Image threshold" id="Image threshold" onchange="constrainInput(this).then(olMeshSettingsUpdate());"
+                min="0.0" max="100" step="1" value="0.0" style="width:60px"
+				title="Threshold below which loaded image is set to 'air' node">
+	</td>
+	
+	<td></td>
+	<td></td>
+	
+  </tr>
+  
+  <tr>
+    
+	<td></td>
+	<td></td>
+	<!--td></td>
+	<td></td-->
+	
+	<td>Mode</td>
+	<td>
+	  <label for="Beta"></label>
+	  <select name="Beta mode" id="Beta mode" onchange="olMeshSettingsUpdate();" style="width:60px"
+				title="Absorption mode: sets mesh surfaces to constant ('Con.') or varying ('Var.') absorption. 'Con.' uses the user defined surface absorption, while 'Var.' sets absorption proportional to image luminance">
+		<option value="constant">Con. (Constant surface absorption)</option>
+		<option value="varying">Var. (Varying surface absorption proportional to image luminance)</option>
+				<!--title="Admittance mode: sets mesh surfaces to constant ('Con.') or varying ('Var.') admittance. 'Con.' uses the user defined surface admittance, while 'Var.' sets admittance proportional to image luminance">
+	    <option value="constant">Con. (Constant surface admittance)</option>
+		<option value="varying">Var. (Varying surface admittance proportional to image luminance)</option-->
+	  </select>
+	</td>
+	
+	<td></td>
+	<td></td>
+	
+  </tr>
+  
+  </table>
+  
+  </div>
+  
+  <div class="footer-column">
+  
+  <table id="Source table" style="width:100%">
+  <tr>
+    <th colspan="8">Source(s)/Receiever</th>
+  </tr>
+  <tr>
+    <td style="font-weight: bold;">No.</td>
+	<td style="font-weight: bold;">Active</td>
+	<td style="font-weight: bold;">Inv</td>
+	<td style="font-weight: bold;">Amp</td>
+	<td style="font-weight: bold;">&tau; (ms)</td>
+	<td style="font-weight: bold;">f<sub>0</sub> (Hz)</td>
+	<td style="font-weight: bold;">x (m)</td>
+	<td style="font-weight: bold;">y (m)</td>
+  </tr>
+  
+  </div>
+  
+</footer>
+
+<!--script>
+// Disable buttons until loaded
+document.querySelector("Run button").disabled = true;
+document.querySelector("Reset button").disabled = true;
+document.querySelector("Stop button").disabled = true;
+document.querySelector("Update button").disabled = true;
+</script-->
+
+<!--Run py and js scripts-->
+<py-script src="./fdtdSetup.py"></py-script>
+<script src="./main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,2 @@
+var imList = ["Flat wall", "Absorbing wall", "Concave wall", "Convex wall", "Schroeder diffuser", "Binary amplitude diffuser", "Helmholtz resonator", "Box room", "Whispering gallery", "Square object", "Circular object", "Barrier", "Single slit", "Double slit", "Perforated sheet", "Sonic crystal", "Squiggle", "Hello world", "Maze"];
+var imExt = "png";
