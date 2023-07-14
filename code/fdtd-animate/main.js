@@ -360,15 +360,15 @@ function downloadStatus() {
 	} 
 	fdtdObj.setCMap();
 	// Surface show/hide and colour invert
-	fdtdObj.showMask = meshShowStatus
-	fdtdObj.maskColInvert = meshColInvStatus
+	fdtdObj.plotShowMask = meshShowStatus
+	fdtdObj.plotMaskColInvert = meshColInvStatus
 	// GIF settings
 	fdtdObj.gifFrameTime = gifFrameTime;
 	fdtdObj.gifLoopNum = gifLoopNum;
 	// NOTE: for future
 	// Show/hide sources/receivers
-	//fdtdObj.??? = srcShowStatus
-	//fdtdObj.??? = recShowStatus
+	fdtdObj.plotShowSrc = srcShowStatus
+	fdtdObj.plotShowRec = recShowStatus
 	// Required to init gif (even if doPlot is set to false)
 	fdtdObj.makePlot()
 }
