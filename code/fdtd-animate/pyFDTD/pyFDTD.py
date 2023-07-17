@@ -43,7 +43,7 @@ if USE_MATPLOTLIB:
             
 # TODO
 
-# Make GIF
+# GIF
 # - Do 1D
 # - Add src/recs??
 # Test 1D and 3D
@@ -53,6 +53,7 @@ if USE_MATPLOTLIB:
 # Plots:
 # - Add src/rec labels
 # - Add optional plotSliceHeight for 3D
+# Do staggered mesh to grid
 # Add proper examples
 # Do proper readme
 # Add more debug text?
@@ -998,13 +999,14 @@ class pyFDTD:
             elif arrSize >= sizeLims[2*i+1]:
                 # Trim
                 isAltered = True
-                # TODO - fix for non-2D
-                # NOTE: THIS IS CLUNKY and only for 2D!!!!!
                 NTrim = sizeLims[2*i+1]
-                if i == 0:
-                    arr = arr[0:NTrim,:]
-                elif i==1:
-                    arr = arr[:,0:NTrim]
+                arr = np.delete(arr,np.s_[NTrim:],i)
+                # TODO - delete once tested the above
+                # # NOTE: THIS IS CLUNKY and only for 2D!!!!!
+                # if i == 0:
+                #     arr = arr[0:NTrim,:]
+                # elif i==1:
+                #     arr = arr[:,0:NTrim]
         
         return arr, isAltered
     

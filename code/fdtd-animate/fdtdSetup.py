@@ -88,7 +88,9 @@ def loadImage(im):
     padOrTrim = fdtd.loadImage(im, doReset=True, \
                                sizeLimits=[XMin, XMax, YMin, YMax])
     if padOrTrim:
-        passUserMessage("Image pad/truncation warning")
+        passUserMessage("Image pad/truncation warning. Image may be smaller " + \
+                        "or larger than allowed by the code. Use the auto "+ \
+                        "padded/truncated version, or try adjusting your image.")
     # Empty file value so reloads on reselection of same file (i.e. because a change occurs)
     document.getElementById(LOAD_FILE_ID).value = ''
     # Make initial 'mesh' version
