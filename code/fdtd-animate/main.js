@@ -120,7 +120,9 @@ var madeGif, madeWav;
 - Save GIF
 	- Any user gif settings?
 	- Add sources (more difficult)
-- Move pyFDTD to submodule respository
+- Hide some modebar stuff??
+https://plotly.com/javascript/configuration-options/?_ga=2.131771919.1025833578.1689411173-1503907169.1683466811#edit-mode
+- Move pyFDTD to submodule respository?? NO!
 - Show 'loading' when loading examples - hard to fix
 - Make loadExample more efficient? (i.e. triggering less stuff)
 - Load own source
@@ -1061,6 +1063,7 @@ function makeFig() {
 		x: xValues,
 		y: yValues,
 		type: 'heatmap',
+		zsmooth: 'fast',
 		colorscale: colorscaleValue,
 		colorbar: {len: 1},	// Also has x property for how far left/right
 		zmin: -cLim,
@@ -1071,6 +1074,7 @@ function makeFig() {
 		x: xValues,
 		y: yValues,
 		type: 'heatmap',
+		zsmooth: 'best',
 		//colorscale: 'Greys',
 		colorscale: colorscaleGrey,
 		showscale: false,			// No colorbar
@@ -1163,7 +1167,6 @@ function makeFig() {
 			mirror: true
 		}
 	};
-	
 	/*var layout = [
 	{
 		xaxis: {
@@ -1182,9 +1185,16 @@ function makeFig() {
 		}
 	}
 	];*/
-	
+	// Config - see:
+	// https://plotly.com/javascript/configuration-options/?_ga=2.131771919.1025833578.1689411173-1503907169.1683466811#edit-mode
+	// https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
+	// https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js
+	var config = {
+		/*modeBarButtonsToAdd: ['drawline','drawopenpath','drawrect','drawcircle','eraseshape'],*/
+		modeBarButtonsToRemove: ['zoom2d','select2d','lasso2d','autoScale2d']
+	};
 	// Make new plot
-	Plotly.newPlot(plotDivId, data, layout);
+	Plotly.newPlot(plotDivId, data, layout, config);
 	figExists = true;
 }
 
@@ -1870,7 +1880,7 @@ function runButton() {
 		// Check source(s) and receiver(s)
 		var srcRecOnMesh = fdtdObj.srcRecOnMesh();
 		if (srcRecOnMesh) { 
-			passUserMessage("Source/receiver location warning")
+			passUserMessage("Source/receiver location warning. One or more source/receivers may be on a surface - try moving them in to 'free space'.")
 			return;
 		}
 		// Update if making files to download

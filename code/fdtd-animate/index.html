@@ -59,6 +59,20 @@
   /* Style the headings */
   h1, h2, h3 { margin-top: 0.2em; margin-bottom: 0.5em; }
   
+  /* Style the help sidebar */
+  .help-sidebar {
+    padding: 10px;
+	background-color: gainsboro;
+	box-shadow: 2px 0 4px rgba(0,0,0,0.5);
+	height: 100%;
+    overflow: auto;
+	position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    width: 35%;
+  }
+  
   /* Style the left side settings */
   nav {
     float: left;
@@ -140,9 +154,49 @@
 
 <body>
 
-<!--
-Sort layout https://www.w3schools.com/html/html_layout.asp
--->
+<!-- Sidebar -->
+<div id="Help sidebar" class="help-sidebar" style="display:none">
+  <!--button onclick="helpClose()">Close &times;</button-->
+  <a href='javascript:;' onclick='helpClose();'>Close &times;</a>
+  <h3>Help</h3>
+  <h4>Getting started</h4>
+  <p>Try loading an example from the dropdown menu in the top panel and hit "Run". 
+  Real time settings can be adjusted mid simulation to adjust the scale, colour etc. (e.g. try the 'Hit me!' button).</p>
+  <h4>Source/receivers</h4>
+  <p>Use the bottom right panel to alter where source and receivers are placed. 
+  Note: a warning is given if there are active source/receivers located on an object. 
+  There are several other properties that can be set including centre frequency, which is the centre frequency in Hz of the source pulse.</p>
+  <h4>Loading an image</h4>
+  <p>Use the load image button to load your own image. 
+  Size is restricted to 100x100 to 1000x1000 pixels (otherwise padding/trimming will occur).
+  Image luminance is used to determine where to model objects, so black and white or greyscale images may work best. 
+  Simple images are more likely to work as intended (e.g. try making something in MS Paint!). 
+  After loading, use the threshold percentage setting (bottom panel) to adjust what parts of the image are made into objects.</p>
+  <h4>Varying absorption</h4>
+  <p>The default mode is a constant absorption value across surfaces. 
+  To vary the absorption change the absorption mode (bottom panel) and use an image with varying luminance (e.g. greyscale). 
+  This then assigns more absorbing surfaces to lighter areas of the image and more reflecting to darker areas.</p>
+  <h4>Make GIF/wav</h4>
+  <p>Selecting the bottom panel make GIF or wav checkboxes creates and downloads a file/files after a full simulation is run.
+  The real time settings are taken at the start of the simulation, and will have no effect if altered whilst running. 
+  The wav file contains the response at the set receiver position, and will have a sample rate dictated by mesh resolution. 
+  Note: the sample rate will be an integer, but will likely be a non-standard value in terms of audio use.</p>
+  <h4>Plotly functions</h4>
+  <p>The figure uses <a href="https://plotly.com/javascript/" target=”_blank”>Plotly</a>, and the pan, zoom, and plot image download icons
+  (top right of figure) can be used to explore.</p>
+  <h4>Have a play</h4>
+  <p>Note: hovering over most input boxes and buttons displays a description of what they do.</p>
+  <h4>Artefacts/innacuracies</h4>
+  <p>Note: this is not 'cutting edge', and is a 'warts and all' implementation. You may see artefacts, often caused by either the 
+  modelling of curved surfaces using a underlying square grid or the imperfect surface absorption when set to full (&alpha; = 1). 
+  Dispersion is also a problem at higher frequencies. But hey, it's still fun!</p>
+  <h4>Pyscript</h4>
+  <p>In the background this is <a href="https://pyscript.net/" target=”_blank”>PyScript</a>, so it's a version of Python, only in your browser. 
+  This is pretty cool, but does mean you use data to download, and it can take a short while. 
+  It's also quite experimental at this stage, though this page uses a fixed version so hopefully shouldn't break any time soon.</p>
+  <h4>Further help</h4>
+  <p>Any major bugs please get in touch. There will be some!</p>
+</div>
 
 <!--Top panel with run buttons-->
 <header id="Top panel">
@@ -164,7 +218,7 @@ Sort layout https://www.w3schools.com/html/html_layout.asp
   <br>
   
   <button id="Load file button" onclick="document.getElementById('Load file').click();"
-				title="Load image file" style="width:140px">
+				title="Load image file (Hint: adjust the threshold after loading)" style="width:140px">
 				LOAD IMAGE</button>
   <button id="Update button" onclick="updateButton()" style="display:none"
 				title="Update offline settings" style="width:140px">
@@ -189,8 +243,13 @@ Sort layout https://www.w3schools.com/html/html_layout.asp
   <div class="descriptionDiv">
 	<p>2D acoustic Finite Difference Time Domain (FDTD) simulation.<br> 
 	Contact: 	<a href="mailto:r.j.hughes@salford.ac.uk">					email		</a> ; 
-				<a href="https://twitter.com/sparky_10" target=”_blank”>	@sparky_10	</a> <br>
-	Info: <button id="Info button" style="border-radius: 50%;height:25px;width:25px;" onclick="infoButton();">i</button></p>
+				<a href="https://twitter.com/sparky_10" target=”_blank”>	@sparky_10	</a>
+	<br>
+	Help: <button id="Help button" style="border-radius: 50%;height:25px;width:25px;" onclick="helpOpen();"
+				title="Click me for help getting started">h</button>
+	;
+	Info: <button id="Info button" style="border-radius: 50%;height:25px;width:25px;" onclick="infoButton();"
+				title="Click me for further info">i</button></p>
   </div>
   <!--br-->
   <div id="Sim time div" class="simTimeDiv">t =     0.0 ms</div>
@@ -584,6 +643,18 @@ Sort layout https://www.w3schools.com/html/html_layout.asp
   </div>
   
 </footer>
+
+<script>
+function helpOpen() {
+  var docID = document.getElementById("Help sidebar");
+  var disp = docID.style.display;
+  if (disp == "block") { docID.style.display = "none"; }
+  else if (disp == "none") { docID.style.display = "block"; }
+}
+function helpClose() {
+  document.getElementById("Help sidebar").style.display = "none"
+}
+</script>
 
 <!--script>
 // Disable buttons until loaded
