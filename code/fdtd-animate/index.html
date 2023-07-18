@@ -59,8 +59,8 @@
   /* Style the headings */
   h1, h2, h3 { margin-top: 0.2em; margin-bottom: 0.5em; }
   
-  /* Style the help sidebar */
-  .help-sidebar {
+  /* Style the help/info sidebars */
+  .popup-sidebar {
     padding: 10px;
 	background-color: gainsboro;
 	box-shadow: 2px 0 4px rgba(0,0,0,0.5);
@@ -154,11 +154,13 @@
 
 <body>
 
-<!-- Sidebar -->
-<div id="Help sidebar" class="help-sidebar" style="display:none">
-  <!--button onclick="helpClose()">Close &times;</button-->
-  <a href='javascript:;' onclick='helpClose();'>Close &times;</a>
-  <h3>Help</h3>
+<!-- Sidebars -->
+
+<div id="Help sidebar" class="popup-sidebar" style="display:none">
+  <table style="width:100%;border-spacing:0px;"><tr>
+  <td style="padding:0px;"><h2>Help</h2></td>
+  <td style="padding:0px;text-align:right;"><a href='javascript:;' onclick="itemHide('Help sidebar');">Close &times;</a></td>
+  </tr></table>
   <h4>Getting started</h4>
   <p>Try loading an example from the dropdown menu in the top panel and hit "Run". 
   Real time settings can be adjusted mid simulation to adjust the scale, colour etc. (e.g. try the 'Hit me!' button).</p>
@@ -196,6 +198,38 @@
   It's also quite experimental at this stage, though this page uses a fixed version so hopefully shouldn't break any time soon.</p>
   <h4>Further help</h4>
   <p>Any major bugs please get in touch. There will be some!</p>
+</div>
+
+<div id="Info sidebar" class="popup-sidebar" style="display:none">
+  <table style="width:100%;border-spacing:0px;"><tr>
+  <td style="padding:0px;"><h2>Info</h2></td>
+  <td style="padding:0px;text-align:right;"><a href='javascript:;' onclick="itemHide('Info sidebar');">Close &times;</a></td>
+  </tr></table>
+  <h4>What is it?</h4>
+  <p>A 2D acoustic Finite Difference Time Domain (FDTD) simulation.</p>
+  <p>Make and simulate/animate a 2D sound world from an image. 
+  Mainly a bit of fun, but also for interest/understanding.</p>
+  <h4>Contact</h4>
+  <p>Richard Hughes</p>
+  <p><a href="mailto:r.j.hughes@salford.ac.uk">											email		</a></p>
+  <p><a href="https://www.linkedin.com/in/richard-hughes-5179593b/" target=”_blank”>	linkedin	</a></p>
+  <p><a href="https://twitter.com/sparky_10" target=”_blank”>							@sparky_10	</a></p>
+  <h4>PySrcipt</h4>
+  <p>Uses <a href="https://pyscript.net/" target=”_blank”>PyScript</a> to download and run Python code. 
+  Python not required, but takes a short while to load and data is on order of tens of MB. 
+  PyScript is developmental and constantly changing; I'll try to make sure it doesn't break!</p>
+  <h4>Details</h4>
+  <p>If of interest:</p>
+  <ul>
+  <li>Grid: basic rectangular</li>
+  <li>Scheme: compact explicit standard leapfrog</li>
+  <li>See e.g.: work of Konrad Kowalczyk</li>
+  <li>Source(s): Gaussian derivative</li>
+  <li>Boundary: no perfectly matched layer (PML)!!</li>
+  </ul>
+  <h4>Disclaimer</h4>
+  <p>Content on this site provided solely for fun. 'Use at your own risk'. 
+  No guarantee made of accurate predictions and should not be relied on.</p>
 </div>
 
 <!--Top panel with run buttons-->
@@ -245,10 +279,10 @@
 	Contact: 	<a href="mailto:r.j.hughes@salford.ac.uk">					email		</a> ; 
 				<a href="https://twitter.com/sparky_10" target=”_blank”>	@sparky_10	</a>
 	<br>
-	Help: <button id="Help button" style="border-radius: 50%;height:25px;width:25px;" onclick="helpOpen();"
+	Help: <button id="Help button" style="border-radius: 50%;height:25px;width:25px;" onclick="itemHide('Info sidebar');itemSwitch('Help sidebar');"
 				title="Click me for help getting started">h</button>
 	;
-	Info: <button id="Info button" style="border-radius: 50%;height:25px;width:25px;" onclick="infoButton();"
+	Info: <button id="Info button" style="border-radius: 50%;height:25px;width:25px;" onclick="itemHide('Help sidebar');itemSwitch('Info sidebar');"
 				title="Click me for further info">i</button></p>
   </div>
   <!--br-->
@@ -645,14 +679,14 @@
 </footer>
 
 <script>
-function helpOpen() {
-  var docID = document.getElementById("Help sidebar");
+function itemSwitch(id) {
+  var docID = document.getElementById(id);
   var disp = docID.style.display;
   if (disp == "block") { docID.style.display = "none"; }
   else if (disp == "none") { docID.style.display = "block"; }
 }
-function helpClose() {
-  document.getElementById("Help sidebar").style.display = "none"
+function itemHide(id) {
+  document.getElementById(id).style.display = "none"
 }
 </script>
 
