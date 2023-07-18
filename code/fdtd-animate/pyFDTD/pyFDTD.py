@@ -43,6 +43,7 @@ if USE_MATPLOTLIB:
             
 # TODO
 
+# Image resizing
 # GIF
 # - Do 1D
 # - Add src/recs??
@@ -955,7 +956,7 @@ class pyFDTD:
         # Add mesh array to plot
         self.updatePlotMask()
         
-    def loadImage(self, file, doReset=True, sizeLimits = None):
+    def loadImage(self, file, doReset=True, sizeLimits = None, resize=False):
         
         # Update on debug
         self.printToDebug('loadImage')
@@ -969,8 +970,23 @@ class pyFDTD:
         # Clear mesh
         self.mesh = None
         
-        # If size limits then check if needs trimming/padding
+        # # Need resizing / pad/trimming?
+        # needResizing = self.image[0] < sizeLimits[0] or \
+        #     self.image[0] > sizeLimits[1] or \
+        #     self.image[1] < sizeLimits[2] or \
+        #     self.image[1] > sizeLimits[3]
+        # if resize:
+        #     h = float(self.image[0])
+        #     w = float(self.image[1])
+        #     max(self.image.shape)
+        #     scale = 0.85
+        #     wsize = int(w*scale)
+        #     hsize = int(h*scale)
+        #     self.image = img.resize((w,h), Image.Resampling.LANCZOS)
+        #     isAltered = True
+        
         if not sizeLimits is None:
+            # If size limits then check if needs trimming/padding
             self.image, isAltered = self.padOrTrim(self.image, sizeLimits, 255)
         else:
             isAltered = False
