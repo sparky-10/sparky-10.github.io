@@ -24,7 +24,7 @@ fdtd.newEmptyMesh([400,400])
 fdtd.plotIthUpdate = 2
 fdtd.doPlot = True
 fdtd.saveRecData = True
-fdtd.saveGif = False
+fdtd.saveGif = True
 
 # Before run and/or prepareMesh
 fdtd.beta = 0.0
@@ -33,10 +33,11 @@ fdtd.threshold = 0.0
 fdtd.betaMode = 'constant'
 # fdtd.betaMode = 'varying'
 
+fdtd.loadImage('../images/Helmholtz_resonator.png')
 # fdtd.loadImage('../images/Flat_wall.png')
-# # fdtd.image2Mesh(xMesh=200, yMesh=200);
-# fdtd.moveSrc([fdtd.D[0]*0.5, fdtd.D[1]*0.7],0)
-# fdtd.moveRec([fdtd.D[0]*0.5, fdtd.D[1]*0.85],0)
+# fdtd.image2Mesh(xMesh=200, yMesh=200);
+fdtd.moveSrc([fdtd.D[0]*0.5, fdtd.D[1]*0.7],0)
+fdtd.moveRec([fdtd.D[0]*0.5, fdtd.D[1]*0.85],0)
 
 # # fdtd.newEmptyMesh([50,50,50])
 # # fdtd.setInputs()

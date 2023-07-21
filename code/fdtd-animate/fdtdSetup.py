@@ -6,6 +6,7 @@ from js import console, Blob, URL
 
 #import asyncio
 import io
+import base64
 from pyFDTD.pyFDTD import pyFDTD
 
 DEBUG = False
@@ -15,6 +16,7 @@ DO_SRC_REC_COORDS_CHECK = False     # Stops sources being deleted if go off imag
 LOAD_FILE_ID = "Load file"
 GIF_DOWNLOAD_ID = "Gif download"
 WAV_DOWNLOAD_ID = "Wav download"
+IMG_ID = "Temp img"
 
 if DEBUG: print("FDTD!")
 # import os
@@ -98,6 +100,17 @@ def loadImage(im):
     # Pass to js
     doImRequest()
 
+# Get image from img tag
+async def getNewImg(e):
+    # Get base64 string
+    b64Str = document.getElementById(IMG_ID).src
+    # Get part after first comma
+    b64Str = b64Str.split(',')[1]
+    # Get bytes object
+    bytesObj = io.BytesIO(base64.b64decode(b64Str))
+    # Load the image
+    loadImage(bytesObj)
+
 # Get numpy array from image file
 # (code adapted from https://jeff.glass/post/pyscript-image-upload/)
 async def getNewImage(e):
@@ -110,9 +123,9 @@ async def getNewImage(e):
     array_buf = Uint8Array.new(await first_item.arrayBuffer())
     # BytesIO wants a bytes-like object, so convert to bytearray first
     bytes_list = bytearray(array_buf)
-    my_bytes = io.BytesIO(bytes_list)
+    bytesObj = io.BytesIO(bytes_list)
     # Load the image
-    loadImage(my_bytes)
+    loadImage(bytesObj)
 
 async def gifDownload(e):
     try:
@@ -160,9 +173,13 @@ async def wavDownload(e):
         console.log("Exception: " + str(e))
         return
 
-# Run get new image code above whenever file is uploaded    
+# Run get new image code above whenever file is uploaded
 upload_file = create_proxy(getNewImage)
 document.getElementById(LOAD_FILE_ID).addEventListener("change", upload_file)
+
+# Run get new image code above whenever img tag is changed
+img_file = create_proxy(getNewImg)
+document.getElementById(IMG_ID).addEventListener("load", img_file)
 
 # Do downloads when get button clicks
 gifProxy = create_proxy(gifDownload)

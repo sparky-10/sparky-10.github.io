@@ -45,6 +45,7 @@ if USE_MATPLOTLIB:
 
 # Image resizing
 # GIF
+# - Test 3D vertical orientation
 # - Do 1D
 # - Add src/recs??
 # Test 1D and 3D
@@ -1308,9 +1309,10 @@ class pyFDTD:
             img = self.arr2CMap(img, self.cLims, self.cMap)
             
             # If there is a mask (surfaces) to add then combine
+            # (Getting confused about why the need for flipud!!)
             if self.plotShowMask:
                 for i in range(0,3):
-                    img[:,:,i] = np.where(self.mesh>0, \
+                    img[:,:,i] = np.where(np.flipud(self.mesh)>0, \
                                           self.imgMesh[:,:,i], \
                                               img[:,:,i])
             
@@ -1438,12 +1440,12 @@ class pyFDTD:
             # If plotting sources
             if self.plotShowSrc:
                 if self.NDim == 1:
-                    xx = np.array(self.srcXyz)[:,0]
+                    xx = np.array(self.srcXyzDisc)[:,0]
                     yy = np.zeros(len(xx))
                     onSlice = np.full(len(xx),True)
                 else:
-                    xx = np.array(self.srcXyz)[:,1]
-                    yy = np.array(self.srcXyz)[:,0]
+                    xx = np.array(self.srcXyzDisc)[:,1]
+                    yy = np.array(self.srcXyzDisc)[:,0]
                     if self.NDim == 2:
                         onSlice = np.full(len(xx),True)
                     else:
@@ -1462,12 +1464,12 @@ class pyFDTD:
             # If plotting receivers
             if self.plotShowRec:
                 if self.NDim == 1:
-                    xx = np.array(self.recXyz)[:,0]
+                    xx = np.array(self.recXyzDisc)[:,0]
                     yy = np.zeros(len(xx))
                     onSlice = np.full(len(xx),True)
                 else:
-                    xx = np.array(self.recXyz)[:,1]
-                    yy = np.array(self.recXyz)[:,0]
+                    xx = np.array(self.recXyzDisc)[:,1]
+                    yy = np.array(self.recXyzDisc)[:,0]
                     if self.NDim == 2:
                         onSlice = np.full(len(xx),True)
                     else:
