@@ -21,6 +21,33 @@
   table, td, th {	text-align: left; }
   th { font-size: 1.17em; } /* To match h3 */
   
+  /* Style the modebar buttons*/
+  .modebar-buttons {
+    background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 2% 2%;
+	margin: 2% 0% 2% 4%;
+	width: 46%;
+	height: 60px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+	&:hover,
+    &:focus {
+        color: white;
+        background: #4CAF50;
+        border-color: #4CAF50;
+    }
+    
+    &:active {
+        color: white;
+        background: #4CAF50;
+        border-color: #4CAF50;
+    }
+  }
+  
   /* Padding and border included in element total width and height */
   * { box-sizing: border-box; }
   
@@ -154,6 +181,8 @@
 
 <body>
 
+<script src="./svgDefinitions.js"></script>
+
 <!-- Sidebars -->
 
 <div id="Help sidebar" class="popup-sidebar" style="display:none">
@@ -170,7 +199,7 @@
   There are several other properties that can be set including centre frequency, which is the centre frequency in Hz of the source pulse.</p>
   <h4>Loading an image</h4>
   <p>Use the load image button to load your own image. 
-  Size is restricted to 100x100 to 1000x1000 pixels (otherwise padding/trimming will occur).
+  Size is restricted to 10x10 to 1000x1000 pixels (otherwise padding/trimming will occur).
   Image luminance is used to determine where to model objects, so black and white or greyscale images may work best. 
   Simple images are more likely to work as intended (e.g. try making something in MS Paint!). 
   After loading, use the threshold percentage setting (bottom panel) to adjust what parts of the image are made into objects.</p>
@@ -269,6 +298,10 @@
 				title="Load example simulation" style="width:140px">
     <option value="-1">Load example...</option>
   </select>
+  
+  <button id="render image button" onclick="renderImageButton();" style="display:none">RENDER IMAGE</button>		<!-- HIDDEN -->
+  
+  <button id="Test button" onclick="testButton();" style="display:none">TEST</button>
   
   </div>
   
@@ -461,15 +494,19 @@
   
 </nav>
 
-<!--Plot/animation panel-->
+<!--Plot/animation panel, inc. modebar-->
 <article id="plot panel">
-  <div id="fdtdPlot" style="margin: 0 auto;"></div>
+  <div id="fdtdPlot" style="margin: 0 auto; float: left; text-align: left; width: 90%;"></div>
+  <!--div id="Alt modebar" style="margin: 0 auto; float: left; text-align: right; width: 10%;"></div-->
 </article>
 
 </section>
 
 <!--Input panel with general inputs-->
 <footer id="Input panel">
+  
+  <!--For getting Plotly image-->
+  <img id="Temp img" style="display:none"></img>																	<!-- HIDDEN -->
   
   <div>
   
@@ -548,7 +585,7 @@
 	<td>
 	  <label for="X grid"></label>
 	  <input type="number" name="X grid" id="X grid" onchange="constrainInput(this).then(olGridSizeUpdate());"
-				min="100" max="1000" step="10" value="300" style="width:60px"
+				min="10" max="1000" step="10" value="300" style="width:60px"
 				title="No. of x grid cells (/pixels)">
 	</td>
 	
@@ -578,7 +615,7 @@
 	<td>
 	  <label for="Y grid"></label>
 	  <input type="number" name="Y grid" id="Y grid" onchange="constrainInput(this).then(olGridSizeUpdate());"
-                min="100" max="1000" step="10" value="200" style="width:60px"
+                min="10" max="1000" step="10" value="200" style="width:60px"
 				title="No. of y grid cells (/pixels)">
 	</td>
 	

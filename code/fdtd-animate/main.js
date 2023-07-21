@@ -4,6 +4,8 @@ var debugPrefix = "JS: ";
 var meshImageFolder = "/home/pyodide/images/";
 var mainHeaderPrefix = "FDTD Animate : ";
 var plotDivId = "fdtdPlot";
+var altModebarDivId = "Alt modebar";
+var imgDivId = "Temp img";
 var srcTableID = "Source table";
 //var recTableID = "Receiver table";
 var recTableID = srcTableID;
@@ -26,6 +28,7 @@ var wavDownload = false;
 var gifFrameTime = 50;		// ms
 var gifLoopNum = 0;			// 0 = infinite
 var doAbsCoeff = false;		// If beta values are actually NIAC (false because now handled in Python)
+var renderPanZoom = true;	// Include pan/zoom in rendering of new plot/mesh
 
 var infoText = 	"Info:\n-----\n"+
 				"\n"+
@@ -114,14 +117,17 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
+- rename 'Render current view'???
+- Alter shapes.line.width???
+- Do resize image
+- Make collapsible RT settings
+- Make modebar buttons?
 - Always
 	- Test examples thouroughly
 	- DEBUG = FALSE!!!!!
 - Save GIF
 	- Any user gif settings?
 	- Add sources (more difficult)
-- Hide some modebar stuff??
-https://plotly.com/javascript/configuration-options/?_ga=2.131771919.1025833578.1689411173-1503907169.1683466811#edit-mode
 - Move pyFDTD to submodule respository?? NO!
 - Show 'loading' when loading examples - hard to fix
 - Make loadExample more efficient? (i.e. triggering less stuff)
@@ -155,6 +161,8 @@ mainHeader.innerHTML = mainHeaderPrefix + "Loading...";
 
 // Input boxes
 var plotDiv 		= document.getElementById(plotDivId);
+var altModebarDiv 	= document.getElementById(altModebarDivId);
+var imgDiv 			= document.getElementById(imgDivId);
 var srcTable 		= document.getElementById(srcTableID);
 var recTable 		= document.getElementById(recTableID);
 var tSimDiv			= document.getElementById(tSimDivID);
@@ -1074,7 +1082,8 @@ function makeFig() {
 		x: xValues,
 		y: yValues,
 		type: 'heatmap',
-		zsmooth: 'best',
+		//zsmooth: 'best',
+		zsmooth: false,
 		//colorscale: 'Greys',
 		colorscale: colorscaleGrey,
 		showscale: false,			// No colorbar
@@ -1155,17 +1164,20 @@ function makeFig() {
 			layer: "below"
 		}],*/
 		xaxis: {
-			//autorange: false,
 			range: [xValues[0], xValues[Nx-1]],
 			showline: true,
-			mirror: true
+			mirror: true,
+			showgrid: false,
+			zeroline: false,
 		},
 		yaxis: {
-			//autorange: false,
 			range: [yValues[0], yValues[Ny-1]],
 			showline: true,
-			mirror: true
-		}
+			mirror: true,
+			showgrid: false,
+			zeroline: false,
+		},
+		modebar: {orientation: 'v'}
 	};
 	/*var layout = [
 	{
@@ -1189,19 +1201,79 @@ function makeFig() {
 	// https://plotly.com/javascript/configuration-options/?_ga=2.131771919.1025833578.1689411173-1503907169.1683466811#edit-mode
 	// https://github.com/plotly/plotly.js/blob/master/src/plot_api/plot_config.js
 	// https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js
+	// https://github.com/plotly/plotly.js/blob/master/src/fonts/ploticon.js
+	var renderButton = {
+		name: 'Render current view',
+		icon: {
+			width: 500,
+			height: 500,
+			path: "M64 32C28.7 32 0 60.7 0 96V288 448c0 17.7 14.3 32 32 32s32-14.3 32-32V320h95.3L261.8 466.4c10.1 14.5 30.1 18 44.6 7.9s18-30.1 7.9-44.6L230.1 309.5C282.8 288.1 320 236.4 320 176c0-79.5-64.5-144-144-144H64zM176 256H64V96H176c44.2 0 80 35.8 80 80s-35.8 80-80 80z"
+		},
+		click: function(gd) { renderImageButton(); }
+	}
+	var loadButton = {
+		name: 'Load file',
+		icon: {
+			width: 500,
+			height: 500,
+			path: "M384 480h48c11.4 0 21.9-6 27.6-15.9l112-192c5.8-9.9 5.8-22.1 .1-32.1S555.5 224 544 224H144c-11.4 0-21.9 6-27.6 15.9L48 357.1V96c0-8.8 7.2-16 16-16H181.5c4.2 0 8.3 1.7 11.3 4.7l26.5 26.5c21 21 49.5 32.8 79.2 32.8H416c8.8 0 16 7.2 16 16v32h48V160c0-35.3-28.7-64-64-64H298.5c-17 0-33.3-6.7-45.3-18.7L226.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H87.7 384z"
+		},
+		click: function(gd) { loadFileBox.click(); }
+	}
+	var clearButton = {
+		name: 'Clear all',
+		icon: {
+			width: 500,
+			height: 500,
+			path: "M48.5 224H40c-13.3 0-24-10.7-24-24V72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8H48.5z"
+		},
+		click: function(gd) { meshResetButton(); }
+	}
 	var config = {
-		/*modeBarButtonsToAdd: ['drawline','drawopenpath','drawrect','drawcircle','eraseshape'],*/
-		modeBarButtonsToRemove: ['zoom2d','select2d','lasso2d','autoScale2d']
+		modeBarButtons: [[loadButton,clearButton,renderButton],['pan2d','zoom2d','zoomIn2d','zoomOut2d','resetScale2d','toImage'],
+						['drawline','drawopenpath','drawrect','drawcircle','eraseshape']],
+		displayModeBar: true,//altModebarDiv==null,
+		//modeBarStyle: {orientation: 'v'}
+		/*modeBarButtonsToAdd: ['drawline','drawopenpath','drawrect','drawcircle','eraseshape',
+							{
+								name: 'Render image',
+								icon: {
+									width: 857.1,
+									height: 1000,
+									path: "M64 32C28.7 32 0 60.7 0 96V288 448c0 17.7 14.3 32 32 32s32-14.3 32-32V320h95.3L261.8 466.4c10.1 14.5 30.1 18 44.6 7.9s18-30.1 7.9-44.6L230.1 309.5C282.8 288.1 320 236.4 320 176c0-79.5-64.5-144-144-144H64zM176 256H64V96H176c44.2 0 80 35.8 80 80s-35.8 80-80 80z"},
+								click: function(gd) { renderImageButton(); }
+							}],
+		modeBarButtonsToRemove: ['zoom2d','select2d','lasso2d','autoScale2d']*/
 	};
+	
 	// Make new plot
 	Plotly.newPlot(plotDivId, data, layout, config);
+	// If alternative modebar div exists
+	if (altModebarDiv!=null) {
+		if (!figExists) {
+			// Make alternative buttons if first time made fig
+			var modebarDataTitles = [];
+			modebarDataTitles.push(loadButton['name']);
+			modebarDataTitles.push(clearButton['name']);
+			modebarDataTitles.push(renderButton['name']);
+			modebarDataTitles.push(...["Draw line", "Draw open freeform", "Draw rectangle", "Draw circle", "Erase active shape"]);
+			modebarDataTitles.push(...["Pan", "Zoom", "Zoom in", "Zoom out", "Reset axes", "Download plot as a png"]);
+			var modebarTitles = modebarDataTitles;
+			makeAlternativeModebarButtons(altModebarDiv, modebarDataTitles, modebarTitles);
+		}
+		// Hide modebar (different to displayModeBar=false in config, which means there is no modebar)
+		var modebarContainer = plotDiv.getElementsByClassName("modebar-container");
+		modebarContainer[0].hidden = true;
+		//modebarContainer[0].style.display = "none";
+	}
+	// Figure now exists
 	figExists = true;
 }
 
 // Update figure data and layout
 function updateFig(updateData, updataLayout, ind=0) {
 	printToDebug("Update figure data and layout");
-	Plotly.restyle(plotDivId, updateData, updataLayout, ind);
+	Plotly.update(plotDivId, updateData, updataLayout, ind);
 }
 
 // Update figure data
@@ -1221,6 +1293,45 @@ function updateFigLayout(update={}) {
 	Plotly.relayout(plotDivId, update);
 }
 
+// Get modebar element from data title
+function getModebarElement(modebarDataTitle) {
+	var modebarElements = plotDiv.getElementsByClassName("modebar-btn");
+	for (var i = 0; i<modebarElements.length; i++) {
+		if (modebarElements[i].getAttribute("data-title") == modebarDataTitle) {
+			return modebarElements[i];
+		}
+	}
+}
+
+// Make alternative buttons to trigger modebar options
+function makeAlternativeModebarButtons(divId, modebarDataTitles, title) {
+	// Number of buttons to make
+	var NButton = modebarDataTitles.length
+	// Text/html to use
+	let html = modebarDataTitles;
+	// Loop and add
+	for (var i=0 ; i<NButton ; i++) {
+		// Add break if already button above
+		//if (i>0) { divId.appendChild(document.createElement("br")); }
+		// Get element to trigger
+		let modebarElement = getModebarElement(modebarDataTitles[i]);
+		// Make button
+		var el = document.createElement("button");
+		if (html[i] in svgHtml) {
+			el.innerHTML += svgHtml[html[i]];
+			el.getElementsByTagName('svg')[0].setAttribute("width", "75%");
+			el.getElementsByTagName('svg')[0].setAttribute("height", "75%");
+		}
+		else { el.innerHTML += html[i]; }
+		el.id = "modebarBtn"+i.toString();
+		el.name = "modebarBtn"+i.toString();
+		el.classList.add("modebar-buttons");
+		el.onclick = function() { modebarElement.click(); };
+		el.title = title[i];
+		divId.appendChild(el);
+	}
+}
+
 // Update plot size - triggered by window resizing
 function onWindowResize(e) {
 	// Get size to make plot
@@ -1234,11 +1345,8 @@ function onWindowResize(e) {
 // Get size to make plot
 function getPlotSize() {
 	printToDebug("Get plot size");
-	// Size of plot div
-	plotWidth = plotDiv.offsetWidth;
-	//plotHeight = plotDiv.offsetHeight;
-	// Size of window
-	//plotWidth = window.innerWidth;
+	// Size of plot div/window
+	plotWidth = Math.min(plotDiv.offsetWidth, window.innerWidth);
 	plotHeight = window.innerHeight;
 	// Fudge to take in to account colorbar
 	var colBarWidth = 100;
@@ -1974,3 +2082,84 @@ function infoButton() {
 	printToDebug("Info button press");
 	alert(infoText);
 }
+
+// Render current image view (including shapes) to an image and update fig
+function renderImageButton() {
+	printToDebug("Render image button press");
+	// Stop everything (no reset to avoid clearing fig)
+	stopButton(false);
+	// Get grid size
+	if (renderPanZoom) {
+		// ... including pan/zoom
+		var xRangePlot = plotDiv.layout.xaxis.range;
+		var yRangePlot = plotDiv.layout.yaxis.range;
+		//var XPlot = fdtdObj.X;	// Prev.
+		var XPlot = X;				// Current
+		xRangePlot[0] = Math.round(xRangePlot[0]/XPlot)*XPlot
+		xRangePlot[1] = Math.round(xRangePlot[1]/XPlot)*XPlot
+		yRangePlot[0] = Math.round(yRangePlot[0]/XPlot)*XPlot
+		yRangePlot[1] = Math.round(yRangePlot[1]/XPlot)*XPlot
+		var xExtent = xRangePlot[1]-xRangePlot[0];
+		var yExtent = yRangePlot[1]-yRangePlot[0];
+		var NxPlot = Math.round(xExtent/XPlot)+1;
+		var NyPlot = Math.round(yExtent/XPlot)+1;
+		// Move source/receivers
+		for (var i = 0; i<NSrc; i++) {
+			var xi = Number(srcXBox[i].value);
+			var yi = Number(srcYBox[i].value);
+			srcXBox[i].value = xi-xRangePlot[0];
+			srcYBox[i].value = yi-yRangePlot[0];
+		}
+		for (var i = 0; i<NRec; i++) {
+			var xi = Number(recXBox[i].value);
+			var yi = Number(recYBox[i].value);
+			recXBox[i].value = xi-xRangePlot[0];
+			recYBox[i].value = yi-yRangePlot[0];
+		}
+	} else {
+		// ... without pan/zoom
+		NxPlot = Nx;
+		NyPlot = Ny;
+		xRangePlot = [xValues[0], xValues[Nx-1]]
+		yRangePlot = [yValues[0], yValues[Ny-1]]
+	}
+	// Set cropped/stripped back layout
+	var layoutUpdate = {
+		width: NxPlot,
+		height: NyPlot,
+		margin: {l: 0, r: 0, b: 0, t: 0, pad: 0},
+		xaxis: {
+			range: xRangePlot,					// Range
+			showgrid: false, 					// Grid
+			zeroline: false, 					// Origin zero line
+			visible: false,  					// Labels
+			showline: false,					// Box bottom
+			mirror: false						// Box top
+		},
+		yaxis: {
+			range: yRangePlot,					// Range
+			showgrid: false, 					// Grid
+			zeroline: false, 					// Origin zero line
+			visible: false,  					// Labels
+			showline: false,					// Box left
+			mirror: false						// Box right
+		}
+	};
+	// Set colour scale so mesh surfaces are black
+	meshColInvStatus = false;
+	getGreyScale();
+	// Update everything ready for saving
+	updateFigLayout(layoutUpdate);
+	updateFigData({visible: false, showscale: false}, fdtdFigLayer);
+	updateFigData({visible: true, colorscale: [colorscaleGrey], zsmooth: false}, meshFigLayer);
+	updateFigData({visible: false}, srcFigLayer);
+	updateFigData({visible: false}, recFigLayer);
+	// Save image and add to img div (Python listening for change)
+	Plotly.toImage(plotDivId, {format:'png',height:NyPlot,width:NxPlot}).then(
+		function(dataURL){imgDiv.src = dataURL;});
+	// Note: above triggers new fig anyway, but this sets it back immediately
+	// ... so the user doesn't see (for very long at least) the above edits
+	rtMeshColInvStatus(false);
+	makeFig();
+}
+
