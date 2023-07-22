@@ -1203,7 +1203,7 @@ function makeFig() {
 	// https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js
 	// https://github.com/plotly/plotly.js/blob/master/src/fonts/ploticon.js
 	var renderButton = {
-		name: 'Render current view',
+		name: 'Save current view',
 		icon: {
 			width: 500,
 			height: 500,
@@ -1254,9 +1254,9 @@ function makeFig() {
 			// Make alternative buttons if first time made fig
 			var modebarDataTitles = [];
 			modebarDataTitles.push(loadButton['name']);
-			modebarDataTitles.push(clearButton['name']);
 			modebarDataTitles.push(renderButton['name']);
-			modebarDataTitles.push(...["Draw line", "Draw open freeform", "Draw rectangle", "Draw circle", "Erase active shape"]);
+			modebarDataTitles.push(clearButton['name']);
+			modebarDataTitles.push(...["Erase active shape", "Draw line", "Draw open freeform", "Draw rectangle", "Draw circle"]);
 			modebarDataTitles.push(...["Pan", "Zoom", "Zoom in", "Zoom out", "Reset axes", "Download plot as a png"]);
 			var modebarTitles = modebarDataTitles;
 			makeAlternativeModebarButtons(altModebarDiv, modebarDataTitles, modebarTitles);

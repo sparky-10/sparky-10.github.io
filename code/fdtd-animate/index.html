@@ -17,39 +17,109 @@
   
   <style>
   
+  /* Padding and border included in element total width and height */
+  * { box-sizing: border-box; }
+  
   /* Style the tables */
   table, td, th {	text-align: left; }
-  th { font-size: 1.17em; } /* To match h3 */
+  th {
+    font-size: 1.17em;
+	color: #003300;
+  } /* To match h3 */
   
-  /* Style the modebar buttons*/
-  .modebar-buttons {
+  /* Style the headings */
+  h1, h2, h3 {
+	margin-top: 0.2em;
+	margin-bottom: 0.5em;
+	color: #003300;
+  }
+  
+  /* Style the buttons*/
+  button {
     background-color: #4CAF50;
-	border: none;
+	border-color: #4CAF50;
+	border-style: solid;
+	border-width: 4px;
+	border-radius: 10%;
 	color: white;
-	padding: 2% 2%;
-	margin: 2% 0% 2% 4%;
-	width: 46%;
-	height: 60px;
+	padding: 5px 5px;
+	margin: 0px;
+	width: 100px;
+	height: 40px;
+	vertical-align:top;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
 	cursor: pointer;
 	&:hover,
     &:focus {
-        color: white;
-        background: #4CAF50;
-        border-color: #4CAF50;
+        color: black;
+		background-color: #f2f2f2;
+		border-color: darkgreen;
     }
-    
     &:active {
-        color: white;
-        background: #4CAF50;
-        border-color: #4CAF50;
+        color: black;
+		background-color: #f2f2f2;
+		border-color: darkgreen;
     }
   }
-  
-  /* Padding and border included in element total width and height */
-  * { box-sizing: border-box; }
+  .control-buttons {
+	width: 80px;
+	margin-top: 0px;
+	margin-right: 10px;
+	height: 50px;
+  }
+  .help-buttons {
+    border: none;
+    border-radius: 50%;
+	height:30px;
+	width:30px;
+  }
+  .colour-buttons {
+	width: 70px;
+	margin: 0px 15px;
+	height: 60px;
+  }
+  .modebar-buttons {
+	width: 46%;
+	height: 60px;
+	padding: 2% 2%;
+	margin: 2% 0% 2% 4%;
+	&:hover,
+    &:focus {
+        /*background: lightgray;*/
+    }
+    &:active {
+        /*background: lightgray;*/
+    }
+  }
+  .header-dropdown {
+	background-color: white;
+	border-color: #4CAF50;
+	border-style: solid;
+	border-width: 4px;
+	border-radius: 10%;
+	padding: 5px 5px;
+	margin-top: 0px;
+	width: 150px;
+	height: 50px;
+	vertical-align:top;
+	text-align: left;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+	&:hover,
+    &:focus {
+        color: black;
+		background-color: #f2f2f2;
+		border-color: darkgreen;
+    }
+    &:active {
+        color: black;
+		background-color: #f2f2f2;
+		border-color: darkgreen;
+    }
+  }
   
   /* Supposed to make equal height cols (https://www.w3schools.com/howto/howto_css_equal_height.asp) but not working */
   .col-container {
@@ -60,7 +130,8 @@
   /* Style the header */
   header { 
 	padding: 10px;
-	background-color: powderblue;
+	background-color: #e6e6e6;
+	border-bottom: 5px solid darkgreen;
   }
   .header-column {
     float: left;
@@ -83,13 +154,10 @@
 	text-align: right;
   }
   
-  /* Style the headings */
-  h1, h2, h3 { margin-top: 0.2em; margin-bottom: 0.5em; }
-  
   /* Style the help/info sidebars */
   .popup-sidebar {
     padding: 10px;
-	background-color: gainsboro;
+	background-color: #dce0ef;
 	box-shadow: 2px 0 4px rgba(0,0,0,0.5);
 	height: 100%;
     overflow: auto;
@@ -119,9 +187,22 @@
   article {
     float: left;
     padding: 10px;
+	padding-right: 0px;
     width: 75%;
 	background-color: white;
 	display: table-cell;
+  }
+  .article-plot {
+    margin: 0 auto;
+	float: left;
+	text-align: left;
+	width: 90%;
+  }
+  .article-modebar {
+    margin: 0 auto;
+	float: left;
+	text-align: right;
+	width: 10%;
   }
   
   /* Clear floats after the main section */
@@ -134,7 +215,8 @@
   /* Style the footer */
   footer {
     padding: 10px;
-	background-color: powderblue;
+	background-color: #e6e6e6;
+	border-top: 5px solid darkgreen;
   }
   .footer-column {
     float: left;
@@ -191,18 +273,23 @@
   <td style="padding:0px;text-align:right;"><a href='javascript:;' onclick="itemHide('Help sidebar');">Close &times;</a></td>
   </tr></table>
   <h4>Getting started</h4>
-  <p>Try loading an example from the dropdown menu in the top panel and hit "Run". 
-  Real time settings can be adjusted mid simulation to adjust the scale, colour etc. (e.g. try the 'Hit me!' button).</p>
+  <p>Try loading an example from the dropdown menu in the top panel and hit "Run" (PLAY). 
+  Real time settings can be adjusted mid simulation to adjust the scale, colour etc. (e.g. try the DICE button).</p>
   <h4>Source/receivers</h4>
   <p>Use the bottom right panel to alter where source and receivers are placed. 
   Note: a warning is given if there are active source/receivers located on an object. 
   There are several other properties that can be set including centre frequency, which is the centre frequency in Hz of the source pulse.</p>
   <h4>Loading an image</h4>
-  <p>Use the load image button to load your own image. 
+  <p>Select load image (LOAD_FILE) to load your own image. 
   Size is restricted to 10x10 to 1000x1000 pixels (otherwise padding/trimming will occur).
   Image luminance is used to determine where to model objects, so black and white or greyscale images may work best. 
   Simple images are more likely to work as intended (e.g. try making something in MS Paint!). 
   After loading, use the threshold percentage setting (bottom panel) to adjust what parts of the image are made into objects.</p>
+  <h4>Draw an image</h4>
+  <p>Use the draw tools (DRAW_LINE, DRAW_OPEN_FREEFORM, DRAW_RECTANGLE, DRAW_CIRCLE) to create or add to an image. 
+  Use the clear tools to delete individual shapes (ERASE_ACTIVE_SHAPE) or the full image (CLEAR_ALL).
+  Use the pan, zoom and reset tools (PAN, ZOOM, ZOOM_IN, ZOOM_OUT, RESET_AXES) to alter the view.
+  Save an image (SAVE_CURRENT_VIEW) prior to running to commit/render to an image (including pan/zoom).</p>
   <h4>Varying absorption</h4>
   <p>The default mode is a constant absorption value across surfaces. 
   To vary the absorption change the absorption mode (bottom panel) and use an image with varying luminance (e.g. greyscale). 
@@ -268,34 +355,34 @@
 
   <h1 id="Main header">FDTD Animate</h1>
   
-  <button id="Run button" onclick="runButton()"
-				title="Run/pause simulation" style="width:140px">
+  <button id="Run button" class="control-buttons" onclick="runButton()"
+				title="Run/pause simulation">
 				RUN/PAUSE</button>
-  <button id="Reset button" onclick="resetButton()"
-				title="Reset simulation" style="width:140px">
+  <button id="Reset button" class="control-buttons" onclick="resetButton()"
+				title="Reset simulation">
 				RESET</button>
-  <button id="Stop button" onclick="stopButton()"
-				title="Stop (and clear) simulation" style="width:140px">
+  <button id="Stop button" class="control-buttons" onclick="stopButton()"
+				title="Stop (and clear) simulation">
 				STOP</button>
-  
-  <br>
+  <!--br-->
   
   <button id="Load file button" onclick="document.getElementById('Load file').click();"
-				title="Load image file (Hint: adjust the threshold after loading)" style="width:140px">
-				LOAD IMAGE</button>
-  <button id="Update button" onclick="updateButton()" style="display:none"
-				title="Update offline settings" style="width:140px">
-				UPDATE</button>																						<!-- HIDDEN -->
+				title="Load image file (Hint: adjust the threshold after loading)" style="width:140px; display:none">
+				LOAD IMAGE</button>																					<!-- HIDDEN -->
   <button id="Reset mesh button" onclick="clearFile().then(meshResetButton());"
-				title="Reset to empty mesh" style="width:140px">
-				CLEAR MESH</button>
+				title="Reset to empty mesh" style="width:140px; display:none">
+				CLEAR MESH</button>																					<!-- HIDDEN -->
   
+  <button id="Update button" onclick="updateButton()"
+				title="Update offline settings" style="width:140px; display:none">
+				UPDATE</button>																						<!-- HIDDEN -->
+	
   <input id="Load file" type="file" accept="image/*" style="display:none" onchange="loadFileButton();"/>			<!-- HIDDEN -->
   <button id="Prepare mesh button" onclick="meshUpdateButton();" style="display:none">PREPARE MESH</button>			<!-- HIDDEN & UNUSED -->
   
   <label for="Load examples"></label>
-  <select name="Load examples" id="Load examples" onchange="loadExample();"
-				title="Load example simulation" style="width:140px">
+  <select name="Load examples" id="Load examples" class="header-dropdown" onchange="loadExample();"
+				title="Load example simulation">
     <option value="-1">Load example...</option>
   </select>
   
@@ -312,11 +399,11 @@
 	Contact: 	<a href="mailto:r.j.hughes@salford.ac.uk">					email		</a> ; 
 				<a href="https://twitter.com/sparky_10" target=”_blank”>	@sparky_10	</a>
 	<br>
-	Help: <button id="Help button" style="border-radius: 50%;height:25px;width:25px;" onclick="itemHide('Info sidebar');itemSwitch('Help sidebar');"
-				title="Click me for help getting started">h</button>
+	Help: <button id="Help button" class="help-buttons" onclick="itemHide('Info sidebar');itemSwitch('Help sidebar');"
+				title="Click me for help getting started"><b>h</b></button>
 	;
-	Info: <button id="Info button" style="border-radius: 50%;height:25px;width:25px;" onclick="itemHide('Help sidebar');itemSwitch('Info sidebar');"
-				title="Click me for further info">i</button></p>
+	Info: <button id="Info button" class="help-buttons" onclick="itemHide('Help sidebar');itemSwitch('Info sidebar');"
+				title="Click me for further info"><b>i</b></button></p>
   </div>
   <!--br-->
   <div id="Sim time div" class="simTimeDiv">t =     0.0 ms</div>
@@ -335,11 +422,11 @@
   
   <h3 id="Colours header">Colours:</h3>
   
-  <button id="Reset colours button" onclick="rtResetColorScale().then(rtColourUpdate());"
-				title="Reset colours to default" style="width:98px">
+  <button id="Reset colours button" class="colour-buttons" onclick="rtResetColorScale().then(rtColourUpdate());"
+				title="Reset colours to default">
 				RESET</button>
-  <button id="Hit me button" onclick="rtRandomColorScale().then(rtColourUpdate());"
-				title="Set to random colours" style="width:98px">
+  <button id="Hit me button" class="colour-buttons" onclick="rtRandomColorScale().then(rtColourUpdate());"
+				title="Set to random colours">
 				HIT ME!</button>
   
   <br>
@@ -496,8 +583,8 @@
 
 <!--Plot/animation panel, inc. modebar-->
 <article id="plot panel">
-  <div id="fdtdPlot" style="margin: 0 auto; float: left; text-align: left; width: 90%;"></div>
-  <!--div id="Alt modebar" style="margin: 0 auto; float: left; text-align: right; width: 10%;"></div-->
+  <div id="fdtdPlot" class="article-plot"></div>
+  <div id="Alt modebar" class="article-modebar"></div>
 </article>
 
 </section>
@@ -715,6 +802,7 @@
   
 </footer>
 
+<!--Switch between display or not-->
 <script>
 function itemSwitch(id) {
   var docID = document.getElementById(id);
@@ -725,6 +813,41 @@ function itemSwitch(id) {
 function itemHide(id) {
   document.getElementById(id).style.display = "none"
 }
+</script>
+
+<!--Replace search text with icons-->
+<script>
+var p = document.getElementsByTagName('p');
+var keys = Object.keys(svgHtml);
+for (var i = 0; i < p.length; i++) {
+	let txt = p[i].innerHTML;
+	for (var j = 0; j < keys.length ; j++) {
+		let findTxt = keys[j].replaceAll(' ','_').toUpperCase();
+		let pattern = RegExp('(?<!_)'+findTxt+'(?!_)','g');
+		txt = txt.replaceAll(pattern,svgHtml[keys[j]]);
+	}
+	p[i].innerHTML = txt;
+}
+var btn = document.getElementById('Run button');
+btn.innerHTML = svgHtml['Play'];
+btn.getElementsByTagName('svg')[0].setAttribute("width", "100%");
+btn.getElementsByTagName('svg')[0].setAttribute("height", "100%");
+var btn = document.getElementById('Reset button');
+btn.innerHTML = svgHtml['Rewind'];
+btn.getElementsByTagName('svg')[0].setAttribute("width", "100%");
+btn.getElementsByTagName('svg')[0].setAttribute("height", "100%");
+var btn = document.getElementById('Stop button');
+btn.innerHTML = svgHtml['Stop'];
+btn.getElementsByTagName('svg')[0].setAttribute("width", "100%");
+btn.getElementsByTagName('svg')[0].setAttribute("height", "100%");
+var btn = document.getElementById('Reset colours button');
+btn.innerHTML = svgHtml['Reset'];
+btn.getElementsByTagName('svg')[0].setAttribute("width", "80%");
+btn.getElementsByTagName('svg')[0].setAttribute("height", "80%");
+var btn = document.getElementById('Hit me button');
+btn.innerHTML = svgHtml['Dice'];
+btn.getElementsByTagName('svg')[0].setAttribute("width", "90%");
+btn.getElementsByTagName('svg')[0].setAttribute("height", "90%");
 </script>
 
 <!--script>
