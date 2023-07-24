@@ -145,8 +145,8 @@ def loadImage(im):
     
     if padOrTrim or resized:
         passUserMessage("Image size warning. " + \
-                        "Image may have been resized and/or padded/truncated " + \
-                        "to match allowed set min/max size. Use the auto "+ \
+                        "Image may have been resized and/or padded/cropped " + \
+                        "to match allowed min/max size. Use the auto "+ \
                         "resized version, or adjust image size and reload.")
     
     # if padOrTrim:

@@ -117,9 +117,10 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
-- Do resize image
+- No pan/zoom reset on start or reset??
+- Test on larger screen
 - Alter shapes.line.width???
-- Move source - callback on marker click to move??
+- Move source - callback on marker click to move?? OR use shapes for source/receivers??
 - Always
 	- Test examples thouroughly
 	- DEBUG = FALSE!!!!!
