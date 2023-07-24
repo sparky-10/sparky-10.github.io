@@ -117,9 +117,8 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
-- Alter shapes.line.width???
 - Do resize image
-- Make collapsible RT settings
+- Alter shapes.line.width???
 - Move source - callback on marker click to move??
 - Always
 	- Test examples thouroughly

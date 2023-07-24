@@ -139,12 +139,6 @@
     }
   }
   
-  /* Supposed to make equal height cols (https://www.w3schools.com/howto/howto_css_equal_height.asp) but not working */
-  .col-container {
-    display: table; /* Make the container element behave like a table */
-    width: 100%; 	/* Set full-width to expand the whole page */
-  }
-  
   /* Style the header */
   header { 
 	padding: 10px;
@@ -159,14 +153,6 @@
     float: left;
     width: 45%;
   }
-
-  /* Clear floats after the header */
-  header:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  
   /* Style the top-right divs */
   .simTimeDiv {
     text-align: right;
@@ -174,6 +160,13 @@
   }
   .descriptionDiv {
 	text-align: right;
+  }
+
+  /* Clear floats after the header */
+  header:after {
+    content: "";
+    display: table;
+    clear: both;
   }
   
   /* Style the help/info sidebars */
@@ -194,32 +187,35 @@
     scrollbar-color: white #4CAF50;
   }
   
-  /* Style the left side settings */
-  nav {
-    float: left;
-    width: 25%;
-    padding: 10px;
-	/*background-color: ghostwhite; Don't use because equal height not working */
-	display: table-cell;
+  /* Supposed to make equal height cols (https://www.w3schools.com/howto/howto_css_equal_height.asp) but not working */
+  .col-container {
+    display: table; /* Make the container element behave like a table */
+    width: 100%; 	/* Set full-width to expand the whole page */
   }
   
+  /* Style the left side settings */
+  nav {
+    float: right;
+    width: 22%;
+    padding: 10px;
+	/*background-color: ghostwhite; Don't use because equal height not working */
+  }  
   /* Style the sidebar(/nav) columns */
   .sidebar-column {
       width: 100%;
       height: auto;
   }
-  
+
   /* Style the main article (i.e. the plot space) */
   article {
-    float: left;
+    float: right;
     padding: 10px;
-	padding-right: 0px;
-    width: 75%;
+    width: 78%;
 	background-color: white;
-	display: table-cell;
   }
   .article-plot {
     margin: 0 auto;
+	padding 0px;
 	float: left;
 	text-align: left;
 	width: 90%;
@@ -227,6 +223,7 @@
   .article-modebar {
     margin: 0 auto;
 	float: left;
+	padding 0px;
 	text-align: right;
 	width: 10%;
   }
@@ -256,22 +253,41 @@
     clear: both;
   }
   
-  /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+  /* Responsive layout */
+  /* Header/footer switch to rows, main article plot move to rows */
   @media (max-width: 900px) {
-    nav, article, .header-column-left, .header-column-right, .footer-column {
+    .header-column-left, .header-column-right, .footer-column {
       width: 100%;
       height: auto;
     }
 	.descriptionDiv, .simTimeDiv {
-	text-align: left;
+	  text-align: left;
+	}
+	.article-plot, .article-modebar {
+	  width: 100%;
+      height: auto;
+	  text-align: center;
+	  margin 0 auto;
+	}
+	.modebar-buttons {
+	  width: 12%;
+	  height: 60px;
+	  margin: 1%;
 	}
   }
-  
-  /* Responsive layout - makes sidebar switch to two columns - NOT WORKING!! */
-  @media (max-width: 900px) {
-    .sidebar-column {
+  /* Main content switches to rows, with sidebar switching to columns */
+  @media (max-width: 1100px) {
+    nav, article {
+	  width: 100%;
+      height: auto;
+	}
+	nav {
+	  border-top: 5px solid darkgreen;
+	}
+	.sidebar-column {
       float: left;
       width: 50%;
+	  height: auto;
     }
   }
   
@@ -447,12 +463,18 @@
 
 <section class="col-container">
 
+<!--Plot/animation panel, inc. modebar-->
+<article id="plot panel">
+  <div id="fdtdPlot" class="article-plot"></div>
+  <div id="Alt modebar" class="article-modebar"></div>
+</article>
+
 <!--Real time input panel-->
 <nav id="Real time settings">
 
-  <h2 id="Real time header">Real time inputs:</h2>
+  <h2 id="Real time header" style="width: 100%">Real time inputs:</h2>
   
-  <div class=".sidebar-column">
+  <div class="sidebar-column">
   
   <h3 id="Colours header">Colours:</h3>
   
@@ -548,7 +570,7 @@
   
   </div>
   
-  <div class=".sidebar-column">
+  <div class="sidebar-column">
   
   <h3 id="Other RT header">Other:</h3>
 	
@@ -615,12 +637,6 @@
   </div>
   
 </nav>
-
-<!--Plot/animation panel, inc. modebar-->
-<article id="plot panel">
-  <div id="fdtdPlot" class="article-plot"></div>
-  <div id="Alt modebar" class="article-modebar"></div>
-</article>
 
 </section>
 
