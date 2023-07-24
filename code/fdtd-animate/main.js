@@ -87,7 +87,7 @@ var data, layout;
 var runReset, runStep;
 var pyZValues, xValues, yValues;
 var pyValidStep;
-var colorscaleValue, colorscaleGrey;
+var colorscaleValue, colorscaleGrey, bgColour;
 var stopNextStep, isRunning = false;
 var nextHeaderUpdate = mainHeaderPrefix + "Ready!!";
 var X, Nx, Ny, Dx, Dy, c, t, plotIthUpdate, tSim;
@@ -117,11 +117,10 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
-- rename 'Render current view'???
 - Alter shapes.line.width???
 - Do resize image
 - Make collapsible RT settings
-- Make modebar buttons?
+- Move source - callback on marker click to move??
 - Always
 	- Test examples thouroughly
 	- DEBUG = FALSE!!!!!
@@ -133,7 +132,6 @@ var madeGif, madeWav;
 - Make loadExample more efficient? (i.e. triggering less stuff)
 - Load own source
 - Add offset to padding/trimming
-- Move source - callback on marker click to move??
 
 ONGOING:
 - Aspect ratio - have ugly fix for this
@@ -394,6 +392,7 @@ function getColorScale() {
 		['0.500', rgbZero],
 		['1.000', rgbPos]
 	];
+	bgColour = rgbZero;
 }
 
 // Get greyscale array (for mesh)
@@ -1073,7 +1072,11 @@ function makeFig() {
 		type: 'heatmap',
 		zsmooth: 'fast',
 		colorscale: colorscaleValue,
-		colorbar: {len: 1},	// Also has x property for how far left/right
+		colorbar: {
+			len: 1,
+			outlinewidth: 2,
+			tickfont: {size: 12},
+		},	// Also has x property for how far left/right
 		zmin: -cLim,
 		zmax: cLim,
 	};
@@ -1140,6 +1143,7 @@ function makeFig() {
 		autosize: false,
 		width: plotWidth,	// For manual sizing as aspect ratio doesn't work
 		height: plotHeight,
+		plot_bgcolor: bgColour,
 		margin: {
 			l: 40,
 			r: 10,
@@ -1169,6 +1173,10 @@ function makeFig() {
 			mirror: true,
 			showgrid: false,
 			zeroline: false,
+			linewidth: 2,
+			tickwidth: 2,
+			ticks: "inside",
+			tickfont: {size: 14},
 		},
 		yaxis: {
 			range: [yValues[0], yValues[Ny-1]],
@@ -1176,6 +1184,10 @@ function makeFig() {
 			mirror: true,
 			showgrid: false,
 			zeroline: false,
+			linewidth: 2,
+			tickwidth: 2,
+			ticks: "inside",
+			tickfont: {size: 14},
 		},
 		modebar: {orientation: 'v'}
 	};
@@ -1263,8 +1275,8 @@ function makeFig() {
 		}
 		// Hide modebar (different to displayModeBar=false in config, which means there is no modebar)
 		var modebarContainer = plotDiv.getElementsByClassName("modebar-container");
-		modebarContainer[0].hidden = true;
-		//modebarContainer[0].style.display = "none";
+		//modebarContainer[0].hidden = true;
+		modebarContainer[0].style.display = "none";
 	}
 	// Figure now exists
 	figExists = true;
@@ -1744,6 +1756,7 @@ async function rtColourUpdate(doFigUpdate=true) {
 		update['zmin'] = -cLim;
 		update['zmax'] = cLim;
 		updateFigData(update, fdtdFigLayer);
+		updateFigLayout({plot_bgcolor: bgColour});
 		//await sleep(plotSleepTime);
 	};
 }
@@ -2128,13 +2141,15 @@ function renderImageButton() {
 		width: NxPlot,
 		height: NyPlot,
 		margin: {l: 0, r: 0, b: 0, t: 0, pad: 0},
+		plot_bgcolor: "white",
 		xaxis: {
 			range: xRangePlot,					// Range
 			showgrid: false, 					// Grid
 			zeroline: false, 					// Origin zero line
 			visible: false,  					// Labels
 			showline: false,					// Box bottom
-			mirror: false						// Box top
+			mirror: false,						// Box top
+			ticks: "",							// No ticks
 		},
 		yaxis: {
 			range: yRangePlot,					// Range
@@ -2142,7 +2157,8 @@ function renderImageButton() {
 			zeroline: false, 					// Origin zero line
 			visible: false,  					// Labels
 			showline: false,					// Box left
-			mirror: false						// Box right
+			mirror: false,						// Box right
+			ticks: "",							// No ticks
 		}
 	};
 	// Set colour scale so mesh surfaces are black

@@ -34,20 +34,15 @@
 	color: #003300;
   }
   
-  /* Style the buttons*/
-  button {
+  /* Style the buttons and top dropdown */
+  button, .header-dropdown {
     background-color: #4CAF50;
 	border-color: #4CAF50;
 	border-style: solid;
 	border-width: 4px;
 	border-radius: 10%;
-	color: white;
 	padding: 5px 5px;
 	margin: 0px;
-	width: 100px;
-	height: 40px;
-	vertical-align:top;
-	text-align: center;
 	text-decoration: none;
 	display: inline-block;
 	cursor: pointer;
@@ -63,61 +58,84 @@
 		border-color: darkgreen;
     }
   }
+  button {
+    background-color: #4CAF50;
+	color: white;
+    width: 100px;
+    height: 40px;
+    vertical-align:top;
+    text-align: center;
+  }
+  .header-dropdown {
+    background-color: white;
+    width: 150px;
+    height: 50px;
+    vertical-align:top;
+    text-align: left;
+  }
   .control-buttons {
 	width: 80px;
-	margin-top: 0px;
 	margin-right: 10px;
 	height: 50px;
   }
   .help-buttons {
-    border: none;
+    border-width: 2px;
     border-radius: 50%;
 	height:30px;
 	width:30px;
   }
   .colour-buttons {
 	width: 70px;
-	margin: 0px 15px;
+	/*margin: 0px 15px;*/
 	height: 60px;
   }
   .modebar-buttons {
+	border-width: 3px;
 	width: 46%;
 	height: 60px;
 	padding: 2% 2%;
 	margin: 2% 0% 2% 4%;
-	&:hover,
-    &:focus {
-        /*background: lightgray;*/
-    }
-    &:active {
-        /*background: lightgray;*/
-    }
   }
-  .header-dropdown {
-	background-color: white;
-	border-color: #4CAF50;
-	border-style: solid;
-	border-width: 4px;
+  .button-text-only {
+    color: black;
+	width: fit-content;
+	height: fit-content;
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+  }
+  
+  /* Style the input boxes */
+  input[type=number], .beta-select {
 	border-radius: 10%;
-	padding: 5px 5px;
-	margin-top: 0px;
-	width: 150px;
-	height: 50px;
-	vertical-align:top;
-	text-align: left;
-	text-decoration: none;
-	display: inline-block;
 	cursor: pointer;
 	&:hover,
-    &:focus {
-        color: black;
+    &:focus,
+	&:active {
 		background-color: #f2f2f2;
 		border-color: darkgreen;
     }
-    &:active {
-        color: black;
-		background-color: #f2f2f2;
-		border-color: darkgreen;
+	&:focus {
+		outline: 2px solid darkgreen;
+	}
+  }
+  input[type=checkbox] {
+	border-radius: 10%;
+	cursor: pointer;
+	opacity: 0.5;
+	&:hover,
+    &:focus,
+	&:active,
+	&:checked {
+		accent-color: #4CAF50;
+		opacity: 1;
+    }
+	&:focus {
+		outline: 2px solid darkgreen;
+	}
+	&:checked {
+		accent-color: #4CAF50;
     }
   }
   
@@ -133,9 +151,13 @@
 	background-color: #e6e6e6;
 	border-bottom: 5px solid darkgreen;
   }
-  .header-column {
+  .header-column-left {
     float: left;
-    width: 50%;
+    width: 55%;
+  }
+  .header-column-right {
+    float: left;
+    width: 45%;
   }
 
   /* Clear floats after the header */
@@ -157,7 +179,8 @@
   /* Style the help/info sidebars */
   .popup-sidebar {
     padding: 10px;
-	background-color: #dce0ef;
+	background-color: whitesmoke;
+	border-right: 4px solid darkgreen;
 	box-shadow: 2px 0 4px rgba(0,0,0,0.5);
 	height: 100%;
     overflow: auto;
@@ -166,6 +189,9 @@
     top: 0;
     z-index: 1;
     width: 35%;
+  }
+  .popup-sidebar.scroller {
+    scrollbar-color: white #4CAF50;
   }
   
   /* Style the left side settings */
@@ -232,7 +258,7 @@
   
   /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
   @media (max-width: 900px) {
-    nav, article, .header-column, .footer-column {
+    nav, article, .header-column-left, .header-column-right, .footer-column {
       width: 100%;
       height: auto;
     }
@@ -270,7 +296,10 @@
 <div id="Help sidebar" class="popup-sidebar" style="display:none">
   <table style="width:100%;border-spacing:0px;"><tr>
   <td style="padding:0px;"><h2>Help</h2></td>
-  <td style="padding:0px;text-align:right;"><a href='javascript:;' onclick="itemHide('Help sidebar');">Close &times;</a></td>
+  <td style="padding:0px;text-align:right;">
+  <!--a href='javascript:;' onclick="itemHide('Help sidebar');">Close &times;</a-->
+  <button class="button-text-only" onclick="itemHide('Help sidebar');">Close &times;</button>
+  </td>
   </tr></table>
   <h4>Getting started</h4>
   <p>Try loading an example from the dropdown menu in the top panel and hit "Run" (PLAY). 
@@ -319,7 +348,10 @@
 <div id="Info sidebar" class="popup-sidebar" style="display:none">
   <table style="width:100%;border-spacing:0px;"><tr>
   <td style="padding:0px;"><h2>Info</h2></td>
-  <td style="padding:0px;text-align:right;"><a href='javascript:;' onclick="itemHide('Info sidebar');">Close &times;</a></td>
+  <td style="padding:0px;text-align:right;">
+  <!--a href='javascript:;' onclick="itemHide('Info sidebar');">Close &times;</a-->
+  <button class="button-text-only" onclick="itemHide('Help sidebar');">Close &times;</button>
+  </td>
   </tr></table>
   <h4>What is it?</h4>
   <p>A 2D acoustic Finite Difference Time Domain (FDTD) simulation.</p>
@@ -351,7 +383,7 @@
 <!--Top panel with run buttons-->
 <header id="Top panel">
 
-  <div class="header-column">
+  <div class="header-column-left">
 
   <h1 id="Main header">FDTD Animate</h1>
   
@@ -393,20 +425,22 @@
   </div>
   
   <!--Description in upper right corner-->
-  <div class="header-column">
+  <div class="header-column-right">
+  
   <div class="descriptionDiv">
-	<p>2D acoustic Finite Difference Time Domain (FDTD) simulation.<br> 
+    <div style="margin: 5px 0px;">2D acoustic Finite Difference Time Domain (FDTD) simulation.</div>
+	<!--br> 
 	Contact: 	<a href="mailto:r.j.hughes@salford.ac.uk">					email		</a> ; 
-				<a href="https://twitter.com/sparky_10" target=”_blank”>	@sparky_10	</a>
-	<br>
-	Help: <button id="Help button" class="help-buttons" onclick="itemHide('Info sidebar');itemSwitch('Help sidebar');"
-				title="Click me for help getting started"><b>h</b></button>
-	;
-	Info: <button id="Info button" class="help-buttons" onclick="itemHide('Help sidebar');itemSwitch('Info sidebar');"
-				title="Click me for further info"><b>i</b></button></p>
+				<a href="https://twitter.com/sparky_10" target=”_blank”>	@sparky_10	</a-->
+	<div style="margin: 5px 0px;">
+		Help: <button id="Help button" class="help-buttons" onclick="itemHide('Info sidebar');itemSwitch('Help sidebar');"
+					title="Click me for help getting started"><b>h</b></button>
+		;
+		Info: <button id="Info button" class="help-buttons" onclick="itemHide('Help sidebar');itemSwitch('Info sidebar');"
+					title="Click me for further info"><b>i</b></button>
+	</div>
   </div>
-  <!--br-->
-  <div id="Sim time div" class="simTimeDiv">t =     0.0 ms</div>
+  <div style="margin: 5px 0px;" id="Sim time div" class="simTimeDiv">t =     0.0 ms</div>
   </div>
   
 </header>
@@ -416,26 +450,26 @@
 <!--Real time input panel-->
 <nav id="Real time settings">
 
-  <div>
-
-  <h2 id="Real time header">Real time settings:</h2>
-  
-  <h3 id="Colours header">Colours:</h3>
-  
-  <button id="Reset colours button" class="colour-buttons" onclick="rtResetColorScale().then(rtColourUpdate());"
-				title="Reset colours to default">
-				RESET</button>
-  <button id="Hit me button" class="colour-buttons" onclick="rtRandomColorScale().then(rtColourUpdate());"
-				title="Set to random colours">
-				HIT ME!</button>
-  
-  <br>
-  
-  </div>
+  <h2 id="Real time header">Real time inputs:</h2>
   
   <div class=".sidebar-column">
   
+  <h3 id="Colours header">Colours:</h3>
+  
   <table>
+  
+  <tr>
+  <td colspan="2" style="text-align: center;">
+  <button id="Reset colours button" class="colour-buttons" onclick="rtResetColorScale().then(rtColourUpdate());"
+				title="Reset colours to default">
+				RESET</button>
+  </td>
+  <td colspan="2" style="text-align: center;">
+  <button id="Hit me button" class="colour-buttons" onclick="rtRandomColorScale().then(rtColourUpdate());"
+				title="Set to random colours">
+				HIT ME!</button>
+  </td>
+  </tr>
   
   <tr>
 	<td style="text-align: center;"></td>
@@ -443,6 +477,7 @@
 	<td style="text-align: center;">G</td>
 	<td style="text-align: center;">B</td>
   </tr>
+  
   <tr>
 	<td>Pos</td>
     <td>
@@ -762,7 +797,7 @@
 	<td>Mode</td>
 	<td>
 	  <label for="Beta"></label>
-	  <select name="Beta mode" id="Beta mode" onchange="olMeshSettingsUpdate();" style="width:60px"
+	  <select class="beta-select" name="Beta mode" id="Beta mode" onchange="olMeshSettingsUpdate();" style="width:60px"
 				title="Absorption mode: sets mesh surfaces to constant ('Con.') or varying ('Var.') absorption. 'Con.' uses the user defined surface absorption, while 'Var.' sets absorption proportional to image luminance">
 		<option value="constant">Con. (Constant surface absorption)</option>
 		<option value="varying">Var. (Varying surface absorption proportional to image luminance)</option>
@@ -827,6 +862,8 @@ for (var i = 0; i < p.length; i++) {
 		txt = txt.replaceAll(pattern,svgHtml[keys[j]]);
 	}
 	p[i].innerHTML = txt;
+	//p[i].getElementsByTagName('svg')[0].setAttribute("width", "150%");
+	//p[i].getElementsByTagName('svg')[0].setAttribute("height", "150%");
 }
 var btn = document.getElementById('Run button');
 btn.innerHTML = svgHtml['Play'];
