@@ -323,7 +323,7 @@
   <h4>Source/receivers</h4>
   <p>Use the bottom right panel to alter where source and receivers are placed. 
   Note: a warning is given if there are active source/receivers located on an object. 
-  There are several other properties that can be set including centre frequency, which is the centre frequency in Hz of the source pulse.</p>
+  Several other properties can be set here, including e.g. the centre frequency in Hz of the source pulse.</p>
   <h4>Loading an image</h4>
   <p>Select load image (LOAD_FILE) to load your own image. 
   Size is restricted to 10x10 to 1000x1000 pixels (otherwise padding/trimming will occur).
@@ -332,21 +332,19 @@
   After loading, use the threshold percentage setting (bottom panel) to adjust what parts of the image are made into objects.</p>
   <h4>Draw an image</h4>
   <p>Use the draw tools (DRAW_LINE, DRAW_OPEN_FREEFORM, DRAW_RECTANGLE, DRAW_CIRCLE) to create or add to an image. 
-  Use the clear tools to delete individual shapes (ERASE_ACTIVE_SHAPE) or the full image (CLEAR_ALL).
-  Use the pan, zoom and reset tools (PAN, ZOOM, ZOOM_IN, ZOOM_OUT, RESET_AXES) to alter the view.
-  Save an image (SAVE_CURRENT_VIEW) prior to running to commit/render to an image (including pan/zoom).</p>
+  You can delete individual shapes (ERASE_ACTIVE_SHAPE) or the full image (CLEAR_ALL) to restart.
+  Use the pan (PAN), zoom in/out (ZOOM_IN, ZOOM_OUT), advanced zoom/select (ZOOM), and reset (RESET_AXES) tools to alter the view/modelled area.
+  Save an image (SAVE_CURRENT_VIEW) prior to running to commit/render to an image ready for simulating.</p>
   <h4>Varying absorption</h4>
   <p>The default mode is a constant absorption value across surfaces. 
   To vary the absorption change the absorption mode (bottom panel) and use an image with varying luminance (e.g. greyscale). 
   This then assigns more absorbing surfaces to lighter areas of the image and more reflecting to darker areas.</p>
-  <h4>Make GIF/wav</h4>
+  <h4>Make GIF/wav/image</h4>
   <p>Selecting the bottom panel make GIF or wav checkboxes creates and downloads a file/files after a full simulation is run.
   The real time settings are taken at the start of the simulation, and will have no effect if altered whilst running. 
-  The wav file contains the response at the set receiver position, and will have a sample rate dictated by mesh resolution. 
-  Note: the sample rate will be an integer, but will likely be a non-standard value in terms of audio use.</p>
-  <h4>Plotly functions</h4>
-  <p>The figure uses <a href="https://plotly.com/javascript/" target=”_blank”>Plotly</a>, and the pan, zoom, and plot image download icons
-  (top right of figure) can be used to explore.</p>
+  The wav file contains the response at the receiver position, and will have a sample rate dictated by mesh resolution. 
+  Note: the sample rate will be an integer, but will likely be a non-standard value in terms of audio use.
+  An image of the current plot can also be downloaded (DOWNLOAD_PLOT_AS_A_PNG).</p>
   <h4>Have a play</h4>
   <p>Note: hovering over most input boxes and buttons displays a description of what they do.</p>
   <h4>Artefacts/innacuracies</h4>
@@ -382,6 +380,8 @@
   <p>Uses <a href="https://pyscript.net/" target=”_blank”>PyScript</a> to download and run Python code. 
   Python not required, but takes a short while to load and data is on order of tens of MB. 
   PyScript is developmental and constantly changing; I'll try to make sure it doesn't break!</p>
+  <h4>Plotly</h4>
+  <p>The figure uses <a href="https://plotly.com/javascript/" target=”_blank”>Plotly</a></p>
   <h4>Details</h4>
   <p>If of interest:</p>
   <ul>

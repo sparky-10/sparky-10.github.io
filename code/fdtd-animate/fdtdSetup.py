@@ -4,6 +4,9 @@ from js import document, Uint8Array
 from js import console, Blob, URL
 # from js import window
 
+import numpy as np
+from PIL import Image
+
 #import asyncio
 import io
 import base64
@@ -86,13 +89,71 @@ def recMove(x, y, i):
     
 # Load the image data or file to FDTD
 def loadImage(im):
+    
     # Pass to fdtd for use with PIL (includes reset etc...)
-    padOrTrim = fdtd.loadImage(im, doReset=True, \
-                               sizeLimits=[XMin, XMax, YMin, YMax])
-    if padOrTrim:
-        passUserMessage("Image pad/truncation warning. Image may be smaller " + \
-                        "or larger than allowed by the code. Use the auto "+ \
-                        "padded/truncated version, or try adjusting your image.")
+    sizeLimits=[XMin, XMax, YMin, YMax]
+    # padOrTrim = fdtd.loadImage(im, doReset=True, sizeLimits=sizeLimits=)
+    
+    # Do the above here for more control
+    # Update on debug
+    fdtd.printToDebug('loadImage')
+    # Load image from file (as normalised greyscale)
+    fdtd.image = Image.open(im).convert('L')
+    w = float(fdtd.image.width)
+    h = float(fdtd.image.height)
+    # Need resizing / pad/trimming?
+    relSize = sizeLimits.copy()
+    relSize[0] = relSize[0]/w
+    relSize[1] = w/relSize[1]
+    relSize[2] = relSize[2]/h
+    relSize[3] = h/relSize[3]
+    maxRelSize = max(relSize)
+    if maxRelSize > 1:
+        # Need to resize
+        # Use dimension most out by
+        maxRelSizeInd = relSize.index(maxRelSize)
+        if maxRelSizeInd%2:
+            # Max means scalar is inverse of this
+            imScale = 1/maxRelSize
+        else:
+            # Min means scalar is same as this
+            imScale = maxRelSize
+        # New size
+        wNew = int(min(max(w*imScale, sizeLimits[0]), sizeLimits[1]))
+        hNew = int(min(max(h*imScale, sizeLimits[2]), sizeLimits[3]))
+        # Resize
+        fdtd.image = fdtd.image.resize((wNew,hNew), Image.Resampling.LANCZOS)
+        resized = True
+    else:
+        resized = False
+    
+    # Convert to numpy array and flip to account for direction in 
+    # 'vertical' data
+    fdtd.image = np.asarray(fdtd.image)
+    fdtd.image = np.flip(fdtd.image, axis=0)
+    # Clear mesh
+    fdtd.mesh = None
+        
+    if not sizeLimits is None:
+        # If size limits then check if needs trimming/padding
+        fdtd.image, padOrTrim = fdtd.padOrTrim(fdtd.image, sizeLimits, 255)
+    else:
+        padOrTrim = False
+    
+    # Reset everything to take in to account new grid size
+    fdtd.updateWithImage()
+    
+    if padOrTrim or resized:
+        passUserMessage("Image size warning. " + \
+                        "Image may have been resized and/or padded/truncated " + \
+                        "to match allowed set min/max size. Use the auto "+ \
+                        "resized version, or adjust image size and reload.")
+    
+    # if padOrTrim:
+    #     passUserMessage("Image pad/truncation warning. Image may be smaller " + \
+    #                     "or larger than allowed by the code. Use the auto "+ \
+    #                     "padded/truncated version, or try adjusting your image.")
+    
     # Empty file value so reloads on reselection of same file (i.e. because a change occurs)
     document.getElementById(LOAD_FILE_ID).value = ''
     # Make initial 'mesh' version

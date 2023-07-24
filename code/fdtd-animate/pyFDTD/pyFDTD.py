@@ -957,7 +957,7 @@ class pyFDTD:
         # Add mesh array to plot
         self.updatePlotMask()
         
-    def loadImage(self, file, doReset=True, sizeLimits = None, resize=False):
+    def loadImage(self, file, doReset=True, sizeLimits = None):
         
         # Update on debug
         self.printToDebug('loadImage')
@@ -970,21 +970,6 @@ class pyFDTD:
         self.image = np.flip(self.image, axis=0)
         # Clear mesh
         self.mesh = None
-        
-        # # Need resizing / pad/trimming?
-        # needResizing = self.image[0] < sizeLimits[0] or \
-        #     self.image[0] > sizeLimits[1] or \
-        #     self.image[1] < sizeLimits[2] or \
-        #     self.image[1] > sizeLimits[3]
-        # if resize:
-        #     h = float(self.image[0])
-        #     w = float(self.image[1])
-        #     max(self.image.shape)
-        #     scale = 0.85
-        #     wsize = int(w*scale)
-        #     hsize = int(h*scale)
-        #     self.image = img.resize((w,h), Image.Resampling.LANCZOS)
-        #     isAltered = True
         
         if not sizeLimits is None:
             # If size limits then check if needs trimming/padding
@@ -1018,12 +1003,6 @@ class pyFDTD:
                 isAltered = True
                 NTrim = sizeLims[2*i+1]
                 arr = np.delete(arr,np.s_[NTrim:],i)
-                # TODO - delete once tested the above
-                # # NOTE: THIS IS CLUNKY and only for 2D!!!!!
-                # if i == 0:
-                #     arr = arr[0:NTrim,:]
-                # elif i==1:
-                #     arr = arr[:,0:NTrim]
         
         return arr, isAltered
     

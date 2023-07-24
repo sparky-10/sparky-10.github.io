@@ -72,7 +72,7 @@ var cDefault = 344.0;
 var tDefault = 10.0;
 var betaDefault = 0.0;
 var betaBorderDefault = 0.0;
-var imageThresholdDefault = 0;
+var imageThresholdDefault = 5;
 var betaModeDefault = "constant";
 var cnDefault = [...cn], czDefault = [...cz], cpDefault = [...cp];
 var cLimDefault = cLim;
