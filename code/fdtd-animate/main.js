@@ -1278,6 +1278,10 @@ function makeFig() {
 		var modebarContainer = plotDiv.getElementsByClassName("modebar-container");
 		//modebarContainer[0].hidden = true;
 		modebarContainer[0].style.display = "none";
+		// Click button want to start with (i.e. Zoom)
+		var btn = document.getElementById("modebarBtn9");
+		btn.click();
+		btn.focus();
 	}
 	// Figure now exists
 	figExists = true;
@@ -1317,7 +1321,7 @@ function getModebarElement(modebarDataTitle) {
 }
 
 // Make alternative buttons to trigger modebar options
-function makeAlternativeModebarButtons(divId, modebarDataTitles, title) {
+function makeAlternativeModebarButtons(divId, modebarDataTitles, title, iActive) {
 	// Number of buttons to make
 	var NButton = modebarDataTitles.length
 	// Text/html to use
