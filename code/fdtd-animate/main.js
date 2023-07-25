@@ -117,9 +117,9 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
+- Chrome pyScript issue
 - No pan/zoom reset on start or reset??
 - Test on larger screen
-- Alter shapes.line.width???
 - Move source - callback on marker click to move?? OR use shapes for source/receivers??
 - Always
 	- Test examples thouroughly
@@ -215,16 +215,16 @@ setBoxDefaults();		// Set defaults
 // Print to debug, including prefix (if DEBUG == true)
 function printToDebug(txt) {
 	if (DEBUG) {
-		var debugText = debugPrefix
-		debugText += txt
-		console.log(debugText)
+		var debugText = debugPrefix;
+		debugText += txt;
+		console.log(debugText);
 	}
 }
 
 // Pass message to user in form of an alert
 function passUserMessage(txt) {
 	printToDebug("Received user message");
-	alert(txt)
+	alert(txt);
 }
 
 // Sleep
@@ -1257,7 +1257,8 @@ function makeFig() {
 							}],
 		modeBarButtonsToRemove: ['zoom2d','select2d','lasso2d','autoScale2d']*/
 	};
-	
+	// Clear div of HTML
+	plotDiv.innerHTML = '';
 	// Make new plot
 	Plotly.newPlot(plotDivId, data, layout, config);
 	// If alternative modebar div exists
@@ -2136,8 +2137,15 @@ function renderImageButton() {
 		xRangePlot = [xValues[0], xValues[Nx-1]]
 		yRangePlot = [yValues[0], yValues[Ny-1]]
 	}
+	// Adjust shape width according to plot size (roughly 1 pixel per 150 pixels grid size)
+	var shapeWidth = Math.max(1,Math.round(Math.sqrt(NxPlot*NyPlot)/150.0));
+	var shapes = plotDiv.layout.shapes;
+	for (var i=0 ; i<shapes.length ; i++) {
+		shapes[i]['line']['width'] = shapeWidth;
+	}
 	// Set cropped/stripped back layout
 	var layoutUpdate = {
+		shapes: shapes,
 		width: NxPlot,
 		height: NyPlot,
 		margin: {l: 0, r: 0, b: 0, t: 0, pad: 0},

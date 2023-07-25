@@ -5,15 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FDTD Animate</title>
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-  <!--link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css">
-  <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
   <!--link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
   <script defer src="https://pyscript.net/latest/pyscript.js"></script-->
   <link rel="stylesheet" href="https://pyscript.net/releases/2023.03.1/pyscript.css">
   <script defer src="https://pyscript.net/releases/2023.03.1/pyscript.js"></script>
-  <!--script src="https://cdn.plot.ly/plotly-2.20.0.min.js" charset="utf-8"></script-->
   <script src="https://cdn.plot.ly/plotly-2.24.2.min.js" charset="utf-8"></script>
-  <!--link rel="stylesheet" href="theme.css" /-->
   
   <style>
   
@@ -46,17 +42,12 @@
 	text-decoration: none;
 	display: inline-block;
 	cursor: pointer;
-	&:hover,
-    &:focus {
-        color: black;
-		background-color: #f2f2f2;
-		border-color: darkgreen;
-    }
-    &:active {
-        color: black;
-		background-color: #f2f2f2;
-		border-color: darkgreen;
-    }
+  }
+  button:hover, button:focus, button:active,
+  .header-dropdown:hover, .header-dropdown:focus, .header-dropdown:active {
+	color: black;
+	background-color: #f2f2f2;
+	border-color: darkgreen;
   }
   button {
     background-color: #4CAF50;
@@ -110,33 +101,34 @@
   input[type=number], .beta-select {
 	border-radius: 10%;
 	cursor: pointer;
-	&:hover,
-    &:focus,
-	&:active {
-		background-color: #f2f2f2;
-		border-color: darkgreen;
-    }
-	&:focus {
-		outline: 2px solid darkgreen;
-	}
   }
+  input[type=number]:hover, input[type=number]:focus, input[type=number]:active, 
+  .beta-select:hover, .beta-select:focus, .beta-select:active {
+	background-color: #f2f2f2;
+	border-color: darkgreen;
+  }
+  input[type=number]:focus, 
+  .beta-select:focus {
+	outline-style: solid;
+	outline-width: 2px;
+	outline-color: darkgreen;
+	outline-radius: 10%;
+  }
+  
   input[type=checkbox] {
 	border-radius: 10%;
 	cursor: pointer;
 	opacity: 0.5;
-	&:hover,
-    &:focus,
-	&:active,
-	&:checked {
-		accent-color: #4CAF50;
-		opacity: 1;
-    }
-	&:focus {
-		outline: 2px solid darkgreen;
-	}
-	&:checked {
-		accent-color: #4CAF50;
-    }
+  }
+  input[type=checkbox]:hover, input[type=checkbox]:focus, input[type=checkbox]:active, input[type=checkbox]:checked {
+    accent-color: #4CAF50;
+	opacity: 1;
+  }
+  input[type=checkbox]:focus {
+    outline-style: solid;
+	outline-width: 2px;
+	outline-color: darkgreen;
+	outline-radius: 10%;
   }
   
   /* Style the header */
@@ -217,7 +209,7 @@
     margin: 0 auto;
 	padding 0px;
 	float: left;
-	text-align: left;
+	text-align: center;
 	width: 90%;
   }
   .article-modebar {
@@ -267,7 +259,6 @@
 	  width: 100%;
       height: auto;
 	  text-align: center;
-	  margin 0 auto;
 	}
 	.modebar-buttons {
 	  width: 12%;
@@ -306,6 +297,9 @@
 <body>
 
 <script src="./svgDefinitions.js"></script>
+
+<div id="testDiv">
+</div>
 
 <!-- Sidebars -->
 
@@ -873,9 +867,9 @@ var keys = Object.keys(svgHtml);
 for (var i = 0; i < p.length; i++) {
 	let txt = p[i].innerHTML;
 	for (var j = 0; j < keys.length ; j++) {
-		let findTxt = keys[j].replaceAll(' ','_').toUpperCase();
+		let findTxt = keys[j].replace(/ /g,'_').toUpperCase();
 		let pattern = RegExp('(?<!_)'+findTxt+'(?!_)','g');
-		txt = txt.replaceAll(pattern,svgHtml[keys[j]]);
+		txt = txt.replace(pattern,svgHtml[keys[j]]);
 	}
 	p[i].innerHTML = txt;
 	//p[i].getElementsByTagName('svg')[0].setAttribute("width", "150%");
@@ -899,8 +893,13 @@ btn.getElementsByTagName('svg')[0].setAttribute("width", "80%");
 btn.getElementsByTagName('svg')[0].setAttribute("height", "80%");
 var btn = document.getElementById('Hit me button');
 btn.innerHTML = svgHtml['Dice'];
-btn.getElementsByTagName('svg')[0].setAttribute("width", "90%");
-btn.getElementsByTagName('svg')[0].setAttribute("height", "90%");
+btn.getElementsByTagName('svg')[0].setAttribute("width", "100%");
+btn.getElementsByTagName('svg')[0].setAttribute("height", "100%");
+var div = document.getElementById('fdtdPlot');
+div.appendChild(document.createElement("br"));
+div.innerHTML = svgHtml['Loading'];
+div.getElementsByTagName('svg')[0].setAttribute("width", "15%");
+div.getElementsByTagName('svg')[0].setAttribute("height", "15%");
 </script>
 
 <!--script>
