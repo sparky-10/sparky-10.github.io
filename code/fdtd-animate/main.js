@@ -117,7 +117,8 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
-- Chrome pyScript issue
+- Add modes example
+- Chrome pyScript issue?
 - No pan/zoom reset on start or reset??
 - Test on larger screen
 - Move source - callback on marker click to move?? OR use shapes for source/receivers??
@@ -1085,8 +1086,8 @@ function makeFig() {
 		x: xValues,
 		y: yValues,
 		type: 'heatmap',
-		zsmooth: 'best',
-		//zsmooth: false,
+		//zsmooth: 'best',
+		zsmooth: false,
 		//colorscale: 'Greys',
 		colorscale: colorscaleGrey,
 		showscale: false,			// No colorbar
@@ -1300,10 +1301,10 @@ function updateFigData(update, ind=0) {
 }
 
 // Update figure layout
-function updateFigLayout(update={}) {
+function updateFigLayout(update={}, getDimsFromPlot=false) {
 	printToDebug("Update figure layout");
 	// Include update of plot size
-	getPlotSize()
+	getPlotSize(getDimsFromPlot)
 	update['width'] = plotWidth;
 	update['height'] = plotHeight;
 	// Update layout
@@ -1332,6 +1333,7 @@ function makeAlternativeModebarButtons(divId, modebarDataTitles, title, iActive)
 		//if (i>0) { divId.appendChild(document.createElement("br")); }
 		// Get element to trigger
 		let modebarElement = getModebarElement(modebarDataTitles[i]);
+		let debugTxt = "Modebar button click: "+html[i];
 		// Make button
 		var el = document.createElement("button");
 		if (html[i] in svgHtml) {
@@ -1343,7 +1345,19 @@ function makeAlternativeModebarButtons(divId, modebarDataTitles, title, iActive)
 		el.id = "modebarBtn"+i.toString();
 		el.name = "modebarBtn"+i.toString();
 		el.classList.add("modebar-buttons");
-		el.onclick = function() { modebarElement.click(); };
+		if (html[i] == "Pan") {
+			el.onclick = function() {
+				printToDebug(debugTxt);
+				modebarElement.click();
+				updateFigLayout();	// Extra layout update to fix aspect ratio
+			};
+		}
+		else {
+			el.onclick = function() {
+				printToDebug(debugTxt);
+				modebarElement.click();
+			};
+		}
 		el.title = title[i];
 		divId.appendChild(el);
 	}
@@ -1359,25 +1373,54 @@ function onWindowResize(e) {
 	updateFigLayout(layoutUpdate);
 }
 
+// Get axes range from current plot, including estimate of No. of pixels
+function getRangeFromPlot() {
+	var xRangePlot = plotDiv.layout.xaxis.range;
+	var yRangePlot = plotDiv.layout.yaxis.range;
+	//var XPlot = fdtdObj.X;	// Prev.
+	var XPlot = X;				// Current
+	xRangePlot[0] = Math.round(xRangePlot[0]/XPlot)*XPlot
+	xRangePlot[1] = Math.round(xRangePlot[1]/XPlot)*XPlot
+	yRangePlot[0] = Math.round(yRangePlot[0]/XPlot)*XPlot
+	yRangePlot[1] = Math.round(yRangePlot[1]/XPlot)*XPlot
+	var xExtent = xRangePlot[1]-xRangePlot[0];
+	var yExtent = yRangePlot[1]-yRangePlot[0];
+	var NxPlot = Math.round(xExtent/XPlot)+1;
+	var NyPlot = Math.round(yExtent/XPlot)+1;
+	return [xRangePlot, yRangePlot, NxPlot, NyPlot];
+}
+
 // Get size to make plot
-function getPlotSize() {
+function getPlotSize(getDimsFromPlot=false) {
 	printToDebug("Get plot size");
 	// Size of plot div/window
 	plotWidth = Math.min(plotDiv.offsetWidth, window.innerWidth);
 	plotHeight = window.innerHeight;
-	// Fudge to take in to account colorbar
-	var colBarWidth = 100;
-	plotWidth -= 100
 	// Max proportion of window want to use
 	plotWidth *= plotWidthRelToWindow;
 	plotHeight *= plotHeightRelToWindow;
+	// Fudge to take in to account colorbar and padding
+	var wPad = 170;
+	var hPad = 50;
+	plotWidth -= wPad;
+	plotHeight -= hPad;
+	// Size of plot area
+	if (getDimsFromPlot) {
+		var vals = getRangeFromPlot();
+		var NxPlot = vals[2];
+		var NyPlot = vals[3];
+	} else {
+		// Just use current values
+		var NxPlot = Nx;
+		var NyPlot = Ny;
+	}
 	// Size relative to plot dimensions
-	var relPlotWidth = plotWidth/Nx;
-	var relPlotHeight = plotHeight/Ny;
+	var relPlotWidth = plotWidth/NxPlot;
+	var relPlotHeight = plotHeight/NyPlot;
 	var relPlotMin = Math.min(relPlotWidth, relPlotHeight);
 	// Size to make plot
-	plotWidth = Math.round(Nx*relPlotMin+colBarWidth);
-	plotHeight = Math.round(Ny*relPlotMin);
+	plotWidth = Math.round(NxPlot*relPlotMin+wPad);
+	plotHeight = Math.round(NyPlot*relPlotMin+hPad);
 }
 
 // Reset simulation, including redraw of figure
@@ -1442,10 +1485,10 @@ function olRecPosCheck(doResetOnOLUpdate=true, doPlotOnOLUpdate=true) {
 	printToDebug("Offline receiver position check");
 	// Check all receivers
 	for (var i = 0; i<NRec; i++) {
-		if (recX[i] > Dx) {
+		if (Number(recXBox[i].value) > Dx) {
 			recXBox[i].value = Math.round(Dx*recXRel[i]/recStep)*recStep;
 		}
-		if (recY[i] > Dy) {
+		if (Number(recYBox[i].value) > Dy) {
 			recYBox[i].value = Math.round(Dy*recYRel[i]/recStep)*recStep;
 		}
 	}
@@ -1470,7 +1513,7 @@ function olSrcPosUpdate(doResetOnOLUpdate=true, doPlotOnOLUpdate=true) {
 		}
 		// Relative source position(s)
 		srcXRel[i] = srcX[i]/Dx;
-		srcYRel[i] = srcY[i]/Dx;
+		srcYRel[i] = srcY[i]/Dy;
 	}
 	// Quick fudge fix - because sources can also have changed if active or not when loading examples, so just always update
 	srcChanged = true;
@@ -1512,7 +1555,7 @@ function olRecPosUpdate(doResetOnOLUpdate=true, doPlotOnOLUpdate=true) {
 		}
 		// Relative receiver position(s)
 		recXRel[i] = recX[i]/Dx;
-		recYRel[i] = recY[i]/Dx;
+		recYRel[i] = recY[i]/Dy;
 	}
 	// Quick fudge fix - because receivers can also have changed if active or not when loading examples, so just always update
 	recChanged = true;
@@ -1651,13 +1694,9 @@ function olGridSizeUpdate(doResetOnOLUpdate=true) {
 			pyZValues = Array(Ny).fill().map(() => Array(Nx).fill(0));
 			// make updates
 			var dataUpdate = {'x': [xValues], 'y': [yValues], 'z': [pyZValues]};
-			var layoutUpdate = { 	xaxis: { range: [xValues[0], xValues[Nx-1]],
-									showline: true,
-									mirror: true },
-									yaxis: { range: [yValues[0], yValues[Ny-1]],
-									showline: true,
-									mirror: true } 
-								};
+			var layoutUpdate = { xaxis: plotDiv.layout.xaxis, yaxis: plotDiv.layout.yaxis };	// Copy first (otherwise lose other axis properties)
+			layoutUpdate['xaxis']['range'] = [xValues[0], xValues[Nx-1]];
+			layoutUpdate['yaxis']['range'] = [yValues[0], yValues[Ny-1]];
 			//updateFigData(dataUpdate, fdtdFigLayer);					// Update sim...
 			//updateFigData(dataUpdate, meshFigLayer);					// and mesh...
 			//updateFigData(dataUpdate, [fdtdFigLayer, meshFigLayer]);	// Update sim and mesh...
@@ -2100,7 +2139,7 @@ function infoButton() {
 	printToDebug("Info button press");
 	alert(infoText);
 }
-
+		
 // Render current image view (including shapes) to an image and update fig
 function renderImageButton() {
 	printToDebug("Render image button press");
@@ -2109,18 +2148,11 @@ function renderImageButton() {
 	// Get grid size
 	if (renderPanZoom) {
 		// ... including pan/zoom
-		var xRangePlot = plotDiv.layout.xaxis.range;
-		var yRangePlot = plotDiv.layout.yaxis.range;
-		//var XPlot = fdtdObj.X;	// Prev.
-		var XPlot = X;				// Current
-		xRangePlot[0] = Math.round(xRangePlot[0]/XPlot)*XPlot
-		xRangePlot[1] = Math.round(xRangePlot[1]/XPlot)*XPlot
-		yRangePlot[0] = Math.round(yRangePlot[0]/XPlot)*XPlot
-		yRangePlot[1] = Math.round(yRangePlot[1]/XPlot)*XPlot
-		var xExtent = xRangePlot[1]-xRangePlot[0];
-		var yExtent = yRangePlot[1]-yRangePlot[0];
-		var NxPlot = Math.round(xExtent/XPlot)+1;
-		var NyPlot = Math.round(yExtent/XPlot)+1;
+		var vals = getRangeFromPlot();
+		var xRangePlot = vals[0];
+		var yRangePlot = vals[1];
+		var NxPlot = vals[2];
+		var NyPlot = vals[3];
 		// Move source/receivers
 		for (var i = 0; i<NSrc; i++) {
 			var xi = Number(srcXBox[i].value);
