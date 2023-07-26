@@ -1085,8 +1085,8 @@ function makeFig() {
 		x: xValues,
 		y: yValues,
 		type: 'heatmap',
-		//zsmooth: 'best',
-		zsmooth: false,
+		zsmooth: 'best',
+		//zsmooth: false,
 		//colorscale: 'Greys',
 		colorscale: colorscaleGrey,
 		showscale: false,			// No colorbar
@@ -2144,8 +2144,10 @@ function renderImageButton() {
 	// Adjust shape width according to plot size (roughly 1 pixel per 150 pixels grid size)
 	var shapeWidth = Math.max(1,Math.round(Math.sqrt(NxPlot*NyPlot)/150.0));
 	var shapes = plotDiv.layout.shapes;
-	for (var i=0 ; i<shapes.length ; i++) {
-		shapes[i]['line']['width'] = shapeWidth;
+	if (shapes != undefined) {
+		for (var i=0 ; i<shapes.length ; i++) {
+			shapes[i]['line']['width'] = shapeWidth;
+		}
 	}
 	// Set cropped/stripped back layout
 	var layoutUpdate = {
