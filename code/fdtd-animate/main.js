@@ -1472,10 +1472,12 @@ function olSrcPosCheck(doResetOnOLUpdate=true, doPlotOnOLUpdate=true) {
 	printToDebug("Offline source position check");
 	// Check all sources
 	for (var i = 0; i<NSrc; i++) {
-		if (Number(srcXBox[i].value) > Dx) {
+		var xCoord = Number(srcXBox[i].value);
+		var yCoord = Number(srcYBox[i].value);
+		if ( xCoord < 0 || xCoord > Dx ) {
 			srcXBox[i].value = Math.round(Dx*srcXRel[i]/srcStep)*srcStep;
 		}
-		if (Number(srcYBox[i].value) > Dy) {
+		if ( yCoord < 0 || yCoord > Dx ) {
 			srcYBox[i].value = Math.round(Dy*srcYRel[i]/srcStep)*srcStep;
 		}
 	}
@@ -1487,10 +1489,12 @@ function olRecPosCheck(doResetOnOLUpdate=true, doPlotOnOLUpdate=true) {
 	printToDebug("Offline receiver position check");
 	// Check all receivers
 	for (var i = 0; i<NRec; i++) {
-		if (Number(recXBox[i].value) > Dx) {
+		var xCoord = Number(recXBox[i].value);
+		var yCoord = Number(recYBox[i].value);
+		if ( xCoord < 0 || xCoord > Dx ) {
 			recXBox[i].value = Math.round(Dx*recXRel[i]/recStep)*recStep;
 		}
-		if (Number(recYBox[i].value) > Dy) {
+		if ( yCoord < 0 || yCoord > Dx ) {
 			recYBox[i].value = Math.round(Dy*recYRel[i]/recStep)*recStep;
 		}
 	}
@@ -2181,6 +2185,7 @@ function renderImageButton() {
 	if (shapes != undefined) {
 		for (var i=0 ; i<shapes.length ; i++) {
 			shapes[i]['line']['width'] = shapeWidth;
+			shapes[i]['line']['color'] = "black";
 		}
 	}
 	// Set cropped/stripped back layout
