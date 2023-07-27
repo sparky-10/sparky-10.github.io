@@ -327,16 +327,16 @@
   You can delete individual shapes (ERASE_ACTIVE_SHAPE) or the full image (CLEAR_ALL).
   Use the pan (PAN), zoom in/out (ZOOM_IN, ZOOM_OUT), advanced zoom/select (ZOOM), and reset (RESET_AXES) tools to alter the view/modelled area.
   Save an image (SAVE_CURRENT_VIEW) prior to running to commit/render to an image ready for simulating.</p>
+  <h4>Make GIF/image/wav</h4>
+  <p>An image of the current plot can be downloaded at any time (DOWNLOAD_PLOT_AS_A_PNG).
+  Selecting the bottom panel make GIF or wav checkboxes creates and downloads a file/files after a full simulation is run.
+  Note: creating a GIF will make things run a little slower. 
+  Settings are taken at the start of the simulation, and will have no effect if altered whilst running (e.g. change of colour). 
+  The wav file contains the response at the receiver position, and will have an integer (likely non-standard in terms of audio use) sample rate dictated by mesh resolution.</p>
   <h4>Varying absorption</h4>
   <p>The default mode is a constant absorption value across surfaces. 
   To vary the absorption change the absorption mode (bottom panel) and use an image with varying luminance (e.g. greyscale). 
-  This then assigns more absorbing surfaces to lighter areas of the image and more reflecting to darker areas.</p>
-  <h4>Make GIF/wav/image</h4>
-  <p>Selecting the bottom panel make GIF or wav checkboxes creates and downloads a file/files after a full simulation is run.
-  The real time settings are taken at the start of the simulation, and will have no effect if altered whilst running. 
-  The wav file contains the response at the receiver position, and will have a sample rate dictated by mesh resolution. 
-  Note: the sample rate will be an integer, but will likely be a non-standard value in terms of audio use.
-  An image of the current plot can also be downloaded (DOWNLOAD_PLOT_AS_A_PNG).</p>
+  This then assigns more absorbing surfaces to lighter areas of the image and more reflecting surfaces to darker areas.</p>
   <h4>Have a play</h4>
   <p>Note: hovering over most input boxes and buttons displays a description of what they do.</p>
   <h4>Artefacts/innacuracies</h4>
