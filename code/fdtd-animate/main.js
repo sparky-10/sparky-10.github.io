@@ -1400,8 +1400,8 @@ function getPlotSize(getDimsFromPlot=false) {
 	plotWidth *= plotWidthRelToWindow;
 	plotHeight *= plotHeightRelToWindow;
 	// Fudge to take in to account colorbar and padding
-	var wPad = 170;
-	var hPad = 50;
+	var wPad = 40+10+120;
+	var hPad = 40+10;
 	plotWidth -= wPad;
 	plotHeight -= hPad;
 	// Size of plot area
