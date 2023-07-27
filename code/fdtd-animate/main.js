@@ -5,6 +5,7 @@ var meshImageFolder = "/home/pyodide/images/";
 var mainHeaderPrefix = "FDTD Animate : ";
 var plotDivId = "fdtdPlot";
 var altModebarDivId = "Alt modebar";
+var imageSaveName = "fdtdAnimate";
 var imgDivId = "Temp img";
 var srcTableID = "Source table";
 //var recTableID = "Receiver table";
@@ -1246,6 +1247,7 @@ function makeFig() {
 		modeBarButtons: [[loadButton,clearButton,renderButton],['pan2d','zoom2d','zoomIn2d','zoomOut2d','resetScale2d','toImage'],
 						['drawline','drawopenpath','drawrect','drawcircle','eraseshape']],
 		displayModeBar: true,//altModebarDiv==null,
+		toImageButtonOptions: { filename: imageSaveName }
 		//modeBarStyle: {orientation: 'v'}
 		/*modeBarButtonsToAdd: ['drawline','drawopenpath','drawrect','drawcircle','eraseshape',
 							{
