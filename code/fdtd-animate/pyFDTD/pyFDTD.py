@@ -913,12 +913,15 @@ class pyFDTD:
             # Set to zero if below threshold
             self.mesh[self.mesh <= 255*self.imageThreshold] = 0
             
-            # Scale if doing 'varying' or otherwise set rest to one
-            if self.betaMode == 'varying':
-                self.mesh = self.mesh * 1/255
-            else:
-                self.mesh[self.mesh > 255*self.imageThreshold] = 1
-        
+            # # Scale if doing 'varying' or otherwise set rest to one
+            # if self.betaMode == 'varying':
+            #     self.mesh = self.mesh * 1/255
+            # else:
+            #     self.mesh[self.mesh > 255*self.imageThreshold] = 1
+            
+            # Now always do scaling so image doesn't get made binary
+            self.mesh = self.mesh * 1/255
+            
             # Pad/trim if not same size
             if xMesh!=imX or yMesh!=imY:
                 # Size of new mesh
