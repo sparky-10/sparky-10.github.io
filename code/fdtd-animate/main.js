@@ -109,6 +109,7 @@ var recActiveDefault, recXDefault, recYDefault;
 var recXRel = Array(NRec).fill(0), recYRel = Array(NRec).fill(0), recStep;
 var figExists = false;
 var initialising = true;
+var imReplyResetPlot = true;
 var gsArray;
 var plotWidth, plotHeight
 var srcActiveBox = [], srcXBox = [], srcYBox = [], srcAmpBox = [], srcInvBox = [], srcDelayBox = [], srcFreqBox = [];
@@ -314,8 +315,14 @@ function imReply(imIn) {
 	YGridBox.value = gsArray.length;
 	// Update grid size
 	olGridSizeUpdate(false);
-	// Rest all (does a p request and makes new fig, plus a couple of other things)
-	resetAll();
+	// Rest all (does a p request, plus a couple of other things)
+	if (imReplyResetPlot) {
+		resetAll();										// Makes new fig
+	} else {
+		resetAll(false);								// No new fig
+		updateFigData({'z': [gsArray]}, meshFigLayer);	// Update fig image
+	}
+	imReplyResetPlot = true;
 	// Get p Data
 	//pyPRequest();
 	// Remake figure
@@ -1777,7 +1784,10 @@ function olMeshSettingsUpdate(doResetOnOLUpdate=true) {
 		// If doing offline plot update
 		if (figExists && doPlotOnOLUpdate) {
 			// Update to values if threshold or mode has changed
-			if (threshChanged || modeChanged) { setMeshValues(); }
+			if (threshChanged || modeChanged) {
+				imReplyResetPlot = false;	// Don't remake plot, just update
+				setMeshValues();
+			}
 		}
 	}
 }
