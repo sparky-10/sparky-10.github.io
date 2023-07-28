@@ -196,6 +196,7 @@ var loadFileBox 	= document.getElementById("Load file");
 var betaBox			= document.getElementById("Beta mesh");
 var betaBorderBox	= document.getElementById("Beta boundary");
 var imThreshBox		= document.getElementById("Image threshold");
+var imThreshSlider	= document.getElementById("Threshold slider");
 var betaModeBox		= document.getElementById("Beta mode");
 var examplesBox		= document.getElementById("Load examples");
 var gifDownloadBut 	= document.getElementById("Gif download");
@@ -466,6 +467,7 @@ function setBoxDefaults() {
 	betaBox.value = betaDefault;
 	betaBorderBox.value = betaBorderDefault;
 	imThreshBox.value = imageThresholdDefault;
+	imThreshSlider.value = imageThresholdDefault;
 	betaModeBox.value = betaModeDefault;
 	// Set sources
 	setSrcBoxSettings(	srcActiveDefault,
@@ -1445,6 +1447,13 @@ function resetAll(doMakeFig=true) {
 	mainHeader.innerHTML = nextHeaderUpdate;
 }
 
+// Trigger update via input box
+function thresholdSliderUpdate() {
+	imThreshBox.value = imThreshSlider.value;
+	var onChangeEvent = new Event('change');
+	imThreshBox.dispatchEvent(onChangeEvent);
+}
+
 // Update offline plot update status
 function olPlotUpdateStatus() {
 	printToDebug("Offline plot update status");
@@ -1749,6 +1758,7 @@ function olMeshSettingsUpdate(doResetOnOLUpdate=true) {
 	if (newImThresh != imageThreshold) {
 		threshChanged = true;
 		imageThreshold = newImThresh;
+		imThreshSlider.value = imageThreshold;	// Triggered by box so update slider
 	}
 	var modeChanged = false;
 	if (newMode != betaMode) {

@@ -31,8 +31,8 @@
 	color: #003300;
   }
   
-  /* Style the buttons and top dropdown */
-  button, .header-dropdown {
+  /* Style the buttons, top dropdown, and slider surround */
+  button, .header-dropdown, .threshold-slider-div {
     background-color: #4CAF50;
 	border-color: #4CAF50;
 	border-style: solid;
@@ -45,7 +45,8 @@
 	cursor: pointer;
   }
   button:hover, button:focus, button:active,
-  .header-dropdown:hover, .header-dropdown:focus, .header-dropdown:active {
+  .header-dropdown:hover, .header-dropdown:focus, .header-dropdown:active, 
+  .threshold-slider-div:hover, .threshold-slider-div:focus, .threshold-slider-div:active {
 	color: black;
 	background-color: #f2f2f2;
 	border-color: darkgreen;
@@ -79,12 +80,12 @@
   .colour-buttons {
 	width: 70px;
 	/*margin: 0px 15px;*/
-	height: 60px;
+	height: 55px;
   }
-  .modebar-buttons {
+  .modebar-buttons, .threshold-slider-div {
 	border-width: 3px;
 	width: 46%;
-	height: 60px;
+	height: 55px;
 	padding: 2% 2%;
 	margin: 2% 0% 2% 4%;
   }
@@ -115,7 +116,6 @@
 	outline-color: darkgreen;
 	outline-radius: 10%;
   }
-  
   input[type=checkbox] {
 	border-radius: 10%;
 	cursor: pointer;
@@ -130,6 +130,23 @@
 	outline-width: 2px;
 	outline-color: darkgreen;
 	outline-radius: 10%;
+  }
+  
+  
+  /* Differences in slider to buttons grouped with above */
+  .threshold-slider-div {
+	width: 96%;
+	margin: 2% 0% 2% 2%;
+  }
+  .threshold-slider {
+    width: 100%;
+	height: 100%;
+	background-color: whitesmoke;
+	cursor: pointer;
+	accent-color: darkgreen;
+  }
+  .threshold-slider:hover, .threshold-slider:focus, .threshold-slider:active {
+	accent-color: #4CAF50;
   }
   
   /* Style the header */
@@ -262,7 +279,12 @@
 	  text-align: center;
 	}
 	.modebar-buttons {
-	  width: 12%;
+	  width: 10%;
+	  height: 60px;
+	  margin: 1%;
+	}
+	.threshold-slider-div {
+	  width: 22%;
 	  height: 60px;
 	  margin: 1%;
 	}
@@ -458,9 +480,14 @@
 <!--Plot/animation panel, inc. modebar-->
 <article id="plot panel">
   <div id="fdtdPlot" class="article-plot"></div>
-  <div id="Alt modebar" class="article-modebar"></div>
+  <div id="Alt modebar" class="article-modebar" title="Threshold (%) below which loaded image is set to 'air'">
+	<div class="threshold-slider-div">
+		<input type="range" id="Threshold slider" class="threshold-slider" onchange="thresholdSliderUpdate();"
+			min="0.0" max="100" value="5" step="1">
+	</div>
+  </div>
 </article>
-
+				
 <!--Real time input panel-->
 <nav id="Real time settings">
 
@@ -782,12 +809,17 @@
 	<!--td></td>
 	<td></td-->
 	
-	<td>Thresh. (%)</td>
+	<td>Mode</td>
 	<td>
-	  <label for="Beta"></label>
-	  <input type="number" name="Image threshold" id="Image threshold" onchange="constrainInput(this).then(olMeshSettingsUpdate());"
-                min="0.0" max="100" step="1" value="0.0" style="width:60px"
-				title="Threshold below which loaded image is set to 'air' node">
+	  <label for="Beta mode"></label>
+	  <select class="beta-select" name="Beta mode" id="Beta mode" onchange="olMeshSettingsUpdate();" style="width:60px"
+				title="Absorption mode: sets mesh surfaces to constant ('Con.') or varying ('Var.') absorption. 'Con.' uses the user defined surface absorption, while 'Var.' sets absorption proportional to image luminance">
+		<option value="constant">Con. (Constant surface absorption)</option>
+		<option value="varying">Var. (Varying surface absorption proportional to image luminance)</option>
+				<!--title="Admittance mode: sets mesh surfaces to constant ('Con.') or varying ('Var.') admittance. 'Con.' uses the user defined surface admittance, while 'Var.' sets admittance proportional to image luminance">
+	    <option value="constant">Con. (Constant surface admittance)</option>
+		<option value="varying">Var. (Varying surface admittance proportional to image luminance)</option-->
+	  </select>
 	</td>
 	
 	<td></td>
@@ -802,17 +834,12 @@
 	<!--td></td>
 	<td></td-->
 	
-	<td>Mode</td>
+	<td>Thresh. (%)</td>
 	<td>
-	  <label for="Beta"></label>
-	  <select class="beta-select" name="Beta mode" id="Beta mode" onchange="olMeshSettingsUpdate();" style="width:60px"
-				title="Absorption mode: sets mesh surfaces to constant ('Con.') or varying ('Var.') absorption. 'Con.' uses the user defined surface absorption, while 'Var.' sets absorption proportional to image luminance">
-		<option value="constant">Con. (Constant surface absorption)</option>
-		<option value="varying">Var. (Varying surface absorption proportional to image luminance)</option>
-				<!--title="Admittance mode: sets mesh surfaces to constant ('Con.') or varying ('Var.') admittance. 'Con.' uses the user defined surface admittance, while 'Var.' sets admittance proportional to image luminance">
-	    <option value="constant">Con. (Constant surface admittance)</option>
-		<option value="varying">Var. (Varying surface admittance proportional to image luminance)</option-->
-	  </select>
+	  <label for="Image threshold"></label>
+	  <input type="number" name="Image threshold" id="Image threshold" onchange="constrainInput(this).then(olMeshSettingsUpdate());"
+                min="0.0" max="100" step="1" value="0.0" style="width:60px"
+				title="Threshold fine control (below which loaded image is set to 'air')">
 	</td>
 	
 	<td></td>
