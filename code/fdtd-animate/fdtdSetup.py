@@ -44,12 +44,6 @@ fdtd.saveGif = False            # Gets set by user
 gifFile = 'fdtdAnimate.gif'
 wavFile = 'fdtdAnimate.wav'
 
-# Some settings from html elements (switching x and y to match definitions)
-XMin = int(document.getElementById("Y grid").min)
-XMax = int(document.getElementById("Y grid").max)
-YMin = int(document.getElementById("X grid").min)
-YMax = int(document.getElementById("X grid").max)
-
 # Send pressures back when requested
 def doPRequest():
     pReply(to_js(fdtd.p))
@@ -89,6 +83,13 @@ def recMove(x, y, i):
     
 # Load the image data or file to FDTD
 def loadImage(im):
+    
+    # Some settings from html elements (switching x and y to match definitions)
+    # Moved here so not fixed on load
+    XMin = int(document.getElementById("Y grid").min)
+    XMax = int(document.getElementById("Y grid").max)
+    YMin = int(document.getElementById("X grid").min)
+    YMax = int(document.getElementById("X grid").max)
     
     # Pass to fdtd for use with PIL (includes reset etc...)
     sizeLimits=[XMin, XMax, YMin, YMax]

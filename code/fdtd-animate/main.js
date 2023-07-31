@@ -1384,16 +1384,21 @@ function onWindowResize(e) {
 	updateFigLayout(layoutUpdate);
 }
 
+// Snap coordinate to discretised FDTD grid
+function snapToGrid(x, X) {
+	return Math.round(x/X)*X
+}
+
 // Get axes range from current plot, including estimate of No. of pixels
 function getRangeFromPlot() {
 	var xRangePlot = plotDiv.layout.xaxis.range;
 	var yRangePlot = plotDiv.layout.yaxis.range;
 	//var XPlot = fdtdObj.X;	// Prev.
 	var XPlot = X;				// Current
-	xRangePlot[0] = Math.round(xRangePlot[0]/XPlot)*XPlot
-	xRangePlot[1] = Math.round(xRangePlot[1]/XPlot)*XPlot
-	yRangePlot[0] = Math.round(yRangePlot[0]/XPlot)*XPlot
-	yRangePlot[1] = Math.round(yRangePlot[1]/XPlot)*XPlot
+	xRangePlot[0] = snapToGrid(xRangePlot[0], XPlot)
+	xRangePlot[1] = snapToGrid(xRangePlot[1], XPlot)
+	yRangePlot[0] = snapToGrid(yRangePlot[0], XPlot)
+	yRangePlot[1] = snapToGrid(yRangePlot[1], XPlot)
 	var xExtent = xRangePlot[1]-xRangePlot[0];
 	var yExtent = yRangePlot[1]-yRangePlot[0];
 	var NxPlot = Math.round(xExtent/XPlot)+1;
@@ -2199,15 +2204,32 @@ function renderImageButton() {
 		xRangePlot = [xValues[0], xValues[Nx-1]]
 		yRangePlot = [yValues[0], yValues[Ny-1]]
 	}
-	// Adjust shape width according to plot size (roughly 1 pixel per 150 pixels grid size)
-	var shapeWidth = Math.max(1,Math.round(Math.sqrt(NxPlot*NyPlot)/150.0));
+	// Adjust shape width according to plot size (roughly 1 pixel per 120 pixels grid size)
+	var shapeWidth = Math.round(Math.sqrt(NxPlot*NyPlot)/125.0)
+	shapeWidth = Math.min(Math.max(shapeWidth,2),6);
 	var shapes = plotDiv.layout.shapes;
+	//var XPlot = fdtdObj.X;	// Prev.
+	var XPlot = X;				// Current
+	console.log(shapes)
 	if (shapes != undefined) {
 		for (var i=0 ; i<shapes.length ; i++) {
 			shapes[i]['line']['width'] = shapeWidth;
 			shapes[i]['line']['color'] = "black";
+			console.log(shapes[i]['type'])
+			switch (shapes[i]['type']) {
+				case "line":	// Fall through
+				case "rect":	// Fall through
+				case "circle":
+					shapes[i]['x0'] = snapToGrid(shapes[i]['x0'], XPlot);
+					shapes[i]['x1'] = snapToGrid(shapes[i]['x1'], XPlot);
+					shapes[i]['y0'] = snapToGrid(shapes[i]['y0'], XPlot);
+					shapes[i]['y1'] = snapToGrid(shapes[i]['y1'], XPlot);
+					break;
+				default :		// Otherwise do nothing
+			}
 		}
 	}
+	console.log(shapes)
 	// Set cropped/stripped back layout
 	var layoutUpdate = {
 		shapes: shapes,
