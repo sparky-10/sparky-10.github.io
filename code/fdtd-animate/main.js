@@ -1,3 +1,4 @@
+
 // Settings
 var DEBUG = false;
 var debugPrefix = "JS: ";
@@ -11,6 +12,8 @@ var srcTableID = "Source table";
 //var recTableID = "Receiver table";
 var recTableID = srcTableID;
 var tSimDivID = "Sim time div";
+var gridMin = 10;
+var gridMax = 1000;
 var fdtdFigLayer = 0;
 var meshFigLayer = 1;
 var srcFigLayer = 2;
@@ -30,6 +33,7 @@ var gifFrameTime = 50;		// ms
 var gifLoopNum = 0;			// 0 = infinite
 var doAbsCoeff = false;		// If beta values are actually NIAC (false because now handled in Python)
 var renderPanZoom = true;	// Include pan/zoom in rendering of new plot/mesh
+var discretiseInputs = true;// Discretise user inputs using step value
 
 var infoText = 	"Info:\n-----\n"+
 				"\n"+
@@ -82,6 +86,39 @@ var srcShowDefault = srcShowStatus;
 var recShowDefault = recShowStatus;
 var meshColInvDefault = meshColInvStatus;
 
+// From URL (in case any options)
+// E.g. URL/?debug=1&gridMax=2000
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+if (urlParams.has("debug")) {
+	DEBUG = Boolean(Number(urlParams.get("debug")));
+	printToDebug("URL param: debug = "+(DEBUG));
+}
+if (urlParams.has("gridMin")) {
+	gridMin = Number(urlParams.get("gridMin"));
+	gridMin = clamp(gridMin, 2, 1000);
+	printToDebug("URL param: gridMin = "+(gridMin));
+}
+if (urlParams.has("gridMax")) {
+	gridMax = Number(urlParams.get("gridMax"));
+	gridMax = clamp(gridMax, gridMin, 10000);
+	printToDebug("URL param: gridMax = "+(gridMax));
+}
+if (urlParams.has("numSrc")) {
+	NSrc = Number(urlParams.get("numSrc"));
+	NSrc = clamp(NSrc, 4, 100);
+	printToDebug("URL param: numSrc = "+(NSrc));
+}
+if (urlParams.has("numRec")) {
+	NRec = Number(urlParams.get("numRec"));
+	NRec = clamp(NRec, 1, 100);
+	printToDebug("URL param: numRec = "+(NRec));
+}
+if (urlParams.has("discInputs")) {
+	discretiseInputs = Boolean(Number(urlParams.get("discInputs")));
+	printToDebug("URL param: discInputs = "+(discretiseInputs));
+}
+
 // Other variables
 var zValues;
 var data, layout;
@@ -94,8 +131,8 @@ var nextHeaderUpdate = mainHeaderPrefix + "Ready!!";
 var X, Nx, Ny, Dx, Dy, c, t, plotIthUpdate, tSim;
 var imageThreshold, betaMode, beta, betaBorder;
 var srcActive = Array(NSrc).fill(0);	// Source stuff will get replaced
-var srcX = Array(NSrc).fill(1);
-var srcY = Array(NSrc).fill(1);
+var srcX = Array(NSrc).fill(0);
+var srcY = Array(NSrc).fill(0);
 var srcAmp = Array(NSrc).fill(1);
 var srcInv = Array(NSrc).fill(0);
 var srcDelay = Array(NSrc).fill(0);
@@ -103,8 +140,8 @@ var srcFreq = Array(NSrc).fill(0);
 var srcActiveDefault, srcXDefault, srcYDefault, srcAmpDefault, srcInvDefault, srcDelayDefault, srcFreqDefault;
 var srcXRel = Array(NSrc).fill(0), srcYRel = Array(NSrc).fill(0), srcStep;
 var recActive = Array(NRec).fill(0);	// Receiver stuff will get replaced
-var recX = Array(NRec).fill(1);
-var recY = Array(NRec).fill(1);
+var recX = Array(NRec).fill(0);
+var recY = Array(NRec).fill(0);
 var recActiveDefault, recXDefault, recYDefault;
 var recXRel = Array(NRec).fill(0), recYRel = Array(NRec).fill(0), recStep;
 var figExists = false;
@@ -119,6 +156,9 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
+- Anything else to unlock in URL?
+- wav save work for multi-receiver?
+- Double check not broken anything obvious
 - Add modes example
 - Chrome pyScript issue?
 - No pan/zoom reset on start or reset??
@@ -208,6 +248,10 @@ OLUpdateBox.checked = updateOL;
 OLMeshCheckBox.checked = checkAndFixMesh;
 downloadGifBox.checked = gifDownload;
 downloadWavBox.checked = wavDownload;
+XGridBox.min = gridMin;
+XGridBox.max = gridMax;
+YGridBox.min = gridMin;
+YGridBox.max = gridMax;
 tSimDivUpdate(0.0);		// Sim time is zero
 defineExamples();		// Define the loadable examples dropdown list
 makeSrcTable();			// Make a table with all the source parameter inputs
@@ -270,14 +314,21 @@ function tSimDivUpdate(tSim=null) {
 	tSimDiv.innerHTML = "t = "+tSim+" ms"	// Update
 }
 
+// Clamp a number
+function clamp(num, min, max) {
+	return Math.max(Math.min(num,max),min);
+}
+
 // Ensure value is in range and return value
 function constrainInput(obj, val=null) {
 	return new Promise(function(resolve, reject) {
 		if (obj==null) { val = null }
 		else {
 			if (val==null) { val = obj.value }
-			val = Math.round(val/obj.step)*obj.step;		// Round to nearest step
-			val = Math.max(Math.min(val,obj.max),obj.min);	// Limit to range
+			if (discretiseInputs) {
+				val = Math.round(val/obj.step)*obj.step;	// Round to nearest step
+			}
+			val = clamp(val,obj.min,obj.max);				// Limit to range
 			obj.value = val;
 		}
 		resolve(val);
@@ -452,7 +503,7 @@ function defineRecDefaults() {
 	printToDebug("define receiver defaults");
 	// Receiver active
 	recActiveDefault = Array(NRec).fill(false);
-	recActiveDefault[0] = true
+	recActiveDefault[0] = true;
 	// Receiver x coord
 	var X = NxDefault*XDefault*1e-3;
 	recXDefault = Array(NRec).fill(X*0.5);
@@ -1014,11 +1065,11 @@ function makeRecTable() {
 		inputElement.name = "recActive"+iRec.toString();
 		inputElement.onchange = function(){olRecSettingsUpdate();};
 		inputElement.title = "Receiver #"+iRec.toString()+" active";
-		inputElement.style = "display:none"										// Note: active toggle currently hidden
+		if (NRec == 1) { inputElement.style = "display:none"; }					// Note: active toggle hidden if only one
 		cell.appendChild(inputElement);
 		recActiveBox.push(document.getElementById(inputElement.id));
 		// Skip columns															// Note: skip columns that don't apply to receivers
-		for (var i = 0; i < 4; i++) {
+		for (var j = 0; j < 4; j++) {
 			col += 1;
 			row.insertCell(col);
 		}
@@ -2206,7 +2257,7 @@ function renderImageButton() {
 	}
 	// Adjust shape width according to plot size (roughly 1 pixel per 120 pixels grid size)
 	var shapeWidth = Math.round(Math.sqrt(NxPlot*NyPlot)/125.0)
-	shapeWidth = Math.min(Math.max(shapeWidth,2),6);
+	shapeWidth = clamp(shapeWidth,2,6);
 	var shapes = plotDiv.layout.shapes;
 	//var XPlot = fdtdObj.X;	// Prev.
 	var XPlot = X;				// Current
