@@ -156,9 +156,7 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
-- Anything else to unlock in URL?
-- wav save work for multi-receiver?
-- Double check not broken anything obvious
+- wav save only for active multi-receiver?
 - Add modes example
 - Chrome pyScript issue?
 - No pan/zoom reset on start or reset??
@@ -1730,7 +1728,7 @@ function olRecSettingsUpdate(doResetOnOLUpdate=true) {
 }
 
 // Updates grid size parameters (locally)
-function olGridSizeUpdate(doResetOnOLUpdate=true) {
+function olGridSizeUpdate(doResetOnOLUpdate=true, doMeshUpdate=false) {
 	printToDebug("Offline grid size update");
 	// Set plotting to same as reset (as generally want to do the same thing)
 	var doPlotOnOLUpdate = doResetOnOLUpdate;
@@ -1775,13 +1773,13 @@ function olGridSizeUpdate(doResetOnOLUpdate=true) {
 			var layoutUpdate = { xaxis: plotDiv.layout.xaxis, yaxis: plotDiv.layout.yaxis };	// Copy first (otherwise lose other axis properties)
 			layoutUpdate['xaxis']['range'] = [xValues[0], xValues[Nx-1]];
 			layoutUpdate['yaxis']['range'] = [yValues[0], yValues[Ny-1]];
-			//updateFigData(dataUpdate, fdtdFigLayer);					// Update sim...
-			//updateFigData(dataUpdate, meshFigLayer);					// and mesh...
-			//updateFigData(dataUpdate, [fdtdFigLayer, meshFigLayer]);	// Update sim and mesh...
 			
-			// Update sim only (leaves any mesh untouched, including x and y values)
+			// Update sim (leave mesh untouched, including x and y values)
 			updateFigData(dataUpdate, fdtdFigLayer);
-			updateFigLayout(layoutUpdate);								// and layout
+			// Update mesh if requested
+			if (doMeshUpdate) { updateFigData({'x': [xValues], 'y': [yValues]}, meshFigLayer); }
+			// Update layout
+			updateFigLayout(layoutUpdate);
 			
 			//updateFig(dataUpdate, layoutUpdate, [fdtdFigLayer, meshFigLayer]);	// Update all - NOT WORKING???
 		}

@@ -801,7 +801,7 @@
 	<td>&Delta;x (mm)</td>
 	<td>
 	  <label for="Grid spacing"></label>
-	  <input type="number" name="Grid spacing" id="Grid spacing" onchange="constrainInput(this).then(olGridSizeUpdate());"
+	  <input type="number" name="Grid spacing" id="Grid spacing" onchange="constrainInput(this).then(olGridSizeUpdate(true, true));"
                 min="1" max="1000" step="1" value="10" style="width:60px"
 				title="Grid cell spacing (mm)">
 	</td>
