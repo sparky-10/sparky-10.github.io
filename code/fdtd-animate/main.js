@@ -34,6 +34,7 @@ var gifLoopNum = 0;			// 0 = infinite
 var doAbsCoeff = false;		// If beta values are actually NIAC (false because now handled in Python)
 var renderPanZoom = true;	// Include pan/zoom in rendering of new plot/mesh
 var discretiseInputs = true;// Discretise user inputs using step value
+var loadEx = "";			// Don't load anything
 
 var infoText = 	"Info:\n-----\n"+
 				"\n"+
@@ -117,6 +118,11 @@ if (urlParams.has("numRec")) {
 if (urlParams.has("discInputs")) {
 	discretiseInputs = Boolean(Number(urlParams.get("discInputs")));
 	printToDebug("URL param: discInputs = "+(discretiseInputs));
+}
+if (urlParams.has("load")) {
+	loadEx = urlParams.get("load");
+	loadEx = loadEx.replace(/-+/g, ' ');
+	printToDebug("URL param: load = "+(loadEx));
 }
 
 // Other variables
@@ -621,8 +627,24 @@ function defineExamples() {
 }
 
 // Load example
-function loadExample() {
+function loadExample(loadTxt=null) {
 	//printToDebug("Load example");
+	// Attempt to load example if passed one
+	if (loadTxt != null) {
+		loadTxt = loadTxt.toLowerCase();
+		var foundExample = false;
+		for (var i = 0; i < examplesBox.options.length; i++) {
+			if (examplesBox.options[i].text.toLowerCase() == loadTxt) {
+				examplesBox.selectedIndex = i;
+				foundExample = true;
+				break;
+			}
+		}
+		if (!foundExample) {
+			// Return if not a match
+			return;
+		}
+	}
 	// Example to load
 	var exNum = Number(examplesBox.value);
 	var exTxt = examplesBox.options[examplesBox.selectedIndex].text;
@@ -2062,6 +2084,8 @@ function pyLoaded() {
 	olInputUpdate();
 	// Set values, reset, and make fig
 	updateButton();
+	// Pre-load example if one is provided
+	loadExample(loadEx);
 	// Start listening for window resize (to trigger manual plot resizing due to aspect ratio not working)
 	window.addEventListener("resize", onWindowResize);
 	//// Enable buttons
@@ -2259,12 +2283,10 @@ function renderImageButton() {
 	var shapes = plotDiv.layout.shapes;
 	//var XPlot = fdtdObj.X;	// Prev.
 	var XPlot = X;				// Current
-	console.log(shapes)
 	if (shapes != undefined) {
 		for (var i=0 ; i<shapes.length ; i++) {
 			shapes[i]['line']['width'] = shapeWidth;
 			shapes[i]['line']['color'] = "black";
-			console.log(shapes[i]['type'])
 			switch (shapes[i]['type']) {
 				case "line":	// Fall through
 				case "rect":	// Fall through
@@ -2278,7 +2300,6 @@ function renderImageButton() {
 			}
 		}
 	}
-	console.log(shapes)
 	// Set cropped/stripped back layout
 	var layoutUpdate = {
 		shapes: shapes,
