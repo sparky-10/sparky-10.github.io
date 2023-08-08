@@ -1168,6 +1168,8 @@ class pyFDTD:
         if self.recN > 0:
             # Reshape output data
             data = np.transpose(np.array(self.recData))
+            # Keep data where amplplitude not zero
+            data = data[:,np.array(self.recAmp)!=0]
             # Sample rate to use
             if self.fsOut is None:
                 wavFs = self.fs
@@ -1175,7 +1177,8 @@ class pyFDTD:
                 wavFs = self.fsOut
                 data = self.resampleData(data, wavFs, self.fs)
             # Write to file
-            wavfile.write(self.recDataFile, wavFs, data)
+            if data.shape[1] > 0:
+                wavfile.write(self.recDataFile, wavFs, data)
     
     def writeGifData(self):
         

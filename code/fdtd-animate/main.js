@@ -162,10 +162,8 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
-- wav save only for active multi-receiver?
 - Add modes example
 - Chrome pyScript issue?
-- No pan/zoom reset on start or reset??
 - Test on larger screen
 - Move source - callback on marker click to move?? OR use shapes for source/receivers??
 - Always
@@ -1279,15 +1277,11 @@ function makeFig() {
 			automargin: true,
 			scaleanchor: 'y',
 			scaleratio: 1,
-			showline: true,
-			mirror: true
 		},
 		yaxis: {
 			automargin: true,
 			scaleanchor: 'x',
 			scaleratio: 1,
-			showline: true,
-			mirror: true
 		}
 	}
 	];*/
@@ -1327,7 +1321,7 @@ function makeFig() {
 		modeBarButtons: [[loadButton,clearButton,renderButton],['pan2d','zoom2d','zoomIn2d','zoomOut2d','resetScale2d','toImage'],
 						['drawline','drawopenpath','drawrect','drawcircle','eraseshape']],
 		displayModeBar: true,//altModebarDiv==null,
-		toImageButtonOptions: { filename: imageSaveName }
+		toImageButtonOptions: { filename: imageSaveName },
 		//modeBarStyle: {orientation: 'v'}
 		/*modeBarButtonsToAdd: ['drawline','drawopenpath','drawrect','drawcircle','eraseshape',
 							{
@@ -1339,6 +1333,7 @@ function makeFig() {
 								click: function(gd) { renderImageButton(); }
 							}],
 		modeBarButtonsToRemove: ['zoom2d','select2d','lasso2d','autoScale2d']*/
+		//editable: true
 	};
 	// Clear div of HTML
 	plotDiv.innerHTML = '';
