@@ -1021,7 +1021,7 @@ function makeSrcTable() {
 		inputElement.name = "srcFreq"+iSrc.toString();
 		inputElement.min = 20.0;
 		inputElement.max = 1000.0;
-		inputElement.step = 10;
+		inputElement.step = 1;
 		inputElement.value = 500;
 		inputElement.onchange = function(){constrainInput(this).then(olSrcSettingsUpdate());};
 		inputElement.style="width:70px";
