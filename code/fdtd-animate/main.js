@@ -34,6 +34,7 @@ var gifLoopNum = 0;			// 0 = infinite
 var doAbsCoeff = false;		// If beta values are actually NIAC (false because now handled in Python)
 var renderPanZoom = true;	// Include pan/zoom in rendering of new plot/mesh
 var discretiseInputs = true;// Discretise user inputs using step value
+var limitFreq = true; 		// Limit source frequency
 var loadEx = "";			// Don't load anything
 
 var infoText = 	"Info:\n-----\n"+
@@ -119,6 +120,10 @@ if (urlParams.has("discInputs")) {
 	discretiseInputs = Boolean(Number(urlParams.get("discInputs")));
 	printToDebug("URL param: discInputs = "+(discretiseInputs));
 }
+if (urlParams.has("limitFreq")) {
+	limitFreq = Boolean(Number(urlParams.get("limitFreq")));
+	printToDebug("URL param: limitFreq = "+(limitFreq));
+}
 if (urlParams.has("load")) {
 	loadEx = urlParams.get("load");
 	loadEx = loadEx.replace(/-+/g, ' ');
@@ -162,6 +167,7 @@ var exampleList, imExt;
 var madeGif, madeWav;
 
 /* TODO
+- Add 'saving' text
 - Add modes example
 - Chrome pyScript issue?
 - Test on larger screen
@@ -592,7 +598,8 @@ function setFreqBoxLims() {
 	// get max frequency want to allow
 	var lam = 1/Math.sqrt(2);
 	var fs = Math.round(c/(lam*X));
-	var freqMax = Math.round(0.075*0.75*fs/10)*10;
+	if (limitFreq) { 	var freqMax = Math.round(0.075*0.75*fs/10)*10; 	}
+	else { 				var freqMax = Math.floor(fs/20)*10; 			}
 	// Loop round sources and set
 	for (var i = 0; i<NSrc; i++){
 		fCurrent = Number(srcFreqBox[i].value);
@@ -854,7 +861,7 @@ function loadExample(loadTxt=null) {
 			setRecBoxSettings(	[true], [(XX-1)*dx*0.95], [YMid]);
 			break;
 		case "Sonic crystal":
-			var lambda = dx*50;		// Because cylinders 25 pixels/grid steps apart
+			var lambda = dx*2*25;		// Because cylinders 25 pixels/grid steps apart
 			var relFreq = c/lambda/fs;
 			setSrcBoxSettings(	[true], 
 								[(XX-1)*dx*0.25], [YMid],
@@ -864,7 +871,7 @@ function loadExample(loadTxt=null) {
 			break;
 		case "Binary amplitude diffuser":	// Fall through
 		case "Schroeder diffuser":
-			var lambda = dx*5*7;		// Because well depth step size is 5 pixels/grid steps
+			var lambda = dx*2*5*7;		// Because well depth step size is 5 pixels/grid steps
 			var relFreq = c/lambda/fs;
 			setSrcBoxSettings(	[true], 
 								[(XX-1)*dx*0.5], [YMid],
