@@ -168,6 +168,7 @@ var madeGif, madeWav;
 
 /* TODO
 - Add 'saving' text
+- Add source type option (Gauss, continuous)
 - Add modes example
 - Chrome pyScript issue?
 - Test on larger screen
@@ -1018,7 +1019,7 @@ function makeSrcTable() {
 		inputElement.type = "number";
 		inputElement.id = "srcFreq"+iSrc.toString();
 		inputElement.name = "srcFreq"+iSrc.toString();
-		inputElement.min = 50.0;
+		inputElement.min = 20.0;
 		inputElement.max = 1000.0;
 		inputElement.step = 10;
 		inputElement.value = 500;
