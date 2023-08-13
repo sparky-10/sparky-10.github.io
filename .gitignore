@@ -1,3 +1,4 @@
 *.wav
 *.gif
 __pycache__/
+making_stuff/
