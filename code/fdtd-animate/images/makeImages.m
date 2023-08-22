@@ -122,7 +122,7 @@ for i = 1:NFiles
             NRep = Nyi/NMSeq/patchWidth;
             xInds = ((1-depth):0)+Nxi;
             im(:,xInds) = 1;
-            yInds = find(repmat(kron(MSeq(:),ones([patchWidth,1])),[NRep,1]));
+            yInds = find(repmat(kron(1-MSeq(:),ones([patchWidth,1])),[NRep,1]));
             im(yInds,xInds) = 0.05;
         case "Helmholtz resonator"
             x0 = xMidInt;
