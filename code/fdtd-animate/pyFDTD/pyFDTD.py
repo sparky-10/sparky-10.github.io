@@ -17,6 +17,7 @@ NXYZ = [100, 150, 50]
 X_STEP = 0.01
 SRC_XYZ = [[0.25, 0.75, 0.1]]
 REC_XYZ = [[0.75, 0.25, 0.2]]
+SRC_TYPE_DEFAULT = "Gauss deriv 1"
 C0 = 344
 SIM_TIME = 0.01
 PLOT_UPDATE_TIME = 0.01
@@ -43,7 +44,6 @@ if USE_MATPLOTLIB:
             
 # TODO
 
-# Image resizing
 # GIF
 # - Test 3D vertical orientation
 # - Do 1D
@@ -118,8 +118,9 @@ class pyFDTD:
         
         self.saveGif            = False
         self.gifFile            = 'gifOut.gif'
-        self.gifFrameTime       = 50   # ms
+        self.gifFrameTime       = 40    # ms
         self.gifLoopNum         = 0
+        self.gifArea            = None
         
         self.beta               = 0
         self.betaBorder         = 0
@@ -163,6 +164,7 @@ class pyFDTD:
         self.recStrength        = []
         self.srcT0              = []
         self.srcFreq            = []
+        self.srcType            = []
         self.srcN               = len(self.srcXyz)
         self.recN               = len(self.recXyz)
         
@@ -949,6 +951,15 @@ class pyFDTD:
         if addToPlot:
             self.updatePlotMask()
     
+    def repDecMesh(self, rep=None, dec=None):
+        
+        # Repeat and/or decimate mesh
+        if rep != None:
+            self.mesh = self.repeatData(self.mesh, rep)
+        if dec != None:
+            self.mesh = self.decimateData(self.mesh, dec)
+        self.Nxyz = list(self.mesh.shape)
+    
     def updateWithImage(self):
         
         # Make new mesh array but don't plot
@@ -1017,7 +1028,7 @@ class pyFDTD:
         # inds[0] = self.Nxyz[0]-inds[0]-1
         return inds
         
-    def addSrc(self, xyz, tOffset=0.0, f0=None):
+    def addSrc(self, xyz, tOffset=0.0, f0=None, srcType=None):
         
         # Update on debug
         self.printToDebug('addSrc')
@@ -1031,11 +1042,13 @@ class pyFDTD:
                                    np.ravel_multi_index(inds, self.Nxyz))
             self.srcXyzDisc.insert(self.srcN, \
                                    [ind*self.X for ind in self.srcInd[self.srcN]])
-            srcData, tOffset, f0 = self.getSrc(tOffset, f0)            
+            self.srcType.insert(self.srcN, srcType)
+            srcData, tOffset, f0, srcType = self.getSrc(tOffset, f0, srcType)
             self.srcData.insert(self.srcN, srcData)
             self.srcT0.insert(self.srcN, tOffset)
             self.srcFreq.insert(self.srcN, f0)
             self.srcAmp.insert(self.srcN, 1.0)
+            self.srcType.insert(self.srcN, srcType)
             self.srcStrength.insert(self.srcN, 1.0)
             self.srcNodeType.insert(self.srcN, 0)
             self.srcN += 1
@@ -1064,11 +1077,12 @@ class pyFDTD:
         self.srcXyz.pop(i)
         self.srcInd.pop(i)
         self.srcFlatInd.pop(i)
-        self.srcXyzDisc.opo(i)
+        self.srcXyzDisc.pop(i)
         self.srcT0.pop(i)
         self.srcFreq.pop(i)
         self.srcData.pop(i)
         self.srcAmp.pop(i)
+        self.srcType.pop(i)
         self.srcStrength.pop(i)
         self.srcNodeType.pop(i)
         self.srcN -= 1
@@ -1123,37 +1137,94 @@ class pyFDTD:
         self.recNodeType.pop(i)
         self.recN -= 1
         
-    def getSrc(self, tOffset=0.0, f0=None):
+    def getSrc(self, tOffset=0.0, f0=None, srcType=None):
         
         # Centre frequency
         if f0 is None:
             # Default to half the standard dispersion limit
             f0 = self.fs*0.075/2
         
-        # # Source function
-        # sigma = np.sqrt(2*np.log(2))/(2*PI*f0)
-        # t0 = np.sqrt(np.log(100))*2*sigma + tOffset
-        # tm3dB = np.sqrt(np.log(2))*2*sigma
-        # t = np.arange(0,self.Nt,1)/self.fs
-        # src_fcn = np.exp(-(t-t0)**2/(2*sigma**2))- \
-        #     np.exp(-(t-t0-2*tm3dB)**2/(2*sigma**2))
+        # Source type
+        if srcType is None:
+            # Default source type
+            srcType = SRC_TYPE_DEFAULT
+        srcTypeList = srcType.lower().split()
         
-        # 1st order Gaussian derivative, with appropriate offset, unity 
-        # scaling, and target peak frequency in frequency domain
+        # Time vector
         t = np.arange(0,self.Nt,1)/self.fs
-        alpha = 2*(PI*f0)**2
-        t0 = 4*np.sqrt(1/alpha)
-        dt = t-t0-tOffset
-        src_fcn = (-np.sqrt(2*alpha)*np.exp(0.5)*dt)*np.exp(-alpha*dt**2)
+        t -= tOffset
         
-        return src_fcn, tOffset, f0
+        if srcTypeList[0][0] == "i":            # Impulse
+            # src_fcn = np.zeros(self.Nt)
+            # src_fcn[0] = 1.0
+            src_fcn = np.sinc(t*self.fs)
+        
+        elif srcTypeList[0][0] == "g":          # Gaussian
+            if len(srcTypeList) > 1:
+                if srcTypeList[1][0] == "d":    # Derivative
+                    # Derivative order
+                    if len(srcTypeList) > 2:
+                        derivNum = int(srcTypeList[2])
+                    else:
+                        derivNum = 1
+                    # Get derivative
+                    if derivNum == 1:
+                        # 1st order Gaussian derivative, with appropriate offset, unity 
+                        # scaling, and target peak frequency in frequency domain
+                        alpha = 2*(PI*f0)**2
+                        t0 = 4*np.sqrt(1/alpha)
+                        dt = t-t0
+                        src_fcn = (-np.sqrt(2*alpha)*np.exp(0.5)*dt)*np.exp(-alpha*dt**2)
+                    elif derivNum == 2:
+                        # As above, but 2nd order
+                        alpha = (PI*f0)**2
+                        t0 = 4*np.sqrt(1/alpha)
+                        dt = t-t0
+                        src_fcn = (1-2*alpha*dt**2)*np.exp(-alpha*dt**2)
+                    elif derivNum == 3:
+                        # As above, but 3rd order
+                        alpha = (2/3)*(PI*f0)**2
+                        t0 = 4*np.sqrt(1/alpha)
+                        dt = t-t0
+                        src_fcn = -dt*(2*alpha*dt**2-3)*np.exp(-alpha*dt**2)
+                        src_peak = np.sqrt((3-np.sqrt(6))/(2*alpha))* \
+                            np.sqrt(6)*np.exp(-(3-np.sqrt(6))/2)
+                        src_fcn /= src_peak
+            else:
+                # Gaussian pulse with -3 dB point at f0
+                alpha = (PI*f0)**2/(-np.log(1/np.sqrt(2)))
+                t0 = 3*np.sqrt(1/alpha)
+                dt = t-t0
+                src_fcn = np.exp(-alpha*dt**2)
+        
+        elif srcTypeList[0][0] == "t":          # Tone
+            if len(srcTypeList) > 1:
+                if srcTypeList[1][0] == "p":    # Pulse
+                    # Pulse cycles
+                    if len(srcTypeList) > 2:
+                        P = int(srcTypeList[2])
+                    else:
+                        P = 1
+                    # Get tone pulse
+                    src_fcn = np.cos(2*PI*f0*t-PI)
+                    env = 0.5*(np.cos(2*PI*(f0/P)*t-PI)+1)
+                    env = np.where(t<0, 0, env)
+                    env = np.where(t>P/f0, 0, env)
+                    src_fcn *= env
+                    src_fcn *= (-1)**(P-1)
+            else:
+                # Constant tone
+                src_fcn = np.sin(2*PI*f0*t)
+        
+        return src_fcn, tOffset, f0, srcType
     
     def srcRecDataReset(self):
         
         # Reset all src/rec data
         for i in range(0,self.srcN):
-            self.srcData[i], self.srcT0[i], self.srcFreq[i] = \
-                self.getSrc(self.srcT0[i], self.srcFreq[i])
+            self.srcData[i], self.srcT0[i], self.srcFreq[i], self.srcType[i] =\
+                self.getSrc(tOffset=self.srcT0[i], f0=self.srcFreq[i], \
+                            srcType=self.srcType[i])
         for i in range(0,self.recN):
             self.recData[i] = np.zeros(self.Nt)
     
@@ -1217,6 +1288,22 @@ class pyFDTD:
         
         return data
     
+    def repeatData(self, data, rep):
+        
+        # Repeat data in each dimension
+        for i, r in enumerate(rep):
+            r = int(max(1, r))
+            data = data.repeat(r, axis=i)
+        return data
+    
+    def decimateData(self, data, dec):
+        
+        # Reduce data using decimation
+        for i, d in enumerate(dec):
+            d = int(min(1, d))
+            data = np.delete(data,np.s_[0::d],i)
+        return data
+    
     def setCMap(self):
         
         # Make colour map
@@ -1265,18 +1352,36 @@ class pyFDTD:
         # Add to GIF (if doing)
         if self.saveGif and (self.updatePlotThisLoop or frame0):
             
-            # If there is a mask (surfaces) to get on first frame
-            if self.plotShowMask and frame0:
-                if self.NDim > 1:
-                    # Convert to correct format using colour map
-                    self.imgMesh = self.arr2CMap(self.meshSlice, \
-                                                 [0.0, 1.0], self.gMap)
-                elif self.NDim == 1:
-                    # TODO - What to plot
-                    self.imgMesh = np.zeros((10,10)) # TEMP BLANK!!!!!
+            # If first frame
+            if frame0:
+                
+                # If GIF area defined
+                if self.gifArea != None:
+                    # GIf area no bigger than current mesh
+                    self.gifArea[0] = int(max(0, self.gifArea[0]))
+                    self.gifArea[1] = int(max(0, self.gifArea[1]))
+                    self.gifArea[2] = int(min(self.Nxyz[0], self.gifArea[2]))
+                    self.gifArea[3] = int(min(self.Nxyz[1], self.gifArea[3]))
+                    # If doing trimming of GIF
+                    self.gifTrim =  self.gifArea[0] > 0 or \
+                                    self.gifArea[1] > 0 or \
+                                    self.gifArea[2] < self.Nxyz[0] or \
+                                    self.gifArea[3] < self.Nxyz[1]
                 else:
-                    # Invalid NDim
-                    ()
+                    self.gifTrim = False
+            
+                # If there is a mask (surfaces) to get
+                if self.plotShowMask:
+                    if self.NDim > 1:
+                        # Convert to correct format using colour map
+                        self.imgMesh = self.arr2CMap(self.meshSlice, \
+                                                     [0.0, 1.0], self.gMap)
+                    elif self.NDim == 1:
+                        # TODO - What to plot
+                        self.imgMesh = np.zeros((10,10)) # TEMP BLANK!!!!!
+                    else:
+                        # Invalid NDim
+                        ()
             
             # Get image
             if self.NDim == 3:
@@ -1300,6 +1405,11 @@ class pyFDTD:
                     img[:,:,i] = np.where(np.flipud(self.mesh)>0, \
                                           self.imgMesh[:,:,i], \
                                               img[:,:,i])
+            
+            # Trim if requested
+            if self.gifTrim:
+                img = img[self.gifArea[0]:self.gifArea[2], \
+                          self.gifArea[1]:self.gifArea[3],:]
             
             # Add to list
             self.imgs.append(Image.fromarray(img).convert('RGB'))
