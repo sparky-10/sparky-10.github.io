@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="Schroeder diffusers" content="">
+    <meta name="keywords" content="">
+	<title>Schroeder diffusers</title>
+	<link rel="icon" type="image/x-icon" href="../../images/favicon.ico">
+	
+	<style>
+	img { width: 600px; }
+	.imDiv {text-align: center; }
+	@media (max-width: 600px) {
+    .imDiv {width: 100%;
+			height: auto;}
+	}
+	</style>
+</head>
+
+<body>
+
+<h1>Schroeder diffusers</h1>
+<p>Time domain acoustics FDTD animations of a 2D Schroeder diffuser.</p>
+<p>More often modelled in the frequency domain, these animations show a (pseudo) plane wave sine pulse incident upon 3 periods of an N = 7 quadratic residue diffuser (QRD) with design frequency, f0.</p>
+
+<h2>Below the design frequency</h2>
+
+<p>At low frequency (0.5 x f0), although some extra scattering and temporal diffusion still occur, the diffuser technically doesn't 'work' as intended.</p>
+<div class="imDiv"><img src="videos/Schroeder_diffuser_halff0.gif"></img></div>
+
+<p>The diffuser acts a bit like a plane surface, which when small compared to wavelength will naturally already scatter sound quite evenly. The diffuser is unable to create further diffusion due to the wells not being deep enough to cause sufficient change in phase to the reflected sound.</p>
+<div class="imDiv"><img src="videos/Flat_plate_halff0.gif"></img></div>
+
+<h2>At the design frequency</h2>
+
+<p>At the design frequency (1 x f0) the diffuser can cause a larger change in phase due to wavelength being similar to well depth. This provides potential for diffusion by breaking up the reflected sound, spreading it both spatially and temporally.</p>
+<p>The well depths are based on a quadratic residue number theretic sequence. At the design frequency they are intended to cause a phase change on reflection that scatters equal energy in specific directions, known as 'grating lobes'. These are emphasised by the periodicaly repeating diffuser pattern, and hence Schroeder diffusers are intended to be arranged in repeating periods.</p>
+<div class="imDiv"><img src="videos/Schroeder_diffuser_1f0.gif"></img></div>
+
+<p>Here's the same frequency, but zoomed in. The deepest wells just so happen to be almost (but not quite) quarter wavelength resonators.</p>
+<div class="imDiv"><img src="videos/Schroeder_diffuser_1f0_cropped_slowed.gif"></img></div>
+
+<p>A plane surface of the same dimensions reflects sound in a more directional 'specular' manner (Think 'like a mirror'; angle of incidence equals angle of reflection). As this is a normal incidence source, the specular reflection is straight back towards the source.</p>
+<div class="imDiv"><img src="videos/Flat_plate_1f0.gif"></img></div>
+
+<h2>Multiple of the design frequency</h2>
+
+<p>At multiples of the design frequency (e.g. 3 x f0) the well depths cause a change in phase which again results in equal energy being scattered in the grating lobe directions. This is due to the properties of the number theoretic sequence used.</p>
+<div class="imDiv"><img src="videos/Schroeder_diffuser_3f0.gif"></img></div>
+
+<p>The spread in scattered sound by the diffuser is slightly less than at the design frequency. However, in comparison to the increasingly specular plane surface of the same size, the diffusion is still significant. This is why diffusion is often characterised by a normalised diffusion coefficent calculated relative to a reference plane surface.</p>
+<div class="imDiv"><img src="videos/Flat_plate_3f0.gif"></img></div>
+
+<h2>'Flat plate' frequency</h2>
+
+<p>At high frequency (7 x f0) the so called 'flat plate' frequency occurs, and a reflection similar to a plane surface is seen.</p>
+<div class="imDiv"><img src="videos/Schroeder_diffuser_7f0_resized.gif"></img></div>
+
+<p>This happens due to half a wavelength being equal to the underlying periodic spacing in the well depths, meaning all wells reradiate in phase.</p>
+<div class="imDiv"><img src="videos/Schroeder_diffuser_7f0_cropped_slowed.gif"></img></div>
+
+<p>Note the similarity of the plane surface to the diffuser at this frequency.</p>
+<div class="imDiv"><img src="videos/Flat_plate_7f0_resized.gif"></img></div>
+
+<h2>Far-field response</h2>
+
+<p>To understand better how a Schroeder diffuser should work, we need to look at the far-field interference pattern of more periods (here at 3 x f0 for 6 periods). In theory, sound scattered by a single diffuser panel should be emphasised in the grating lobe directions. 
+In reality this is a little hard to see here, but what can be seen is the directions of constructive and destructive inteference that form a complex spatial pattern akin to the more familiar polar plots seen in frequency domain analysis.</p>
+<div class="imDiv"><img src="videos/Schroeder_diffuser_3f0_6periods.gif"></img></div>
+
+<h2>Further info</h2>
+
+<p>Modelled using <a href="https://github.com/sparky-10/pyFDTD" target=”_blank”>pyFDTD</a> 
+many of the features of which can be used interactively at 
+<a href="https://sparky-10.github.io/code/fdtd-animate/" target=”_blank”>FDTD Animate</a>.</p>
+<p>Based on original Twitter post <a href="https://twitter.com/sparky_10/status/1693629042786746634?s=20" target=”_blank”>here</a>.</p>
+<p>A combined YouTube video can also be found <a href="https://youtu.be/vS6-z-Ml3qg" target=”_blank”>here</a>.</p>
+
+</body>
+
+</html>

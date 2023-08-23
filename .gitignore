@@ -1,4 +1,4 @@
-*.wav
-*.gif
+pyFDTD/*.wav
+pyFDTD/*.gif
 __pycache__/
 making_stuff/
