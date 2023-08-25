@@ -1043,7 +1043,10 @@ class pyFDTD:
             self.srcXyzDisc.insert(self.srcN, \
                                    [ind*self.X for ind in self.srcInd[self.srcN]])
             self.srcType.insert(self.srcN, srcType)
-            srcData, tOffset, f0, srcType = self.getSrc(tOffset, f0, srcType)
+            srcData, tOffset, f0, srcType = self.getSrc(tOffset=tOffset,
+                                                        f0=f0, 
+                                                        srcType=srcType, 
+                                                        i=self.srcN)
             self.srcData.insert(self.srcN, srcData)
             self.srcT0.insert(self.srcN, tOffset)
             self.srcFreq.insert(self.srcN, f0)
@@ -1107,7 +1110,7 @@ class pyFDTD:
             self.recNodeType.insert(self.recN, 0)
             self.recN += 1
     
-    def moveRec(self, xyz, i):
+    def moveRec(self, xyz, i=-1):
         
         # Update on debug
         self.printToDebug('moveRec')
@@ -1137,7 +1140,7 @@ class pyFDTD:
         self.recNodeType.pop(i)
         self.recN -= 1
         
-    def getSrc(self, tOffset=0.0, f0=None, srcType=None):
+    def getSrc(self, tOffset=0.0, f0=None, srcType=None, i=-1):
         
         # Centre frequency
         if f0 is None:
@@ -1154,7 +1157,10 @@ class pyFDTD:
         t = np.arange(0,self.Nt,1)/self.fs
         t -= tOffset
         
-        if srcTypeList[0][0] == "i":            # Impulse
+        if srcTypeList[0][0] == "u":            # User defined
+            src_fcn = self.srcData[i]
+        
+        elif srcTypeList[0][0] == "i":          # Impulse
             # src_fcn = np.zeros(self.Nt)
             # src_fcn[0] = 1.0
             src_fcn = np.sinc(t*self.fs)
@@ -1224,7 +1230,7 @@ class pyFDTD:
         for i in range(0,self.srcN):
             self.srcData[i], self.srcT0[i], self.srcFreq[i], self.srcType[i] =\
                 self.getSrc(tOffset=self.srcT0[i], f0=self.srcFreq[i], \
-                            srcType=self.srcType[i])
+                            srcType=self.srcType[i], i=i)
         for i in range(0,self.recN):
             self.recData[i] = np.zeros(self.Nt)
     
