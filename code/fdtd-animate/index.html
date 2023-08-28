@@ -100,17 +100,17 @@
   }
   
   /* Style the input boxes */
-  input[type=number], .beta-select {
+  input[type=number], .body-select, .srcType-select {
 	border-radius: 10%;
 	cursor: pointer;
   }
   input[type=number]:hover, input[type=number]:focus, input[type=number]:active, 
-  .beta-select:hover, .beta-select:focus, .beta-select:active {
+  .body-select:hover, .body-select:focus, .body-select:active {
 	background-color: #f2f2f2;
 	border-color: darkgreen;
   }
   input[type=number]:focus, 
-  .beta-select:focus {
+  .body-select:focus {
 	outline-style: solid;
 	outline-width: 2px;
 	outline-color: darkgreen;
@@ -132,7 +132,6 @@
 	outline-radius: 10%;
   }
   
-  
   /* Differences in slider to buttons grouped with above */
   .threshold-slider-div {
 	width: 96%;
@@ -144,6 +143,7 @@
 	background-color: whitesmoke;
 	cursor: pointer;
 	accent-color: darkgreen;
+	margin: 0%;
   }
   .threshold-slider:hover, .threshold-slider:focus, .threshold-slider:active {
 	accent-color: #4CAF50;
@@ -319,6 +319,7 @@
 
 <body>
 
+<!-- Get SVGs -->
 <script src="./svgDefinitions.js"></script>
 
 <!-- Sidebars -->
@@ -327,7 +328,6 @@
   <table style="width:100%;border-spacing:0px;"><tr>
   <td style="padding:0px;"><h2>Help</h2></td>
   <td style="padding:0px;text-align:right;">
-  <!--a href='javascript:;' onclick="itemHide('Help sidebar');">Close &times;</a-->
   <button class="button-text-only" onclick="itemHide('Help sidebar');">Close &times;</button>
   </td>
   </tr></table>
@@ -377,7 +377,6 @@
   <table style="width:100%;border-spacing:0px;"><tr>
   <td style="padding:0px;"><h2>Info</h2></td>
   <td style="padding:0px;text-align:right;">
-  <!--a href='javascript:;' onclick="itemHide('Info sidebar');">Close &times;</a-->
   <button class="button-text-only" onclick="itemHide('Info sidebar');">Close &times;</button>
   </td>
   </tr></table>
@@ -408,6 +407,66 @@
   <h4>Disclaimer</h4>
   <p>Content on this site provided solely for fun. 'Use at your own risk'. 
   No guarantee made of accurate predictions and should not be relied on.</p>
+</div>
+
+<div id="Settings sidebar" class="popup-sidebar" style="display:none">
+  <table style="width:100%;border-spacing:0px;"><tr>
+  <td style="padding:0px;"><h2>Settings</h2></td>
+  <td style="padding:0px;text-align:right;">
+  <button class="button-text-only" onclick="itemHide('Settings sidebar');">Close &times;</button>
+  </td>
+  </tr></table>
+  
+  <table>
+  <tr>
+  <td><h4>Source settings</h4></td>
+  </tr>
+  <tr>
+  <td>Type</td>
+  <td style="width:50%">
+  <label for="Source type all"></label>
+  <select name="Source type all" id="Source type all" class="body-select" onchange="olSrcTypeAllUpdate();"
+				style="width:100%"
+				title="Select source type">
+  </select>
+  </td>
+  </tr>
+  <tr>
+  <td>No. periods</td>
+  <td style="width:50%">
+  <label for="Source periods all"></label>
+  <input type="number" name="Source periods all" id="Source periods all" onchange="constrainInput(this).then(olSrcTypeAllUpdate());"
+                style="width:100%" min="1" max="20" step="1" value="2"
+				title="Number of source periods (if type = 'Tone pulse')">
+  </td>
+  </tr>
+  
+  <tr>
+  <td><h4>Mesh settings</h4></td>
+  </tr>
+  <tr>
+      <td>Mesh check</td>
+	  <td>
+	  <label for="Mesh check" class="switch"></label>
+	  <input 	type="checkbox" name="Mesh check" id="Mesh check" onchange="olMeshCheckStatus();" 
+				title="Check mesh (and attempt to fix any issues) before running">
+	  </td>
+  </tr>
+	
+  <tr>
+  <td><h4>General</h4></td>
+  </tr>
+  <tr>
+	  <td >Auto offline update</td>
+	  <td>
+	  <label for="OL plot update" class="switch"></label>
+	  <input 	type="checkbox" name="OL plot update" id="OL plot update" onchange="olPlotUpdateStatus();" 
+				title="Automatically update offline settings/plot when simulation is not running (otherwise updates on next restart)">
+	  </td>
+  </tr>
+  
+  </table>
+  
 </div>
 
 <!--Top panel with run buttons-->
@@ -463,11 +522,17 @@
 	Contact: 	<a href="mailto:r.j.hughes@salford.ac.uk">					email		</a> ; 
 				<a href="https://twitter.com/sparky_10" target=”_blank”>	@sparky_10	</a-->
 	<div style="margin: 5px 0px;">
-		Help: <button id="Help button" class="help-buttons" onclick="itemHide('Info sidebar');itemSwitch('Help sidebar');"
+		Help: <button id="Help button" class="help-buttons" 
+					onclick="itemHide('Info sidebar');itemHide('Settings sidebar');itemSwitch('Help sidebar');"
 					title="Click me for help getting started"><b>h</b></button>
 		;
-		Info: <button id="Info button" class="help-buttons" onclick="itemHide('Help sidebar');itemSwitch('Info sidebar');"
+		Info: <button id="Info button" class="help-buttons" 
+					onclick="itemHide('Help sidebar');itemHide('Settings sidebar');itemSwitch('Info sidebar');"
 					title="Click me for further info"><b>i</b></button>
+		;
+		Settings: <button id="Settings button" class="help-buttons" 
+					onclick="itemHide('Help sidebar');itemHide('Info sidebar');itemSwitch('Settings sidebar');"
+					title="Click me for additional settings"><b>s</b></button>
 	</div>
   </div>
   <div style="margin: 5px 0px;" id="Sim time div" class="simTimeDiv">t =     0.0 ms</div>
@@ -683,32 +748,17 @@
 	<!--Note: Downloads handled by Python-->
 	<button id="Gif download" style="display:none">GIF download</button>											<!-- HIDDEN -->
 	<button id="Wav download" style="display:none">WAV download</button>											<!-- HIDDEN -->
-	
+	  
     <table>
 	
 	<tr>
-      <td >Auto update</td>
-	  <td>
-	  <label for="OL plot update" class="switch"></label>
-	  <input 	type="checkbox" name="OL plot update" id="OL plot update" onchange="olPlotUpdateStatus();" 
-				title="Automatically update settings/plot when simulation is not running (otherwise updates on next restart)">
-	  </td>
-	  <td >&emsp;&emsp;&nbsp; Make GIF</td>
+	  <td >Make GIF</td>
 	  <td>
 	  <label for="Download gif" class="switch"></label>
 	  <input 	type="checkbox" name="Download gif" id="Download gif" onchange="olDownloadsStatus();" 
 				title="Make and auto-download animated GIF file (note: can slow down simulation)">
 	  </td>
-	</tr>
-    
-	<tr>
-      <td>Mesh check</td>
-	  <td>
-	  <label for="Mesh check" class="switch"></label>
-	  <input 	type="checkbox" name="Mesh check" id="Mesh check" onchange="olMeshCheckStatus();" 
-				title="Check mesh (and attempt to fix any issues) before running">
-	  </td>
-	  <td >&emsp;&emsp;&nbsp;  Make wav</td>
+	  <td >&emsp;  Make wav file</td>
 	  <td>
 	  <label for="Download wav" class="switch"></label>
 	  <input 	type="checkbox" name="Download wav" id="Download wav" onchange="olDownloadsStatus();" 
@@ -812,7 +862,7 @@
 	<td>Mode</td>
 	<td>
 	  <label for="Beta mode"></label>
-	  <select class="beta-select" name="Beta mode" id="Beta mode" onchange="olMeshSettingsUpdate();" style="width:60px"
+	  <select class="body-select" name="Beta mode" id="Beta mode" onchange="olMeshSettingsUpdate();" style="width:60px"
 				title="Absorption mode: sets mesh surfaces to constant ('Con.') or varying ('Var.') absorption. 'Con.' uses the user defined surface absorption, while 'Var.' sets absorption proportional to image luminance">
 		<option value="constant">Con. (Constant surface absorption)</option>
 		<option value="varying">Var. (Varying surface absorption proportional to image luminance)</option>
@@ -885,7 +935,7 @@ function itemHide(id) {
 }
 </script>
 
-<!--Replace search text with icons-->
+<!--Replace search text and some buttons with icons-->
 <script>
 var p = document.getElementsByTagName('p');
 var keys = Object.keys(svgHtml);
@@ -910,6 +960,10 @@ btn.getElementsByTagName('svg')[0].setAttribute("width", "100%");
 btn.getElementsByTagName('svg')[0].setAttribute("height", "100%");
 var btn = document.getElementById('Stop button');
 btn.innerHTML = svgHtml['Stop'];
+btn.getElementsByTagName('svg')[0].setAttribute("width", "100%");
+btn.getElementsByTagName('svg')[0].setAttribute("height", "100%");
+var btn = document.getElementById('Settings button');
+btn.innerHTML = svgHtml['Cog'];
 btn.getElementsByTagName('svg')[0].setAttribute("width", "100%");
 btn.getElementsByTagName('svg')[0].setAttribute("height", "100%");
 var btn = document.getElementById('Reset colours button');

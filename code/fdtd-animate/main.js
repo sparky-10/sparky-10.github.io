@@ -148,6 +148,7 @@ var srcAmp = Array(NSrc).fill(1);
 var srcInv = Array(NSrc).fill(0);
 var srcDelay = Array(NSrc).fill(0);
 var srcFreq = Array(NSrc).fill(0);
+var srcType = Array(NSrc).fill(0);
 var srcActiveDefault, srcXDefault, srcYDefault, srcAmpDefault, srcInvDefault, srcDelayDefault, srcFreqDefault;
 var srcXRel = Array(NSrc).fill(0), srcYRel = Array(NSrc).fill(0), srcStep;
 var recActive = Array(NRec).fill(0);	// Receiver stuff will get replaced
@@ -168,7 +169,6 @@ var madeGif, madeWav;
 
 /* TODO
 - Add 'saving' text
-- Add source type option (Gauss, continuous)
 - Add modes example
 - Chrome pyScript issue?
 - Test on larger screen
@@ -251,6 +251,8 @@ var betaModeBox		= document.getElementById("Beta mode");
 var examplesBox		= document.getElementById("Load examples");
 var gifDownloadBut 	= document.getElementById("Gif download");
 var wavDownloadBut 	= document.getElementById("Wav download");
+var srcTypeAllBox	= document.getElementById("Source type all");
+var srcPeriodsAllBox= document.getElementById("Source periods all");
 
 // Set stuff
 OLUpdateBox.checked = updateOL;
@@ -263,6 +265,7 @@ YGridBox.min = gridMin;
 YGridBox.max = gridMax;
 tSimDivUpdate(0.0);		// Sim time is zero
 defineExamples();		// Define the loadable examples dropdown list
+defineSrcTypes();		// define dropdown source type options
 makeSrcTable();			// Make a table with all the source parameter inputs
 makeRecTable();			// Make a table with all the receiver parameter inputs - not really a table, but to stick with same format as sources
 defineSrcDefaults();	// Define the default source values
@@ -610,6 +613,25 @@ function setFreqBoxLims() {
 			olSrcSettingsUpdate(false);		// No resetting etc as should be triggered by function that has already done this
 		};
 	};
+}
+
+// Define source types
+function defineSrcTypes() {
+	printToDebug("Define source types");
+	// Define list
+	var srcTypeList = [	"Gauss", "Gauss derivative 1", "Gauss derivative 2", "Gauss derivative 3", 
+						"Tone", "Tone pulse", "Impulse"];
+	// Add to select box
+	for (var i = 0; i<srcTypeList.length; i++){
+		var opt = document.createElement('option');
+		opt.value = i;
+		opt.innerHTML = srcTypeList[i];
+		srcTypeAllBox.appendChild(opt);
+	}
+	// Default
+	srcTypeAllBox.value = 1;
+	// Update values
+	olSrcTypeAllUpdate();
 }
 
 // Define examples
@@ -1680,6 +1702,21 @@ function olRecPosUpdate(doResetOnOLUpdate=true, doPlotOnOLUpdate=true) {
 	}
 }
 
+// Source type setting (all sources)
+function olSrcTypeAllUpdate() {
+	printToDebug("Source type (all) update");
+	// Get source type
+	var srcTypeAll = srcTypeAllBox.options[srcTypeAllBox.selectedIndex].text;
+	var srcPeriodsAll = Number(srcPeriodsAllBox.value);
+	if (srcTypeAll == "Tone pulse") {
+		srcTypeAll += " "+srcPeriodsAll.toString();
+	}
+	// Assign to all
+	for (var i = 0; i<NSrc; i++) {
+		srcType[i] = srcTypeAll;
+	}
+}
+
 // Source settings (active, amp, invert, delay) update
 function olSrcSettingsUpdate(doResetOnOLUpdate=true) {
 	printToDebug("Source settings update");
@@ -2029,6 +2066,7 @@ function setValues() {
 		pyAttRequest(srcA, 'srcAmp', i);
 		pyAttRequest(srcDelay[i]*1e-3, 'srcT0', i);		// Note: conversion from ms -> seconds
 		pyAttRequest(srcFreq[i], 'srcFreq', i);
+		pyAttRequest(srcType[i], 'srcType', i);
 		// ... Sources get updated before each new run
 	};
 	// Update receivers
