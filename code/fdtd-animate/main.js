@@ -75,6 +75,8 @@ var NyDefault = 200;
 var XDefault = 10.0;
 var NSrc = 4;
 var NRec = 1;
+var srcTypeDefault = "";		// Default set by function
+var srcPeriodsDefault = 2;
 var cDefault = 344.0;
 var tDefault = 10.0;
 var betaDefault = 0.0;
@@ -128,6 +130,16 @@ if (urlParams.has("load")) {
 	loadEx = urlParams.get("load");
 	loadEx = loadEx.replace(/-+/g, ' ');
 	printToDebug("URL param: load = "+(loadEx));
+}
+if (urlParams.has("srcType")) {
+	srcTypeDefault = urlParams.get("srcType");
+	srcTypeDefault = srcTypeDefault.replace(/-+/g, ' ');
+	printToDebug("URL param: srcType = "+(srcTypeDefault));
+}
+if (urlParams.has("srcPeriods")) {
+	srcPeriodsDefault = Number(urlParams.get("srcPeriods"));
+	srcPeriodsDefault = clamp(Math.round(srcPeriodsDefault), 1, 100);
+	printToDebug("URL param: srcPeriods = "+(srcPeriodsDefault));
 }
 
 // Other variables
@@ -630,6 +642,13 @@ function defineSrcTypes() {
 	}
 	// Default
 	srcTypeAllBox.value = 1;
+	for (var i = 0; i<srcTypeList.length; i++){
+		srcTypeTxt = srcTypeDefault.toLowerCase();
+		if (srcTypeAllBox.options[i].text.toLowerCase() == srcTypeTxt) {
+			srcTypeAllBox.value = i;
+		}
+	}
+	srcPeriodsAllBox.value = srcPeriodsDefault;
 	// Update values
 	olSrcTypeAllUpdate();
 }
