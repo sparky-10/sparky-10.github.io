@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="BAD panels" content="">
+    <meta name="keywords" content="">
+	<title>BAD panels</title>
+	<link rel="icon" type="image/x-icon" href="../../images/favicon.ico">
+	
+	<style>
+	img { width: 600px; }
+	.imDiv {text-align: center; }
+	@media (max-width: 600px) {
+    .imDiv {width: 100%;
+			height: auto;}
+	}
+	</style>
+</head>
+
+<body>
+
+<a href="/">&#8592; Home</a>.</p>
+
+<h1>Binary Amplitude Diffuser (BAD) panels</h1>
+<p>2D time domain acoustics FDTD animations of a 2D BAD panel.</p>
+<p>More often modelled in the frequency domain, these animations show a (pseudo) plane wave sine pulse incident upon 3 periods of an N = 7 BAD panel.
+For ease of comparison, the overall size and modelled frequencies are the same as for this <a href="../schroeder-diffuser/">Schroeder diffuser</a>, which has a design frequency, f0.</p>
+
+<h2>Low frequency</h2>
+
+<p>At low frequency the scattering from a BAD panel is effectively an attenuated version of the equivalent plane surface. This is because it's overall dimensions are small compared to wavelength.</p>
+<div class="imDiv"><img src="videos/BAD_halff0.gif" alt="BAD panel - low frequency"></img></div>
+
+<div class="imDiv"><img src="../schroeder-diffuser/videos/Flat_plate_halff0.gif" alt="Plane surface - low frequency"></img></div>
+
+<h2>Mid frequency</h2>
+
+<p>At mid frequency (1 x f0), wavelength becomes comparable to diffuser panel spacing. the reflected sound comprises an attenuated specular reflection (back to the source), with spatial and temporal spread in scattered sound to the sides due to manipulation of the amplitude.</p>
+<div class="imDiv"><img src="videos/BAD_1f0.gif" alt="BAD panel - mid frequency 1"></img></div>
+
+<p>This is a plane surface of the same size. Due to uniform reflection amplitude from the surface, a strong specular reflection is seen reflecting sound back towards the source.</p>
+<div class="imDiv"><img src="../schroeder-diffuser/videos/Flat_plate_1f0.gif" alt="Plane surface - mid frequency 1"></img></div>
+
+<p>Here is the diffuser zoomed in. The BAD panel is able to create scattering through manipulation of the amplitude of the refelcted sound (much harder to see than for a Schroeder diffuser where propagation in the wells occurs).
+Note: although offering less diffusive performance, BAD panels can be made much thinner than an equivalent Schroeder diffuser.</p>
+<div class="imDiv"><img src="videos/BAD_1f0_zoom.gif" alt="BAD panel (zoomed in) - mid frequency 1"></img></div>
+
+<p>The response is similar at slightly higher frequency (3 x f0), though with a narrowing specular component. A BAD panel is designed to scatter equal energy in to the grating lobes, though at a lower level than the reflection in the specular direction. The strong specular reflection is an inherent result of the diffuser altering the reflected sound amplitude and not the phase (like a Schroeder diffuser does).</p>
+<div class="imDiv"><img src="videos/BAD_3f0.gif" alt="BAD panel - mid frequency 2"></img></div>
+
+<p>As the frequency goes up, the equivalent plane surface reflects sound in an increasingly more directional/specular manner.</p>
+<div class="imDiv"><img src="../schroeder-diffuser/videos/Flat_plate_3f0.gif" alt="Plane surface - mid frequency 2"></img></div>
+
+<p>An interesting analagous example is shown below comparing the BAD panel to the equivalent transmission through an array of slits in a plane surface. Because we are considering transmission, where the BAD panel has reflecting and absorbing elements the array of slits has a hole and a surface respectively. One advantage of looking at the surface in this way is that it is slightly easier to distinguish the difference between incident and initial reflected sound (their interference pattern is what is observerd for the BAD panel).
+<div class="imDiv"><img src="videos/BAD_3f0_vs_slits.gif" style="width: 1200px;" alt="BAD panel vs slits - mid frequency 2"></img></div>
+
+<p>Note: arrays of slits/slats can be thought of as a simple volume diffuser equivalent to a surface BAD panel.</p>
+
+<h2>High frequency</h2>
+
+<p>At high frequency (the same as the Schroeder diffuser 'flat plate' frequency), the BAD panel response becomes more specular. However, the BAD does not suffer from the same 'flat plate' frequency as a Schroeder diffuser, and some diffusive efficacy remains.</p>
+
+<div class="imDiv"><img src="videos/BAD_7f0_resized.gif" alt="BAD panel - high frequency"></img></div>
+
+<p>The equivalent plane surface with strong specular reflection.</p>
+<div class="imDiv"><img src="../schroeder-diffuser/videos/Flat_plate_7f0_resized.gif" alt="Plane surface - high frequency"></img></div>
+
+<h2>Further info</h2>
+
+<p>Modelled using <a href="https://github.com/sparky-10/pyFDTD" target=”_blank”>pyFDTD</a> 
+many of the features of which can be used interactively at 
+<a href="https://sparky-10.github.io/code/fdtd-animate/" target=”_blank”>FDTD Animate</a>.</p>
+<!--p>Based on original Twitter post <a href="" target=”_blank”>here</a>.</p>
+<p>A combined YouTube video can also be found <a href="" target=”_blank”>here</a>.</p-->
+
+</body>
+
+</html>
