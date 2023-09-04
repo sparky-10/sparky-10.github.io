@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="Sonic crystals" content="">
+    <meta name="keywords" content="">
+	<title>Sonic crystals</title>
+	<link rel="icon" type="image/x-icon" href="../../images/favicon.ico">
+	
+	<style>
+	img { width: 600px; }
+	.imDiv {text-align: center; }
+	@media (max-width: 600px) {
+    .imDiv {width: 100%;
+			height: auto;}
+	}
+	</style>
+</head>
+
+<body>
+
+<a href="/">&#8592; Home</a>.</p>
+
+<h1>Sonic crystals</h1>
+<p>2D finite difference time domain (FDTD) acoustics animations of a sonic crystal.</p>
+
+<h2>Below the first band gap</h2>
+
+<p>These animations show a (pseudo) plane wave sine pulse incident upon 10 periodically spaced layers of a sonic crystal. The radius of the cylinders is set to one-third of the cylinder spacing.</p>
+<p>Below the first band gap sound is able to pass through (with reflections off the front & back due to abrupt changes in impedance).</p>
+<div class="imDiv"><img src="videos/Sonic_crystal_0p5f0.gif" alt="Sonic crystal at 0.5 x f0"></img></div>
+
+<h2>First band gap</h2>
+
+<p>At the band gap frequency, when half a wavelength fits in to layer spacing (for normal incidence), much lower levels of sound get through.
+A strong reflection back to the source is seen, and some sound appears to get trapped in the array.</p>
+<div class="imDiv"><img src="videos/Sonic_crystal_1f0.gif" alt="Sonic crystal at 1.0 x f0"></img></div>
+
+<h2>Above the first band gap</h2>
+
+<p>Above (1.5 x) the band gap frequency, sound is transmitted again, like at low frequency. Note how the sound travelling through appears to slow down inside the array before reemerging again at the speed of sound in free space.</p>
+<div class="imDiv"><img src="videos/Sonic_crystal_1p5f0.gif" alt="Sonic crystal at 1.5 x f0"></img></div>
+
+<h2>Second band gap</h2>
+
+<p>At twice the first band gap frequency the sonic crystal again attenuates much of the incident sound, letting very little through. At this frequency wavelength is equal to layer spacing, causing coherent back-scattering off the layers.</p>
+<div class="imDiv"><img src="videos/Sonic_crystal_2f0.gif" alt="Sonic crystal at 2.0 x f0"></img></div>
+
+<h2>Graded index arrays</h2>
+
+<p>By varying the size of the cylinders, sonic crystals can be manipulated to have a variety of characteristics. In the following example, imagine the array being a side cross-section of a barrier rather than a view from overhead. This example shows a graded index array, which causes upward refraction by effectively slowing down the the incident wave progressively more with height due to the higher impedance (and essentially tortuosity) of the array towards the top. In the far-field, this can be used to create a shadow behind the array at frequencies below the band gap.</p>
+<p>Note: this array has also been graded in the horizontal direction to minimise reflections off the front/back caused by abrupt change (discontinuity) in impedance.</p>
+<div class="imDiv"><img src="videos/Sonic_crystal_0p5f0_graded_index.gif" alt="Sonic crystal - graded index"></img></div>
+
+<p>As well as the above, graded index arrays have been investigated for applications such as acoustic lenses, acoustic black holes and acoustic cloaking.</p>
+
+<h2>Further info</h2>
+
+<p>Modelled using <a href="https://github.com/sparky-10/pyFDTD" target=”_blank”>pyFDTD</a> 
+many of the features of which can be used interactively at 
+<a href="https://sparky-10.github.io/code/fdtd-animate/" target=”_blank”>FDTD Animate</a>.</p>
+<p>Based on original Twitter post <a href="https://twitter.com/sparky_10/status/1698688251018584348?s=20" target=”_blank”>here</a>.</p>
+<p>A combined YouTube video can also be found <a href="https://youtu.be/Ttkt2MNLXn0" target=”_blank”>here</a>.</p>
+
+</body>
+
+</html>
