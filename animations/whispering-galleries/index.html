@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="Whispering galleries" content="">
+    <meta name="keywords" content="">
+	<title>Whispering galleries</title>
+	<link rel="icon" type="image/x-icon" href="../../images/favicon.ico">
+	
+	<style>
+	* { box-sizing: border-box; }
+	img { width: 600px; }
+	.imDiv, .imDiv2 {
+		text-align: center;
+		padding: 5px;
+	}
+	.imDiv2 {
+		float: left;
+		width: 50%;
+	}
+	.imWrapper, .imWrapperLeft, .imWrapperRight {
+		overflow: hidden;
+		display: inline-block;
+	}
+	.imWrapperLeft {
+		float: left;
+	}
+	.imWrapperRight {
+		float: right;
+	}
+	/* Clear floats */
+	.container::after {
+		content: "";
+		clear: both;
+		display: table;
+	}
+	@media (max-width: 600px) {
+    .imDiv {width: 100%;
+			height: auto;}
+	}
+	@media (max-width: 800px) {
+    .imDiv2 {width: 100%;
+			height: auto;}
+	.imWrapperLeft, .imWrapperRight {
+		float: none;
+	}
+	</style>
+</head>
+
+<body>
+
+<a href="/">&#8592; Home</a>.</p>
+
+<h1>Whispering galleries (and Stonehenge)</h1>
+
+<p>2D geometric acoustics and finite difference time domain (FDTD) animations of a whispering gallery. Also shown are a series of 'broken' equivalents, representative of the outer stones of stonehenge.</p>
+
+<h2>Ray tracing</h2>
+
+<p>Ray tracing showing rays highlighted according to the angle of emission for a full (left) vs 'broken' (right) circular whispering gallery.</p>
+
+<p>The rays highlighted in red are those travelling closest to (/hugging) the surface and forming the whispering gallery effect. The rays travelling further from the circle surface form the more distinct early reflections.</p>
+
+<p>The broken gallery can be seen to have a similar response to the full structure, though with a dashed line effect forming in the wavefront due to the sound escaping through the holes. Note how this effect is more pronounced for the rays highlighted in red, with the whispering gallery effect breaking down. This is because the rays, clinging to the outer surface and undergoing much more rapid reflections, are rapidly able to escape through the holes.</p>
+
+<div class="container">
+	<div class="imDiv2">
+		<div class="imWrapperRight" style="width:395px;height:395px;">
+		<video width="400" controls autoplay muted>
+			<source src="videos/Full_ray_trace_highlighted_solid_angles.mp4" type="video/mp4" alt="Whispering gallery - ray trace highlighted">
+			Browser does not support video tag.
+		</video>
+		</div>
+	</div>
+	<div class="imDiv2">
+		<div class="imWrapperLeft" style="width:395px;height:395px;">
+		<video width="400" controls autoplay muted>
+			<source src="videos/Holes_ray_trace_highlighted_solid_angles.mp4" type="video/mp4" alt="Broken whispering gallery - ray trace highlighted">
+			Browser does not support video tag.
+		</video>
+		</div>
+	</div>
+</div>
+
+<p>... As above, but slightly different visual representation. Ray tracing highlighting specific angles of emission.</p>
+
+<div class="container">
+	<div class="imDiv2">
+		<div class="imWrapperRight" style="width:395px;height:395px;">
+		<video width="400" controls autoplay muted>
+			<source src="videos/Full_ray_trace_90_degrees_highlighted.mp4" type="video/mp4" alt="Whispering gallery - ray trace highlighted 2">
+			Browser does not support video tag.
+		</video>
+		</div>
+	</div>
+	<div class="imDiv2">
+		<div class="imWrapperLeft" style="width:395px;height:395px;">
+		<video width="400" controls autoplay muted>
+			<source src="videos/Holes_ray_trace_90_degrees_highlighted.mp4" type="video/mp4" alt="Broken whispering gallery - ray trace highlighted 2">
+			Browser does not support video tag.
+		</video>
+		</div>
+	</div>
+</div>
+
+<h2>FDTD</h2>
+
+<p>FDTD animation for a full (left) vs 'broken' (right) circular gallery. The source is a pulse with a cardioid directivity, sending sound predominantly clockwise around the circle. This allows a clearer view of how the whispering gallery effect progresses in one direction around the structure (an omnidirectional source will send waves both clockwise and anticlockwise and their interference will be seen).</p>
+
+<p>The whispering gallery effect can clearly be seen for the full structure, forming a wavefront pattern very similar to that predicted by ray tracing. Similarly, the 'broken' gallery response shows the dashed line response in the early reflection wavefront and a rapidly disappearing whispering gallery effect as the waves hugging the outer surface quickly escape the circle.</p>
+
+<div class="imDiv">
+	<div class="imWrapper" style="width:800px;height:402px;">
+	<video width="800" controls autoplay muted>
+		<source src="videos/cardiod2000_side_by_side.mp4" type="video/mp4" alt="Whispering gallery vs broken circle">
+		Browser does not support video tag.
+	</video>
+	</div>
+</div>
+
+<h2>Stonehenge</h2>
+
+<p>Stonehenge - looking for evidence of a whispering gallery effect...</p>
+
+<p>As with the idealised 'broken' gallery, the Stonehenge simualation suggests a negligible surviving whispering gallery effect.</p>
+
+<div class="imDiv">
+	<div class="imWrapper" style="width:495px;height:410px;">
+	<video width="500" controls autoplay muted>
+		<source src="videos/Stonhenge_Cardioid.mp4" type="video/mp4" alt="Stonehenge">
+		Browser does not support video tag.
+	</video>
+	</div>
+</div>
+
+<h2>More unusual whispering galleries</h2>
+
+<p>This shows a 'corrugated' array, which is similar in geometry to the 'broken' whispering gallery, but with indented regions rather than complete holes/gaps. The roughness of the sides can act as a low-pass filter. At higher frequency, when wavelength is comparable or small compared to the rough edges, sound is scattered and directed away from the surface which breaks the whispering gallery effect. However, at low frequency the whispering gallery effect remains intact.</p>
+<div class="imDiv">
+<video width="400" controls autoplay muted>
+  <source src="videos/Corrugated_Cardioid_Grid_2000.mp4" type="video/mp4" alt="Whispering gallery - corrugated sides">
+  Browser does not support video tag.
+</video>
+</div>
+
+<p>Playing with structures... Two three-quarter circles, with whispering gallery effect able to 'jump' across the gap.</p>
+<div class="imDiv">
+<video width="600" controls autoplay muted>
+  <source src="videos/two_three_quarter_circles.mp4" type="video/mp4" alt="Whispering gallery - two 3/4 circles">
+  Browser does not support video tag.
+</video>
+</div>
+
+<h2>Further info</h2>
+
+<p>FDTD simulations modelled mainly using an old MATLAB script, since converetd to <a href="https://github.com/sparky-10/pyFDTD" target=”_blank”>pyFDTD</a> 
+in Python, many of the features of which can be used interactively at 
+<a href="https://sparky-10.github.io/code/fdtd-animate/" target=”_blank”>FDTD Animate</a>.</p>
+<p>Geometric acoustic simulations modelled using MATLAB script (available by request).</p>
+<p>Used in original Twitter posts, e.g. <a href="https://twitter.com/sparky_10/status/1271387236660064256?s=20" target=”_blank”>here</a>.</p>
+
+</body>
+
+</html>
