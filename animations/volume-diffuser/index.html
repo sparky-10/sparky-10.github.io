@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="Volume diffusers" content="">
+    <meta name="keywords" content="">
+	<title>Volume diffusers</title>
+	<link rel="icon" type="image/x-icon" href="../../images/favicon.ico">
+	
+	<style>
+	img { width: 600px; }
+	.imDiv {text-align: center; }
+	@media (max-width: 600px) {
+    .imDiv {width: 100%;
+			height: auto;}
+	}
+	</style>
+</head>
+
+<body>
+
+<a href="/">&#8592; Home</a>.</p>
+
+<h1>Volume diffusers</h1>
+<p>2D finite difference time domain (FDTD) acoustics animations of a volume diffuser cylinder array.</p>
+
+<h2>Low frequency</h2>
+
+<p>These animations show scattering by a volume diffuser of an incident (pseudo) plane wave sine pulse.</p>
+<p>Unlike surface diffusers, volume diffusers aim to reflect sound evenly in all directions, and can allow sound to pass through. This diffuser design is similar to a periodically arranged sonic crystal, though with some cylinders removed. As is common in acoustic diffuser design, this allows number theoretic principals to be applied, guiding the design based on physical properties of the structure.</p>
+<p>The first frequency shown is when a quarter wavelength fits in to layer spacing. Note: whilst at this frequency the arrangement spreads the scattered sound as intended, this is also a point at which scattering is relatively weak. This is due to the cylinders being small compared to wavelength.</p>
+
+<div class="imDiv"><img src="videos/Volume_diffuser_0p5f0.gif" alt="Sonic crystal at 0.5 x f0"></img></div>
+
+<p>The scattering from the equivalent full array (i.e. standard sonic crystal), illustrates why it may be desirable to avoid many periodic elements. The Bragg scattering from a sonic crystal produces a strong coherent reflection off the array layers, giving a result much like a plane surface seen in surface diffuser design. The volume diffuser above aims to avoid this by minimising as far as possible the underlying self-similarity of the structure.</p>
+
+<div class="imDiv"><img src="videos/Sonic_crystal_0p5f0.gif" alt="Volume diffuser at 0.5 x f0"></img></div>
+
+<h2>First 'band gap'</h2>
+
+<p>This is the volume diffuser at the sonic crystal band gap frequency, when half a wavelength fits in to layer spacing (for normal incidence). Although the specular reflected sound is slightly emphasised, significant spatial diffusion occurs. Substantial temporal diffusion also results due to multiple scattering within the diffuser.</p>
+
+<div class="imDiv"><img src="videos/Volume_diffuser_1f0.gif" alt="Sonic crystal at 1.0 x f0"></img></div>
+
+<p>Here is the sonic crystal. Again a strong specular reflection results, though also with significant attenuation of the transmitted wave.</p>
+
+<div class="imDiv"><img src="videos/Sonic_crystal_1f0.gif" alt="Volume diffuser at 1.0 x f0"></img></div>
+
+<h2>Above the first band gap</h2>
+
+<p>Above (at 1.5 x) the band gap frequency, the volume diffuser is working as intended. Here the arrangement (whose design is based on number theory and its aperiodic properties) is able to scatter sound evenly due to the lack of self-similarity. At this point the cylinders are also no longer small comapred to wavelength, and consequently the array can scatter incident sound effectively.</p>
+
+<div class="imDiv"><img src="videos/Volume_diffuser_1f0.gif" alt="Sonic crystal at 1.5 x f0"></img></div>
+
+<p>At this frequency the sound reflected from the sonic crystal is still highly directional, though now focussing scattered energy towards the sides (following Bragg's law).</p>
+
+<div class="imDiv"><img src="videos/Sonic_crystal_1f0.gif" alt="Volume diffuser at 1.5 x f0"></img></div>
+
+<h2>Further info</h2>
+
+<p>Modelled using <a href="https://github.com/sparky-10/pyFDTD" target=”_blank”>pyFDTD</a> 
+many of the features of which can be used interactively at 
+<a href="https://sparky-10.github.io/code/fdtd-animate/" target=”_blank”>FDTD Animate</a>.</p>
+<p>Based on original Twitter post <a href="https://x.com/sparky_10/status/1703770012144591069?s=20" target=”_blank”>here</a>.</p>
+<p>A combined YouTube video can also be found <a href="https://youtu.be/IhFY6XfcF2c" target=”_blank”>here</a>.</p>
+<p>Publications: 
+<a href="https://salford-repository.worktribe.com/output/1454007/volumetric-diffusers-pseudorandom-cylinder-arrays-on-a-periodic-lattice" target=”_blank”>JASA paper</a> ; <a href="https://salford-repository.worktribe.com/output/1446883/volume-diffusers-for-architectural-acoustics" target=”_blank”>Thesis</a>.</p>
+
+</body>
+
+</html>
