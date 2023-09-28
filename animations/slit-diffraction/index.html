@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="Slit diffraction" content="">
+    <meta name="keywords" content="">
+	<title>Slit diffraction</title>
+	<link rel="icon" type="image/x-icon" href="../../images/favicon.ico">
+	
+	<style>
+	* { box-sizing: border-box; }
+	img { width: 600px; }
+	.imDiv, .imDiv3 {
+		text-align: center;
+		padding: 5px;
+	}
+	.imDiv3 {
+		float: left;
+		width: 33.33%;
+	}
+	.imWrapper, .imWrapperLeft, .imWrapperCentre, .imWrapperRight {
+		overflow: hidden;
+		display: inline-block;
+	}
+	.imWrapperLeft {
+		float: left;
+	}
+	.imWrapperCentre {
+		float: center;
+	}
+	.imWrapperRight {
+		float: right;
+	}
+	/* Clear floats */
+	.container::after {
+		content: "";
+		clear: both;
+		display: table;
+	}
+	@media (max-width: 600px) {
+    .imDiv, img {width: 100%;
+			height: auto;}
+    .imDiv3 {width: 100%;
+			height: auto;}
+	.imWrapperLeft, .imWrapperCentre, .imWrapperRight {
+		float: none;}
+	}
+	</style>
+</head>
+
+<body>
+
+<a href="/">&#8592; Home</a>.</p>
+
+<h1>Slit diffraction</h1>
+
+<p>Acoustic finite difference time domain (FDTD) animations of transmission through periodically spaced slits.</p>
+
+<h2>Single slit</h2>
+
+<p>The classic diffraction through a slit (of width a) but with a twist... The incident sound is a sine sweep, resulting in a transmitted wave that changes from a near omnidirectional to a narrowing directional beam pattern.</p>
+
+<div class="imDiv">
+	<img src="videos/Slits1_sweep.gif" alt="Single slit - sine sweep"></img>
+</div>
+
+<p>Here are a few conventional single frequency versions (left to right: wavelength = 1/3, 1, and 3 x a).</p>
+
+<div class="container">
+	<div class="imDiv3">
+		<div class="imWrapperRight">
+			<img src="videos/Slits1_thirdf.gif" alt="Single slit - lambda = 3 x a" style="width:100%"></img>
+		</div>
+	</div>
+	<div class="imDiv3">
+		<div class="imWrapperCentre">
+			<img src="videos/Slits1_1f.gif" alt="Single slit - lambda = 1 x a" style="width:100%"></img>
+		</div>
+	</div>
+	<div class="imDiv3">
+		<div class="imWrapperLeft">
+			<img src="videos/Slits1_3f.gif" alt="Single slit - lambda = 1/3 x a" style="width:100%"></img>
+		</div>
+	</div>
+</div>
+
+<p>At low frequency, when wavelength is (3 x) larger than slit width, the transmitted wave is near omnidirectional. At mid frequency, when wavelength is equal to slit width, a lobing pattern begins to emerge. Some cancellation of transmitted sound to the sides occurs due to lateral propagation from parts of the emerging wavefront being out of phase. Finally at high frequency, when wavelength is (3 x) smaller than slit width, substantial lobing results. Here a complex interference pattern (determined by a sinc function) is seen.</p>
+
+<p>The far field scattering from a single slit can be approximated as being proprtional to a sinc function, given as:</p>
+<p>p_slit = a*sin(k*a*sind(theta)./2);</p>
+<p>Where k is wavenumber, and theta is the angle from normal transmission.</p>
+
+<h2>Double slit (Young's slits)</h2>
+
+<p>This animation shows an example of two slits, separated by distance, d. The incident sine sweep produces a transmitted sound wave that changes from near omnidirectional to a lobing pattern with side lobes of alternating phase.</p>
+
+<div class="imDiv">
+	<img src="videos/Slits2_sweep.gif" alt="Double slit - sine sweep"></img>
+</div>
+
+<p>Again, here are a few more conventional single frequency versions (left to right: wavelength = 1/3, 1, and 3 x d).</p>
+
+<div class="container">
+	<div class="imDiv3">
+		<div class="imWrapperRight">
+			<img src="videos/Slits2_thirdf.gif" alt="Double slit - lambda = 3 x d" style="width:100%"></img>
+		</div>
+	</div>
+	<div class="imDiv3">
+		<div class="imWrapperCentre">
+			<img src="videos/Slits2_1f.gif" alt="Double slit - lambda = 1 x d" style="width:100%"></img>
+		</div>
+	</div>
+	<div class="imDiv3">
+		<div class="imWrapperLeft">
+			<img src="videos/Slits2_3f.gif" alt="Double slit - lambda = 1/3 x d" style="width:100%"></img>
+		</div>
+	</div>
+</div>
+
+<p>At low frequency, when wavelength is (3 x) larger than slit spacing, d (not slit width, a), the transmitted wave is near omnidirectional. Here slit spacing is small compared to wavelength and the sound sums constructively in all directions. At mid frequency, when wavelength is equal to slit spacing, side lobes become apparent. The first of these side lobes are out of phase (in anti-phase) with the main lobe. At high frequency, when wavelength is (3 x) smaller than slit spacing, several side lobes of alternating phase can be seen.</p>
+
+<p>In general the far-field response can be approximated as (e.g. in MATLAB):</p>
+<p>p_array = sin(N*k*d*sind(theta)./2)./sin(k*d*sind(theta)./2);</p>
+<p>Where N is the number of slits. This assumes that wavelength is large compared to slit width, though this can also be taken into account using the sinc function described above (i.e. p = p_slit x p_array).</p>
+
+<h2>Many slits (perforated sheet)</h2>
+
+<p>Finally, a sine sweep sound source hitting a perforated sheet (of infinite extent, modelled using upper/lower reflective boundaries). The transmitted waves transition from near instantly planar to having a complex interference pattern in the near field which slowly becomes planar.</p>
+
+<div class="imDiv">
+	<img src="videos/Slits6_sweep.gif" alt="Perforated sheet - sine sweep"></img>
+</div>
+
+<p>Example frequencies (wavelength = 1/3, 1, and 3 x slit separation, d).</p>
+
+<div class="container">
+	<div class="imDiv3">
+		<div class="imWrapperRight">
+			<img src="videos/Slits6_thirdf.gif" alt="Perforated sheet - lambda = 3 x d" style="width:100%"></img>
+		</div>
+	</div>
+	<div class="imDiv3">
+		<div class="imWrapperCentre">
+			<img src="videos/Slits6_1f.gif" alt="Perforated sheet - lambda = 1 x d" style="width:100%"></img>
+		</div>
+	</div>
+	<div class="imDiv3">
+		<div class="imWrapperLeft">
+			<img src="videos/Slits6_3f.gif" alt="Perforated sheet - lambda = 1/3 x d" style="width:100%"></img>
+		</div>
+	</div>
+</div>
+
+<p>At low frequency, when wavelength is (3 x) larger than slit spacing, d, the separation between emerging parts of the wavefront are small compared to wavelength and the transmitted wave is near planar. The wavefront is near planar (rather than spherical) as the slits extend to +-inf. At mid frequency, when wavelength is equal to slit spacing, a near field interference pattern is created close to the perforated surface which transitions to a plane wave again in the far field (when distance from the slits is large compared to wavelength). Lastly, at higher frequency, when wavelength is (3 x) smaller than slit spacing, a complex near field interference pattern results. Note: for this example any far field behaviour would be further from the surface than shown here.</p>
+
+<p>Note: this example is no longer laterally in the far field of the complete surface (which is infinitely long). Consequently the earlier formula, which is a function of angle, does not apply.</p>
+
+<h2>Further info</h2>
+
+<p>Modelled using <a href="https://github.com/sparky-10/pyFDTD" target=”_blank”>pyFDTD</a> 
+many of the features of which can be used interactively at 
+<a href="https://sparky-10.github.io/code/fdtd-animate/" target=”_blank”>FDTD Animate</a>.</p>
+<p>Based on original Twitter posts, e.g. <a href="https://x.com/sparky_10/status/1706699093651660982?s=20" target=”_blank”>here</a>.</p>
+<!--p>A combined YouTube video can also be found <a href="" target=”_blank”>here</a>.</p-->
+
+</body>
+
+</html>
