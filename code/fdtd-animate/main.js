@@ -2125,6 +2125,9 @@ function setMeshValues(doUpdateMesh=true) {
 
 // Initial setup on receiving message from Python when loaded
 function pyLoaded() {
+	setTimeout(pyLoad, 0);
+}
+function pyLoad() {
 	printToDebug("Initialising js script");
 	// FDTD python object
 	fdtdObj = pyscript.interpreter.globals.get('fdtd');
