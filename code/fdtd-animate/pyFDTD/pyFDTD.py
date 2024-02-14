@@ -121,6 +121,7 @@ class pyFDTD:
         self.gifFrameTime       = 40    # ms
         self.gifLoopNum         = 0
         self.gifArea            = None
+        self.gifScale           = 1
         
         self.beta               = 0
         self.betaBorder         = 0
@@ -1169,7 +1170,10 @@ class pyFDTD:
         t -= tOffset
         
         if srcTypeList[0][0] == "u":            # User defined
-            src_fcn = self.srcData[i]
+            if len(self.srcData) >= i+1:
+                src_fcn = self.srcData[i]
+            else:
+                src_fcn = np.zeros(self.Nt)
         
         elif srcTypeList[0][0] == "i":          # Impulse
             # src_fcn = np.zeros(self.Nt)
@@ -1416,7 +1420,8 @@ class pyFDTD:
             img = self.arr2CMap(img, self.cLims, self.cMap)
             
             # If there is a mask (surfaces) to add then combine
-            # (Getting confused about why the need for flipud!!)
+            # (Use of flipud as img and imgMesh have been flipped when using 
+            # arr2CMap to be in correct form for saving)
             if self.plotShowMask:
                 for i in range(0,3):
                     img[:,:,i] = np.where(np.flipud(self.mesh)>0, \
@@ -1424,12 +1429,22 @@ class pyFDTD:
                                               img[:,:,i])
             
             # Trim if requested
+            # TODO - make area from bottom rather than top??
             if self.gifTrim:
                 img = img[self.gifArea[0]:self.gifArea[2], \
                           self.gifArea[1]:self.gifArea[3],:]
             
+            # Pillow image
+            img = Image.fromarray(img).convert('RGB')
+            
+            # Resize
+            if self.gifScale != 1:
+                h = int(round(self.gifScale*img.size[1]))
+                w = int(round(self.gifScale*img.size[0]))
+                img = img.resize((w,h), Image.Resampling.LANCZOS)
+            
             # Add to list
-            self.imgs.append(Image.fromarray(img).convert('RGB'))
+            self.imgs.append(img)
         
     def getMeshSlice(self):
         
