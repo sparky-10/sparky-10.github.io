@@ -2,12 +2,15 @@
 
 This is an example/template web page using [PyScript](https://pyscript.net/) to allow Python code to be run in the browser.
 
+# UNDER CONSTRUCTION...!!!
+Back to [Main repository](../) for further examples/details
+
+<!--
+
 See:
 * [Web page](https://sparky-10.github.io/code/pyscript-examples/animate-my-model) - Open working web page
 * [Main repository](../) - For further examples/details
 
-<!--
-# UNDER CONSTRUCTION...!!!
 
 ## This example
 
