@@ -1,5 +1,12 @@
+# Any temp Python cache
+__pycache__/
+# Anything in pyFDTD when testing making stuff
 pyFDTD/*.wav
 pyFDTD/*.gif
-__pycache__/
 making_stuff/
-deleteMe*
+# Anything with one of my personal patterns to not include
+*DELETE*
+*NOGIT*
+test*
+# Local copies of stuff made in Ubuntu (that are usually for temporary purposes)
+*(Copy)*
