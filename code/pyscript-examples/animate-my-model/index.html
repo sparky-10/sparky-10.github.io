@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!--Basic recommended meta tags-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!--Give page a name-->
+  <title>Animate my model</title>
+  
+  <!--Version of Pyscript to fetch
+  /* Note: Best to use a fixed version to ensure your page doesn't break (see repository for up-to-date versions)-->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css">
+  <script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
+  
+  <!--See versions at https://github.com/plotly/plotly.js/releases-->
+  <script src='https://cdn.plot.ly/plotly-4.1.2.min.js'></script>
+
+  <!-- For splash screen (edited version of e.g. see https://examples.pyscriptapps.com/matplotlib/latest/)
+  Listens for event that we send at the end of PyScript code (see end of main.py)-->
+  <style>
+    #loadingDiv { outline: none; border: none; background: transparent }
+  </style>
+  <script type="module">
+    const loading = document.getElementById('loadingDiv');
+    addEventListener('py:loaded', () => loading.close());
+    loading.showModal();
+  </script>
+
+</head>
+
+<!--
+Main body of your page
+----------------------
+NOTE:
+- Page deliberately simple and not designed to look pretty
+- Any formatting and use of style purely for quick page construction purposes (and probably quite hacky)
+- Tested on Firefox and (partially) Chrome on a standard desktop/laptop screen
+- May not work well cross- platform/browser/device
+- Proper use of CSS and up-to-date cross-browser/device methods is advised if you want a page to perform properly
+-->
+
+<body>
+
+  <!--Splash screen  (e.g. see https://examples.pyscriptapps.com/matplotlib/latest/)-->
+  <dialog id="loadingDiv">
+    <h1>Loading...</h1>
+  </dialog>
+  
+  <!--Title and summary of page-->
+  <h1>Animate my model</h1>
+  <p>This page is an example of using PyScript to run an animated plot of a 1D finite difference time domain (FDTD) model.</p>
+  
+  <!--This paragraph is set in the Python code-->
+  <div id="statusUpdateId" style="font-weight: bold;">Status: Loading...</div>
+  
+  <div>
+    
+    <h2>Run</h2>
+    
+    <!--Buttons for running simulation
+    Disabled so we let Python enable them when we're ready-->
+    
+    <button id="runButtonId" name="run-button" disabled autocomplete="off" title="Run simulation ">Run</button>
+    <button id="pauseButtonId" name="pause-button" disabled autocomplete="off" title="Pause simulation">Pause</button>
+    <button id="stopButtonId" name="stop-button" disabled autocomplete="off" title="Stop simulation">Stop</button>
+    
+  </div>
+  
+  <div id="settingsDiv" style="width: 20%; float:left;">
+    
+    <h2>Settings</h2>
+    
+    <!--Settings for inputs
+    Note: Values are pretty much all added by Python code
+    Use of autocomplete="off" can be useful to stop previously cached form data from reloading-->
+    
+    <!--
+    <label for="numSourceId" style="width:70%; float:left;">No. sources</label>
+	  <input id="numSourceId" type="number" name="number-sources"
+				title="Number of sources in line array" autocomplete="off"
+				style="width:25%; float:right;"></input>
+		<br/>
+		<label for="dxSourceId" style="width:70%; float:left;">Source spacing (m)</label>
+	  <input id="dxSourceId" type="number" name="source-spacing"
+				title="spacing between line array sources (m)" autocomplete="off"
+				style="width:25%; float:right;"></input>
+		<br/>
+		<label for="frequencyId" style="width:70%; float:left;">Frequency (Hz)</label>
+	  <input id="frequencyId" type="number" name="frequency"
+				title="Frequency (Hz)" autocomplete="off"
+				style="width:25%; float:right;"></input>
+		<br></br>
+		<input id="frequencySliderId" type="range" name="frequency-slider"
+				title="Frequency (Hz)" autocomplete="off"
+				style="width:95%;"></input>
+			
+		<h2>Amplitudes</h2-->
+		<!--the rest gets added by PyScript/Python code-->
+		
+  </div>
+  
+  <div style="width: 80%; float:right;">
+  
+    <h2>Plot</h2>
+    
+    <!--Plot type used/displayed-->
+    <!--label for="plotMethodId" >Plot method</label>
+    <select id="plotMethodId" class="header-dropdown"" title="Method used for plotting" autocomplete="off">
+      <option>Plotly</option>
+      <option>Matplotlib (replace)</option>
+      <option>Matplotlib (update)</option>
+    </select-->
+    
+    <!--Area(s) used to place plot(s)-->
+    <div id="plotlyDivId" class="output"></div>
+    
+  </div>
+  
+  <!--Python/PyScript code
+  Uses code and configuration (libraries, files etc.) defined in external files-->
+  <script type="py" src="./main.py" config="./myConfig.toml">
+  </script>
+  
+</body>
+
+</html>
+

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!--Basic recommended meta tags-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!--Give page a name-->
+  <title>Plot sum of harmonics</title>
+  
+  <!--Version of Pyscript to fetch
+  /* Note: Best to use a fixed version to ensure your page doesn't break (see repository for up-to-date versions)-->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css">
+  <script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
+        
+</head>
+
+<!--Inline configuration (TOML format)-->
+<py-config>
+packages = ["numpy", "matplotlib"]
+</py-config>
+
+<!--
+Main body of your page
+----------------------
+NOTE:
+- Page deliberately simple and not designed to look pretty
+- Any formatting and use of style purely for quick page construction purposes (and probably quite hacky)
+- Tested on Firefox and (partially) Chrome on a standard desktop/laptop screen
+- May not work well cross- platform/browser/device
+- Proper use of CSS and up-to-date cross-browser/device methods is advised if you want a page to perform properly
+-->
+
+<body>
+  
+  <!--Title and summary of page-->
+  <h1>Plot sum of harmonics</h1>
+  <p>This page is an example of using PyScript to plot the sum of the first N harmonics of the harmonic series of either a sawtooth, triangular, or square wave.</p>
+  <p></p>
+  
+  <div class="panel">
+    
+    <h2>Plot settings (wait for plot to load)</h2>
+    
+    <!--
+    Settings for inputs used for making plot - i.e. the wave type and number of harmonics used
+    Note:
+    - autocomplete="off" can be useful to stop previously cached form data from reloading
+    - title gives mouse hover tip
+    -->
+    
+    <label for="waveTypeId" >Wave type</label>
+    <select id="waveTypeId" class="header-dropdown"" title="Select wave type" autocomplete="off">
+      <option value="0" selected>Sawtooth</option>
+      <option value="1">Triangular</option>
+      <option value="2">Square</option>
+    </select>
+		<label for="numHarmonicsId">No. of harmonics</label>
+		<input id="numHarmonicsId" type="number" min="1" max="20" step="1" value="1"
+				title="Select No. of harmonics" autocomplete="off"></input>
+		
+		<h2>Matplotlib plot</h2>
+		
+		<!--Div for placing plot in-->
+		<div id="plotDivId"></div>
+		
+  </div>
+	
+  <!-- Inline Python/PyScript code-->
+  <script type="py">
+      # Imports
+      from pyscript import document, when, display
+      import numpy as np
+      import matplotlib.pyplot as plt
+      
+      # Settings for plot
+      f0 = 100    # Fundamental frequency (Hz)
+      T = 0.02    # Length of signal (s)
+      fs = 10000  # Sample rate (Hz)
+      
+      # Get elements from document by their ID
+      waveTypeElement = document.getElementById("waveTypeId")
+      numHarmonicsElement = document.getElementById("numHarmonicsId")
+      
+      # We introduce the when event decorator
+      # This is a shorthand convenient way of triggering a block of code when an event happens
+      # Note two events are stacked here, meaning either event triggers the execution of the code block
+      @when("change", "#waveTypeId")        # ... when there is a change in element with ID "waveType" (note: "#" specifies ID)
+      @when("change", "#numHarmonicsId")    # ... when there is a change in element with ID "numHarmonics"
+      def waveSettingsChange(event):
+          
+          # Get the number of harmonics value from the HTML element
+          N = int(numHarmonicsElement.value)
+          # Print message to web developer tools console
+          print("No. of harmonics set to %i"%N)
+
+          # Get the wave type from the HTML element
+          wavTypeIndex = waveTypeElement.selectedIndex
+          waveType = waveTypeElement.options[wavTypeIndex].text
+          # Print message to web developer tools console
+          print("Wave type set to %s"%waveType)
+
+          # Make a new plot using wave type and N harmonics
+          makePlot(waveType, N)
+      
+      # Make and display matplotlib plot
+      # Note - makes new plot every time. Not the most efficient, but fine for this simple example
+      def makePlot(waveType, N):
+          
+          # Make figure
+          fig, ax = plt.subplots()
+          # Get data for plotting
+          t, y = getSumHarmonicData(waveType, N)
+          # Add plot
+          ax.plot(t, y, 'b-', linewidth=1, label='Sum of harmonics')
+          # Plot labels, limits etc...
+          ax.set_xlim(0, t[-1])
+          ax.set_xlabel('Time (s)')
+          ax.set_ylabel('Level')
+          ax.set_title('%s wave - sum of first N = %i harmonics'%(waveType, N))
+          ax.grid()
+          # Update display (Note: append=False means any previous plots are replaced)
+          display(fig, target="plotDivId", append=False)
+          # Close figure to tidy up
+          plt.close(fig)
+      
+      # Get sum of harmonics data for plotting
+      def getSumHarmonicData(waveType, N):
+          
+          # Time domain data
+          t = np.arange(0, T, 1/fs)
+          # Empty output
+          NPlot = len(t)
+          y = np.zeros(NPlot)
+          # Loop round and sum harmonics
+          for i in range(1, N+1):
+              # Get harmonic number and scaling term according to wave type
+              match waveType:
+                  case 'Sawtooth':
+                      n = i                 # All harmonics
+                      A = (1/n)             # Amplitude inverse of harmonic number
+                      A *= (-1)**(i-1)      # ... with alternating sign
+                      A *= 2/np.pi          # ... and scaled
+                  case 'Triangular':
+                      n = 2*i-1             # Odd harmonics
+                      A = 1/n**2            # Amplitude factor inverse of square of harmonic number
+                      A *= (-1)**(i-1)      # ... with alternating sign
+                      A *= 8/(np.pi**2)     # ... and scaled
+                  case 'Square':
+                      n = 2*i-1             # Odd harmonics
+                      A = (1/n)             # Amplitude inverse of harmonic number
+                      A *= 4/(np.pi)        # ... and scaled
+              # Add harmonic to total
+              y = y + A*np.sin(n*2*np.pi*f0*t)
+          return t, y
+      
+      # Trigger the number of harmonics change function as if a user event occured
+      # I.e. so we get an initial plot without user interaction
+      # (There are other ways to do this - see later examples) 
+      waveSettingsChange(None)
+      
+      # So we know when we've reached the end of the code block
+      print("End of PyScript code")
+      
+  </script>
+
+</body>
+
+</html>

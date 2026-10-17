@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!--Basic recommended meta tags-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!--Give page a name-->
+  <title>Hello, world!</title>
+  
+  <!--Version of Pyscript to fetch
+  /* Note: Best to use a fixed version to ensure your page doesn't break (see repository for up-to-date versions)-->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css">
+  <script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
+        
+</head>
+
+<!--Inline configuration (TOML format)-->
+<!--Any required non-standard packages, additional files etc. should be specified here-->
+<py-config>
+packages = ["numpy"]
+</py-config>
+
+<!--
+Main body of your page
+----------------------
+NOTE:
+- Page deliberately simple and not designed to look pretty
+- Any formatting and use of style purely for quick page construction purposes (and probably quite hacky)
+- Tested on Firefox and (partially) Chrome on a standard desktop/laptop screen
+- May not work well cross- platform/browser/device
+- Proper use of CSS and up-to-date cross-browser/device methods is advised if you want a page to perform properly
+-->
+
+<body>
+  
+  <!--Title and summary of page-->
+  <h1>Hello, world!</h1>
+  <p>This page is an example of setting up the most basic PyScript page to allow use of Python in the browser.</p>
+  
+  <!--Just a basic paragraph allowing PyScript to place text in-->
+  <h2>Package loaded test (wait for page to load)...</h2>
+  <p id = "myParaId"></p>
+  
+  <!-- Inline Python/PyScript code-->
+  <script type="py">
+      # Imports
+      from pyscript import document   # For access to document elements
+      import numpy as np              # To show we can access a non-standard Python library package
+      import sys
+      # Print message to web developer tools console
+      print('Python code block running...')
+      # Get paragraph element from document by its ID
+      myParaElement = document.getElementById("myParaId")
+      # Let user know if page successfully imported NumPy
+      if "numpy" in sys.modules:
+          myParaElement.innerText = "You have successfully imported NumPy!!"
+      else:
+          myParaElement.innerText = "Sadly no NumPy here!!"
+  </script>
+
+</body>
+
+</html>

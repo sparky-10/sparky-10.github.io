@@ -1,0 +1,4 @@
+packages =  ["numpy", "matplotlib", "plotly"]
+[files]
+"../util/ps_tools.py" = "ps_tools.py"
+"./myPyFunc.py" = ""

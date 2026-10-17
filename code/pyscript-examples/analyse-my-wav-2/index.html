@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!--Basic recommended meta tags-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!--Give page a name-->
+  <title>Analyse my wav 2</title>
+  
+  <!--Version of Pyscript to fetch
+  /* Note: Best to use a fixed version to ensure your page doesn't break (see repository for up-to-date versions)-->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css">
+  <script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
+  
+  <!-- For splashscreen (e.g. see https://examples.pyscriptapps.com/matplotlib/latest/) -->
+  <style>
+    #loading { outline: none; border: none; background: transparent }
+  </style>
+  <script type="module">
+    const loading = document.getElementById('loading');
+    addEventListener('py:ready', () => loading.close());
+    loading.showModal();
+  </script>
+  
+</head>
+
+<!--
+Main body of your page
+----------------------
+NOTE:
+- Page deliberately simple and not designed to look pretty
+- Any formatting and use of style purely for quick page construction purposes (and probably quite hacky)
+- Tested on Firefox and (partially) Chrome on a standard desktop/laptop screen
+- May not work well cross- platform/browser/device
+- Proper use of CSS and up-to-date cross-browser/device methods is advised if you want a page to perform properly
+-->
+
+<body>
+
+  <!--Splashscreen  (e.g. see https://examples.pyscriptapps.com/matplotlib/latest/)-->
+  <dialog id="loading">
+    <h1>Loading...</h1>
+  </dialog>
+  
+  <!--Title and summary of page-->
+  <h1>Analyse my wav 2</h1>
+  <p>This page is an example of using PyScript to load, analyse, and plot audio from a '.wav' file.</p>
+  
+  <!--This paragraph is set in the Python code-->
+  <div id="statusUpdateId" style="font-weight: bold;">Status: Loading...</div>
+
+  <div>
+    
+    <h2>Upload/analyse</h2>
+    
+    <!--Buttons for upload, and analyse
+    Disabled so we let Python enable them when we're ready
+    Note: upload button set to trigger an input element (which is what actually gets the file)-->
+    
+    <input type="file" id="uploadWavId" accept=".wav" style="display:none;"></input>
+    <button id="uploadButtonId" name="Upload" disabled autocomplete="off" onclick="document.getElementById('uploadWavId').click();"
+      title="Upload audio .wav file">Upload</button>
+    <button id="analyseButtonId" name="Analyse" disabled autocomplete="off" title="Analyse audio and print/plot results">Analyse</button>
+    
+  </div>
+
+  <div>
+    
+    <h2>Analysis settings</h2>
+    
+    <!--
+    Settings for inputs used for analysis
+    Note:
+    - Some values may be overwritten by Python code
+    - autocomplete="off" can be useful to stop previously cached form data from reloading
+    -->
+    
+		<label for="analysisThresholdId">Threshold</label>
+		<input id="analysisThresholdId" type="number" name="analysis-threshold" min="0" max="1" step="0.01" value="0.5"
+				title="Analysis threshold" autocomplete="off"></input>
+		
+  </div>
+  
+  <div>
+  
+    <div style="width: 35%; float:left">
+  
+      <!--Area used to display analysis results-->
+      <h2>Analysis results</h2>
+    
+      <h3>File properties:</h3>
+      <!--Results table 1-->
+      <table>
+        <tr>
+          <td title="Uploaded file name">File name:</td>
+          <td id="filenameTableDataId"></td>
+        </tr>
+        <tr>
+          <td title="Number of channels in signal">No. channels:</td>
+          <td id="nChannelTableDataId"></td>
+        </tr>
+        <tr>
+          <td title="Sample rate/frequency of signal (Hz)">Sample rate (Hz):</td>
+        <td id="sampleRateTableDataId"></td>
+        </tr>
+        <tr>
+          <td title="Number of samples in signal">No. samples:</td>
+          <td id="nSampleTableDataId"></td>
+        </tr>
+        <tr>
+          <td title="Signal length in seconds">Signal length (s):</td>
+          <td id="timeLengthTableDataId"></td>
+        </tr>
+      </table>
+    
+      <h3>Signal stats:</h3>
+      <!--Results table 2-->
+      <table id="signalStatsTableId">
+        <tr>
+          <td title="Channel">Channel:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td title="No. samples with abs. level over threshold">No. samples over threshold:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td title="Percentage of signal with abs. level over threshold">Proportion over threshold (%):</td>
+          <td></td>
+        </tr>
+      </table>
+    
+    </div>
+    
+    <div style="width: 65%; float:right">
+  
+      <!--Area used to place plot(s)-->
+      <h2>Matplotlib plot</h2>
+      <div id="plotDivId" class="output"></div>
+    
+    </div>
+    
+  </div>
+  
+  <!--Python/PyScript code
+  Uses code and configuration (libraries, files etc.) defined in external files-->
+  <script type="py" src="./main.py" config="./myConfig.toml">
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!--Basic recommended meta tags-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!--Give page a name-->
+  <title>Code in my console</title>
+
+  <!--Version of Pyscript to fetch
+  /* Note: Best to use a fixed version to ensure your page doesn't break (see repository for up-to-date versions)-->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css">
+  <script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
+  
+</head>
+
+<!--
+Main body of your page
+----------------------
+NOTE:
+- Page deliberately simple and not designed to look pretty
+- Any formatting and use of style purely for quick page construction purposes (and probably quite hacky)
+- Tested on Firefox and (partially) Chrome on a standard desktop/laptop screen
+- May not work well cross- platform/browser/device
+- Proper use of CSS and up-to-date cross-browser/device methods is advised if you want a page to perform properly
+-->
+
+<body>
+  
+  <!--Title and summary of page-->
+  <h1>Code in my console</h1>
+  <p>This page is an example of using PyScript to load a function available to a user in a console style environment.</p>
+  
+  <div style="width: 30%; float:left">
+    
+    <!--Some instructions-->
+    <h2>ChatPGTips</h2>
+    <p>Interactive console allowing use of the function: chatPGTips. An instance of the class is pre-loaded called "monkey". Try e.g.</p>
+    <p>>>> monkey.ask("What is the meaning of all this?")</p>
+    <p>>>> monkey.why()</p>
+    <p>>>> monkey.who()</p>
+    <p>>>> monkey.surpriseMe()</p>
+    <p>etc...</p>
+    <p>Type help(monkey) for further details</p>
+    
+  </div>
+  
+  <div style="width: 70%; float:right">
+    
+    <!--Python/PyScript code using terminal (worker - which is necessary for interactivity)
+    Uses code and configuration (libraries, files etc.) defined in external files-->
+    <script type="mpy" src="./main.py" config="./myConfig.toml" terminal worker>
+    </script>
+    
+  </div>
+
+</body>
+
+</html>

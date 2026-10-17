@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!--Basic recommended meta tags-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!--Give page a name-->
+  <title>Filter my wav</title>
+  
+  <!--Version of Pyscript to fetch
+  /* Note: Best to use a fixed version to ensure your page doesn't break (see repository for up-to-date versions)-->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css">
+  <script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
+  
+  <!-- For splash screen (edited version of e.g. see https://examples.pyscriptapps.com/matplotlib/latest/)
+  Listens for event that we send at the end of PyScript code (see end of main.py)-->
+  <style>
+    #loadingDiv { outline: none; border: none; background: transparent }
+  </style>
+  <script type="module">
+    const loading = document.getElementById('loadingDiv');
+    addEventListener('py:loaded', () => loading.close());
+    loading.showModal();
+  </script>
+        
+</head>
+
+<!--
+Main body of your page
+----------------------
+NOTE:
+- Page deliberately simple and not designed to look pretty
+- Any formatting and use of style purely for quick page construction purposes (and probably quite hacky)
+- Tested on Firefox and (partially) Chrome on a standard desktop/laptop screen
+- May not work well cross- platform/browser/device
+- Proper use of CSS and up-to-date cross-browser/device methods is advised if you want a page to perform properly
+-->
+
+<body>
+
+  <!--Splash screen  (e.g. see https://examples.pyscriptapps.com/matplotlib/latest/)-->
+  <dialog id="loadingDiv">
+    <h1>Loading...</h1>
+  </dialog>
+  
+  <!--Title and summary of page-->
+  <h1>Filter my wav</h1>
+  <p>This page is an example of using PyScript to load, plot, filter, and save audio from a '.wav' file.</p>
+  
+  <!--This paragraph is set in the Python code-->
+  <div id="statusUpdateId" style="font-weight: bold;">Status: Loading...</div>
+
+  <div>
+    
+    <h2>Upload/process/download</h2>
+    
+    <!--Buttons for upload, process, and download
+    Disabled so we let Python enable them when we're ready
+    Note: upload button set to trigger an input element (which is what actually gets the file)-->
+    
+    <input type="file" id="uploadWavId" accept=".wav" style="display:none;"></input>
+    <button id="uploadButtonId" name="Upload" disabled autocomplete="off" onclick="document.getElementById('uploadWavId').click();"
+      title="Upload audio .wav file">Upload</button>
+    <button id="processButtonId" name="Process" disabled autocomplete="off" title="Process audio and plot">Process</button>
+    <button id="downloadButtonId" name="Download" disabled autocomplete="off" title="Download processed audio as .wav file">Download</button>
+    
+  </div>
+
+  <div>
+    
+    <h2>Filter settings</h2>
+    
+    <!--
+    Settings for inputs used for filtering - dropdown box for type, and value boxes for filter order and cut-off frequencies
+    Note:
+    - Some values may be overwritten by Python code
+    - autocomplete="off" can be useful to stop previously cached form data from reloading
+    -->
+    
+    <label for="filterTypeId" >Type</label>
+    <select id="filterTypeId" name="filter-type" class="header-dropdown"" title="Filter type" autocomplete="off">
+      <option selected>Low pass</option>
+      <option>High pass</option>
+      <option>Band pass</option>
+      <option>Band stop</option>
+    </select>
+    <label for="filterOrderId">Order</label>
+	  <input id="filterOrderId" type="number" name="filter-order" min="1" max="10" step="1" value="2"
+				title="Filter order" autocomplete="off"></input>
+		<label for="filterFLowerId">f Lower (Hz)</label>
+	  <input id="filterFLowerId" type="number" name="filter-f-lower" min="10" max="20000" step="10" value="500"
+				title="Lower frequency of filter (Hz)" autocomplete="off" disabled></input><!--Disabled as type initially set to Low pass-->
+		<label for="filterFUpperId">f Upper (Hz)</label>
+		<input id="filterFUpperId" type="number" name="filter-f-upper" min="10" max="20000" step="10" value="1000"
+				title="Upper frequency of filter (Hz)" autocomplete="off"></input>
+		
+  </div>
+  
+  <div>
+  
+    <!--Area used to place plot(s)-->
+  
+    <h2>Matplotlib plot(s)</h2>
+    
+    <!-- Simple left and right columns-->
+    <div id="plotDivLId" class="output" style="width: 50%; float:left"></div>
+    <div id="plotDivRId" class="output" style="width: 50%; float:right"></div>
+    
+  </div>
+  
+  <!--Python/PyScript code
+  Uses code and configuration (libraries, files etc.) defined in external files-->
+  <script type="py" src="./main.py" config="./myConfig.toml">
+  </script>
+
+</body>
+
+</html>
