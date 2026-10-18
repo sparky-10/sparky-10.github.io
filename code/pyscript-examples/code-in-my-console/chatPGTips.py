@@ -98,7 +98,7 @@ class chatPGTips:
             qSum = 0
             for x in list(question):
                 qSum += ord(x)
-            Seed(qSum)
+            seed(qSum)
         # Ask the question!!
         getattr(self, qType)()
     
