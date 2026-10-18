@@ -14,8 +14,9 @@ questionTypes +=        ["which"]
 treatQuestionTypesAs += ["what"]                            # I.e. treat "which" like "what"
 questionTypes +=        ["whom", "whose"]
 treatQuestionTypesAs += ["who"]*2                           # I.e. treat "whom" and "whose" like "who"
-decideQuestions =       ["if", "is", "isn't", "has", "hasn't", "should", "shouldn't", 
+decideQuestions =       ["is", "isn't", "has", "hasn't", "should", "shouldn't", "have", "haven't", 
                          "could", "couldn't", "will", "won't", "can", "can't"]
+#decideQuestions +=      ["if"]     # Not sure about this one
 questionTypes +=        decideQuestions
 treatQuestionTypesAs += ["decide"]*len(decideQuestions)     # I.e. treat all decideQuestions as "decide"
 defaultQuestionType =   "unsure"
@@ -296,7 +297,7 @@ class chatPGTips:
                         asList[0] = asList[0].upper()
                         appendOpt = "".join(asList)
                     # include space if new text doesn't start with punctuation or space
-                    if not any(appendOpt[0]==endText for endText in [" ", ",", ".", "?", "!"]):
+                    if not any(appendOpt[0]==endText for endText in [" ", "'", ",", ".", "?", "!"]):
                         ans += " "
                 # Add to answer
                 ans += appendOpt

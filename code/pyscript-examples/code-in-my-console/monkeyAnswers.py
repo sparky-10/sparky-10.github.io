@@ -81,28 +81,38 @@ isIssue = ["is a problem for you", "scares you", "means it's all pointless anywa
            "is your thing", "is a turn off", "is chronic", "is plausible"]
 
 # Some random extra add-ons
-randomExtras = {"is": {"just my luck!": None, "blooming typical!": None, "common these days": None, "par for the course": None, 
-                        "nothing that can't be fixed with a nice cuppa": None, "sort of what you'd expect": None},
-                "contradicts": {"what I just said": None, "the manual": None, "basic common sense": None, "the laws of physics": None},
-                "monkey thinks": {"is": {"the answer to everything": None, "inevitable": None, "best fixed with a nice cup of tea": None,
-                                            "not that unusual in the current climate": None, "pretty standard": None}},
-                "honestly": {"beggars belief": None, "is not uncommon": None, "is astonishing": None, "is flabbergasting": None}}
+randomExtras = {"is": ["just my luck!", "blooming typical!", "common these days", "par for the course", 
+                        "nothing that can't be fixed with a nice cuppa", "sort of what you'd expect", "nothing to do with me"],
+                "contradicts": ["what I just said", "the manual", "basic common sense", "the laws of physics"],
+                "monkey thinks": ["is", ["the answer to everything", "inevitable", "best fixed with a nice cup of tea",
+                                            "not that unusual in the current climate", "pretty standard"]],
+                "honestly": [["beggars belief", "is not uncommon", "is astonishing", "is flabbergasting"],
+                            [stop, skip], ["when", "if"], "you think about it"]}
 
 caveats = [[",", stop], ["which is", skip], prefixAdverb+[skip], dueTo, event+reason, [skip, stop], "which", randomExtras]
 
 whoList = [
-            [["Who", "Whom"], ["do you think", "would you like it to be", "is anybody, really"], quiz],
+            [["Who", "Whom"], ["do you think", "would you like it to be", "is anybody, really", "gives a damn", "goes there", 
+                               "let The Dogs Out", "are you", "can live without it, I ask in all honesty", 
+                               "lives in a house like this", "moved my cheese", "rattled your cage"], quiz],
             [prefix+[skip], itIs, prefixAdverb+[skip], identity, [skip, stop], doing+[skip, stop], 
                 wearing+[stop], adjective+[skip], colour+[skip], clothes, [skip, stop], pairedWith+[skip, stop], whilstPrefix+[stop], whilst],
             [prefix, itIs, identity, doing],
             [identity]+caveats,
+            ["It's not", identity, ["again", skip], "is it", quiz],
             [itIs+[skip], prefixAdverb, identity, wearing+[stop], adjective+[skip], colour+[skip], clothes],
             [prefixQuestion+[skip], itIs, prefixAdverb+[skip], identity, [skip, quiz], doing+[skip, quiz], wearing+[quiz],  
                 adjective+[skip], colour+[skip], clothes, [skip, quiz], pairedWith+[skip, quiz], whilstPrefix+[quiz], whilst, quiz]
         ]
 
 whatList = [
-            ["What", ["do you think", "is the point to be honest", "do you want from me, it's not how it used to be"], quiz],
+            ["What", ["do you think?", "is the point to be honest?", "is the meaning of this?", "on earth do you mean?",
+                      "do you want from me? It's not how it used to be!", "time is dinner? I'm famished!",
+                      "goes up must come down", "happens in Vegas, stays in Vegas!", "has come over you?", 
+                      "have the Romans ever done for us?", "if...?", "in tarnation?", "in the name of Dickens!",
+                      "is this life if, full of care, we have no time to stand and stare", "the Dickens!",
+                      "do points mean? Points mean prizes!", "do you give to a man who has everything?", 
+                      "does that have to do with the price of fish?", "fresh hell is this?", "gives?", "goes around comes around"]],
             [prefix+[skip], itIs, prefixAdverb+[skip], identity, [skip, stop], doing+[skip, stop], 
                 wearing+[stop], adjective+[skip], colour+[skip], clothes, [skip, stop], pairedWith+[skip, stop], whilstPrefix+[stop], whilst],
             [prefix, itIs, identity, doing]+caveats,
@@ -113,37 +123,47 @@ whatList = [
         ]
 
 whereList = [
-            ["Where", ["the sun meets the sky", "would you say it is", "isn't it", "have all the cowboys gone", 
-                        "do you go, my lovely"], quiz],
+            ["Where", ["the sun meets the sky", "isn't it?", "have all the cowboys gone?", "the wild things are", 
+                        "do you go, my lovely?", "do I even begin?", "am I!?!", "wonders never cease", "'s the catch?",
+                        "did Our Love Go?", "eagles dare", "imagination meets reality", "it's at", "on god's green earth", 
+                        {"would": [["you say it is", "you like it to be"], quiz]},
+                        {"there's": ["smoke there's fire", "a will there's a way", "life, there's hope", "muck there's brass"]}]],
             [prefix+[skip], itIs, prefixAdverb+[skip], place, [skip, stop], setting+[skip, stop], dueTo, reason],
             [prefix, itIs, place, setting+[stop]]+caveats,
             [place]+caveats,
-            [prefixQuestion+[skip], itIs, prefixAdverb+[skip], place, [skip, quiz], setting+[skip, quiz]]+ 
-            [["because", "as"], "that's" , ["where", "the kind of place"], ["I'd", "monkey would", "Johnny Vegas would"], 
-            ["leave it", "put it"]]+[quiz]
+            [prefixQuestion+[skip], itIs, prefixAdverb+[skip], place, [skip, quiz], setting+[skip, quiz], quiz]+ 
+                [["Because", "As"]+[skip], "that's" , ["where", "the kind of place"], 
+                ["I'd", "monkey would", "Johnny Vegas would"], ["leave it", "put it"], stop]
         ]
 
 whyList = [
-            ["Why", ["wouldn't it", "not", ", oh why, oh why...", "frankly who cares already",
-                      "is it you get to ask all the questions", "do birds suddenly appear",
-                      "does it always rain on me"], quiz],
-            ["Why it's none of your business", ["you cheeky"]+[skip], ["monkey", "young scamp"]],
-            ["Why", ["I oughta", "of course"], "!"],
+            {"Why":{"":[["wouldn't it", "not", ", oh why, oh why...", "frankly who cares already",
+                         "is it you get to ask all the questions", "do birds suddenly appear", "hast thou forsaken me", 
+                         "does it always rain on me", "did the chicken cross the road", "do only fools and horses work",
+                         "don't you say what you really think", "take two bottles into the shower"], quiz], 
+                    "it's none of your business":[["you cheeky"]+[skip], ["monkey", "young scamp"],["!", stop]],
+                    "you": ["!", "would, wouldn't you", "look lovely today", "might ask"]}},
             [prefix+[skip], itIs, prefixAdverb+[skip], dueTo, event, [skip, stop], eventSuffix],
             [prefix, itIs, dueTo, event, eventSuffix]+caveats,
             [prefix, itIs, dueTo, event]+caveats,
-            [["Could it be"]+[skip], dueTo, reason, [stop], causing, outcome, quiz],
+            [["Could it be"]+[skip], dueTo+[skip], reason, [skip, quiz], causing, outcome, quiz],
             [["Monkey thinks", "These days"]+[skip], itIs, prefixAdverb+[skip], dueTo, event, eventSuffix+[stop]],
-            [prefixQuestion+[skip], itIs, prefixAdverb+[skip], event, [skip, quiz], place+[skip, quiz]]+ 
-                [["because", "as"], "that's" , ["why", "the reason"], ["I'd", "monkey would", "Johnny Vegas would"], 
-                ["do it", "resort to that"]]+[quiz]
+            [prefixQuestion+[skip], itIs, prefixAdverb+[skip], event, [skip, quiz], place+[skip, quiz], quiz]+ 
+                [["Because", "As"]+[skip], "that's" , ["why", "the reason"], ["I'd", "monkey would", "Johnny Vegas would"], 
+                ["do it", "resort to that"], stop]
         ]
 
 whenList = [
-            ["When", ["would you", "shall we three meet again", ", will I, will I be famous!", "is the best time for you"], quiz],
-            ["When", ["you're in love with a beautiful woman", "you're smiling, when you're smiling, the whole world smiles with you"]],
-            [["When", "Right after"], ["you've made that brew!", "monkey's tidied his room", 
-                                        "you stick the kettle on", "we've had a quick brew"]],
+            {"": [["Monkey says", "When"], ["would you", "shall we three meet again", ", will I, will I be famous!", 
+                   "is the best time for you"], quiz],
+             "When": ["you're in love with a beautiful woman", "you're smiling, when you're smiling, the whole world smiles with you",
+                      "push comes to shove", "it rains, it pours", "all is said and done", "in Rome...", "the going gets tough, the tough get going",
+                      "hell freezes over", "I was a lad...", "I'm good and ready", "you least expect it", "the boat comes in", "word gets out",
+                      "all is said and done", "all you have is a hammer, everything looks like a nail", "pigs fly", "the cat's away", 
+                      "I was a kid, I walked to school uphill both ways", "the time is right", "you get a moment", "the going gets tough",
+                      "the dust has settled", "the gloves are off", "the eagle flies", "the band begins to play", "the fat lady sings",
+                      "the stars align"], 
+             "Right after": ["you've made that brew!", "monkey's tidied his room", "you stick the kettle on", "we've had a quick brew"]},
             [prefix+[skip], itIs+[skip], prefixAdverb+[skip], timePrefix, time+moment, timeSuffix+[skip, stop]]+caveats,
             [itIs+[skip], timePrefix, moment, timeSuffix+[skip, stop]]+caveats,
             [timePrefix, time],
@@ -154,8 +174,10 @@ whenList = [
 howList = [
             ["How", ["do you do", "do you like your eggs in the morning", "would you like it", "you doing",
                      "is it you get to ask all the questions", "do you mean", "do they do that",
-                      "long is a piece of string", "do you take your tea", "one lump or two"], quiz],
-            ["Monkey says have you tried Googling it?"],
+                      "long is a piece of string", "do you take your tea", "one lump or two", 
+                      "soon is now", "deep Is Your Love", "about that", "come", "do you like them apples",
+                      "does your garden grow", "long is a piece of string"], quiz],
+            [["Monkey says", skip], "have you tried Googling it?", "how dare you!", "that's how, for now"],
             [prefix, prefixAdverb+[skip], byTry, method, methodSuffix+[skip]]+caveats,
             [prefix, byTry, method, methodSuffix+[skip]],
             [byTry, method],
