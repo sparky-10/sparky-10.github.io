@@ -87,7 +87,7 @@ class chatPGTips:
         # An then...
         if not questionType is None:
             # If found question type, get how we treat it
-            questionType = treatQuestionTypesAs[questionIndex]
+            qType = treatQuestionTypesAs[questionIndex]
         else:
             # Use default question type
             qType = defaultQuestionType
@@ -204,7 +204,7 @@ class chatPGTips:
             # Index of start of a question - initial value (i.e. not found)
             firstQuestionIndex = questionLength
             # No questions found yet
-            firstQuestionType = None
+            firstQuestionTypeIndex = None
             # Loop round question types (except for last one)...
             for i, qType in enumerate(questionTypes):
                 # Index of question type in question (returns -1 if not found)
@@ -212,15 +212,15 @@ class chatPGTips:
                 # If found question type in question, and is before any prev types found
                 if qIndex >= 0 and qIndex < firstQuestionIndex:
                     # Current found question type and index
-                    firstQuestionType = i
+                    firstQuestionTypeIndex = i
                     firstQuestionIndex = qIndex
             # This should mean we have a question
-            if not firstQuestionType is None:
-                questionType = questionTypes[firstQuestionType]
+            if not firstQuestionTypeIndex is None:
+                questionType = questionTypes[firstQuestionTypeIndex]
             else:
                 questionType = None
             # Return result
-            return (questionType, firstQuestionIndex)
+            return (questionType, firstQuestionTypeIndex)
     
     def __getAnswer__(self, x):
         
