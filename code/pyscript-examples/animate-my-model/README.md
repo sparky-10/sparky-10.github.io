@@ -11,12 +11,14 @@ See:
 * [Web page](https://sparky-10.github.io/code/pyscript-examples/animate-my-model) - Open working web page
 * [Main repository](../) - For further examples/details
 
+This is effectively a much simpler version of an older page FDTD Animate ( [page](https://sparky-10.github.io/code/fdtd-animate/) | [repository](https://github.com/sparky-10/pyFDTD)), though note this uses a much earlier version of PyScript and is written using both JS and PyScript.
 
 ## This example
 
 This example allows the user to:
-* Set inputs (......)
+* Set page inputs (......)
 * Run an animated plot of a 1D FDTD model
+* Use an interactive console environment to use additional functionality of the code?
 
 ## Use case(s)
 
@@ -24,9 +26,14 @@ Animating of analytical/numerical model predictions based on user settings (simi
 
 ## Methods used
 
-* Fetches file (pinned to version???)
+* Fetches file (pinned to version)
+* Workers (accessing shared memory)?
+* Wav/gif download options?
+* Interactive console?
 
 ## Notable improvements in later examples
+
+This will be updated as new examples are added.
 
 ## Packages
 
