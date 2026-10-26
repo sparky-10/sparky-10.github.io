@@ -53,11 +53,13 @@ NOTE:
       print('Python code block running...')
       # Get paragraph element from document by its ID
       myParaElement = document.getElementById("myParaId")
-      # Let user know if page successfully imported NumPy
+      # Say hello and let user know if page successfully imported NumPy
+      mypageText = "Hello, world!\n"
       if "numpy" in sys.modules:
-          myParaElement.innerText = "You have successfully imported NumPy!!"
+          mypageText += "You have successfully imported NumPy!!"
       else:
-          myParaElement.innerText = "Sadly no NumPy here!!"
+          mypageText += "Sadly no NumPy here!!"
+      myParaElement.innerText = mypageText
   </script>
 
 </body>
