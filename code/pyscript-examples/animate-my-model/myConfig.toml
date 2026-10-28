@@ -3,4 +3,3 @@ packages =  ["numpy", "scipy", "matplotlib", "pillow", "plotly"]
 "../util/ps_tools.py" = "ps_tools.py"
 #"https://raw.githubusercontent.com/sparky-10/pyFDTD/refs/heads/main/pyFDTD.py" = "pyFDTD.py"	# Latest version
 "https://raw.githubusercontent.com/sparky-10/pyFDTD/b1be0c9483e80ac5c655acadb5bbb965ed1c5a20/pyFDTD.py" = "pyFDTD.py"	# Pinned version
-#"NOGIT/pyFDTD.py" = "pyFDTD.py"	# TEMPORARY!!!!!!
