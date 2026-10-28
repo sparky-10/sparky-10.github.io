@@ -1,5 +1,6 @@
-packages =  ["numpy", "scipy", "matplotlib", "plotly"]
+packages =  ["numpy", "scipy", "matplotlib", "pillow", "plotly"]
 [files]
 "../util/ps_tools.py" = "ps_tools.py"
 #"https://raw.githubusercontent.com/sparky-10/pyFDTD/refs/heads/main/pyFDTD.py" = "pyFDTD.py"	# Latest version
-"https://raw.githubusercontent.com/sparky-10/pyFDTD/5f2021ccab8e790c130ae598d3654befebf8581e/pyFDTD.py" = "pyFDTD.py"	# Pinned version
+"https://raw.githubusercontent.com/sparky-10/pyFDTD/b1be0c9483e80ac5c655acadb5bbb965ed1c5a20/pyFDTD.py" = "pyFDTD.py"	# Pinned version
+#"NOGIT/pyFDTD.py" = "pyFDTD.py"	# TEMPORARY!!!!!!

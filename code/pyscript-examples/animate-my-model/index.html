@@ -55,67 +55,64 @@ NOTE:
   <!--This paragraph is set in the Python code-->
   <div id="statusUpdateId" style="font-weight: bold;">Status: Loading...</div>
   
-  <div>
+  <div style="width: 25%; float:left;">
     
-    <h2>Run</h2>
+    <div>
+      <h2>Run</h2>
+      <!--Buttons for running simulation
+      Disabled so we let Python enable them when we're ready-->  
+      <button id="runButtonId" name="run-button" disabled autocomplete="off" title="Run simulation ">Run</button>
+      <button id="pauseButtonId" name="pause-button" disabled autocomplete="off" title="Pause simulation">Pause</button>
+      <button id="stopButtonId" name="stop-button" disabled autocomplete="off" title="Stop simulation">Stop</button>
+      <button id="downloadWavButtonId" name="download-wav-button" disabled autocomplete="off" title="Download '.wav' file">Download '.wav'</button>
+    </div>
     
-    <!--Buttons for running simulation
-    Disabled so we let Python enable them when we're ready-->
-    
-    <button id="runButtonId" name="run-button" disabled autocomplete="off" title="Run simulation ">Run</button>
-    <button id="pauseButtonId" name="pause-button" disabled autocomplete="off" title="Pause simulation">Pause</button>
-    <button id="stopButtonId" name="stop-button" disabled autocomplete="off" title="Stop simulation">Stop</button>
+    <div id="settingsDiv">
+      <h2>Settings</h2>
+      <!--Settings for inputs
+      Note: Values are pretty much all added by Python code
+      Use of autocomplete="off" can be useful to stop previously cached form data from reloading-->
+      <label for="gridDistanceId" style="width:70%; float:left;">Grid distance (m)</label>
+	    <input id="gridDistanceId" type="number" name="grid-spacing"
+				  title="Grid distance (m)" autocomplete="off"
+				  style="width:25%; float:right;"></input>
+		  <br/>
+		  <label for="gridStepSizeId" style="width:70%; float:left;">Grid step size (m)</label>
+	    <input id="gridStepSizeId" type="number" name="grid-step-size"
+				  title="Grid step size (m)" autocomplete="off"
+				  style="width:25%; float:right;"></input>
+		  <br/>
+		  <label for="simulationTimeId" style="width:70%; float:left;">Simulation time (ms)</label>
+	    <input id="simulationTimeId" type="number" name="simulation-time"
+				  title="Simulation time (s)" autocomplete="off"
+				  style="width:25%; float:right;"></input>
+		  <label for="sourcePositionId" style="width:70%; float:left;">Source position (m)</label>
+	    <input id="sourcePositionId" type="number" name="source-position"
+				  title="Source position (m)" autocomplete="off"
+				  style="width:25%; float:right;"></input>
+		  <label for="receiverPositionId" style="width:70%; float:left;">Receiver position (m)</label>
+	    <input id="receiverPositionId" type="number" name="receiver-position"
+				  title="Receiver position (m)" autocomplete="off"
+				  style="width:25%; float:right;"></input>
+		  <label for="absCoeffLId" style="width:70%; float:left;">Absorption coefficient (left)</label>
+	    <input id="absCoeffLId" type="number" name="abs-coeff-left"
+				  title="Absorption coefficient (left)" autocomplete="off"
+				  style="width:25%; float:right;"></input>
+		  <label for="absCoeffRId" style="width:70%; float:left;">Absorption coefficient (right)</label>
+	    <input id="absCoeffRId" type="number" name="abs-coeff-right"
+				  title="Absorption coefficient (right)" autocomplete="off"
+				  style="width:25%; float:right;"></input>
+		  <label for="plotIthUpdateId" style="width:70%; float:left;">Plot n-th time step</label>
+	    <input id="plotIthUpdateId" type="number" name="plot-ith-update"
+				  title="Update plot every n-th time step" autocomplete="off"
+				  style="width:25%; float:right;"></input>
+    </div>
     
   </div>
   
-  <div id="settingsDiv" style="width: 20%; float:left;">
-    
-    <h2>Settings</h2>
-    
-    <!--Settings for inputs
-    Note: Values are pretty much all added by Python code
-    Use of autocomplete="off" can be useful to stop previously cached form data from reloading-->
-    
-    <!--
-    <label for="numSourceId" style="width:70%; float:left;">No. sources</label>
-	  <input id="numSourceId" type="number" name="number-sources"
-				title="Number of sources in line array" autocomplete="off"
-				style="width:25%; float:right;"></input>
-		<br/>
-		<label for="dxSourceId" style="width:70%; float:left;">Source spacing (m)</label>
-	  <input id="dxSourceId" type="number" name="source-spacing"
-				title="spacing between line array sources (m)" autocomplete="off"
-				style="width:25%; float:right;"></input>
-		<br/>
-		<label for="frequencyId" style="width:70%; float:left;">Frequency (Hz)</label>
-	  <input id="frequencyId" type="number" name="frequency"
-				title="Frequency (Hz)" autocomplete="off"
-				style="width:25%; float:right;"></input>
-		<br></br>
-		<input id="frequencySliderId" type="range" name="frequency-slider"
-				title="Frequency (Hz)" autocomplete="off"
-				style="width:95%;"></input>
-			
-		<h2>Amplitudes</h2-->
-		<!--the rest gets added by PyScript/Python code-->
-		
-  </div>
-  
-  <div style="width: 80%; float:right;">
-  
-    <h2>Plot</h2>
-    
-    <!--Plot type used/displayed-->
-    <!--label for="plotMethodId" >Plot method</label>
-    <select id="plotMethodId" class="header-dropdown"" title="Method used for plotting" autocomplete="off">
-      <option>Plotly</option>
-      <option>Matplotlib (replace)</option>
-      <option>Matplotlib (update)</option>
-    </select-->
-    
+  <div style="width: 75%; float:right;">
     <!--Area(s) used to place plot(s)-->
-    <div id="plotlyDivId" class="output"></div>
-    
+    <div id="plotDivId" class="output"></div>
   </div>
   
   <!--Python/PyScript code
