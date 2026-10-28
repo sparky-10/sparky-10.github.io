@@ -12,9 +12,7 @@ Quick links:
 * Analyse my wav 2 ( [Repository](analyse-my-wav-2/) | [Web page](https://sparky-10.github.io/code/pyscript-examples/analyse-my-wav-2) )
 * Filter my wav ( [Repository](filter-my-wav/) | [Web page](https://sparky-10.github.io/code/pyscript-examples/filter-my-wav) )
 * Plot array response ( [Repository](plot-array-response/) | [Web page](https://sparky-10.github.io/code/pyscript-examples/plot-array-response) )
-<!--
 * Animate my model ( [Repository](animate-my-model/) | [Web page](https://sparky-10.github.io/code/pyscript-examples/animate-my-model) )
--->
 
 See examples in subfolders for further info.
 

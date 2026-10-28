@@ -35,12 +35,8 @@ Plotting of analytical/numerical model predictions based on user settings (simil
 
 ## Notable improvements in later examples
 
-This will be updated as new examples are added. 
-<!--
-* Interactive console
 * Fetching of file(s) from external resources
-* Audio recording
--->
+* Asynchronous plot updates
 
 ## Packages
 
