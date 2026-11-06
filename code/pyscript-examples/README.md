@@ -35,6 +35,9 @@ Resources:
 * [pyscript.net](https://pyscript.net/) - The home of PyScript, including manuals
 * [pyscript.com](https://pyscript.com/) - Hosting service to write, run, and share code
 
+UPDATE:
+PyScript is now in ['maintenance mode'](https://dev.to/nodex-ar/pyscript-is-in-maintenance-mode-heres-whats-left-for-python-in-the-browser-4j15). This means it is effectively frozen in terms of development. However, it still works, and will continue to do so (though will remain niche). That said, for simple and effective sharing of scientific Python applications in the browser, PyScript remains a good option.
+
 ## Getting started
 
 The absolute basics of a web page for running PyScript are given in [Hello, world!](hello-world/).
@@ -80,7 +83,7 @@ packages = ["numpy"]
 
 The lines in the example above fetch and initialise the required files/code to run PyScript.
 
-Note: PyScript is constantly evolving. Web pages should specify a fixed version of PyScript (2026.7.3 in the example above, previous use of 'latest' is now deprecated) to avoid new release syntax/functionality changes breaking any existing code.
+Note: PyScript is still technically evolving (though it has been recently declared 'frozen'). Web pages should specify a fixed version of PyScript (2026.7.3 in the example above, previous use of 'latest' is now deprecated) to avoid new release syntax/functionality changes breaking any existing code.
 
 Note: All examples here are written using PyScript 2026.7.3 (see release versions [here](https://github.com/pyscript/pyscript/releases)).
 
