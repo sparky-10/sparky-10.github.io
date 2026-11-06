@@ -13,6 +13,7 @@ Quick links:
 * Filter my wav ( [Repository](filter-my-wav/) | [Web page](https://sparky-10.github.io/code/pyscript-examples/filter-my-wav) )
 * Plot array response ( [Repository](plot-array-response/) | [Web page](https://sparky-10.github.io/code/pyscript-examples/plot-array-response) )
 * Animate my model ( [Repository](animate-my-model/) | [Web page](https://sparky-10.github.io/code/pyscript-examples/animate-my-model) )
+* Extras ( [Repository](extras/) )
 
 See examples in subfolders for further info.
 
