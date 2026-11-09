@@ -10,7 +10,7 @@ See:
 
 This example allows the user to:
 * Use an interactive console/terminal environment (familiar to many Python users)
-* Try pre-loaded code
+* Try pre-loaded code (from: ['ChatPGTips'](https://github.com/sparky-10/ChatPGTips/tree/main))
 
 ## Use case(s)
 
